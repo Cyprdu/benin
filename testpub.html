@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Raccourcis clavier — QuickKeys</title>
+<meta name="description" content="Présentation interactive des raccourcis clavier (Win / mac / Linux). Intégration d'une publicité (id: ads-105868564)." />
+<style>
+  :root{
+    --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#5eead4; --glass: rgba(255,255,255,0.03);
+    --card-radius:12px; --gap:14px; --max-w:1000px;
+  }
+  [data-theme="light"]{
+    --bg:#f6f8fb; --card:#ffffff; --muted:#475569; --accent:#0ea5a4; --glass: rgba(2,6,23,0.02);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+    background:linear-gradient(180deg,var(--bg),#071028); color:#e6eef6;
+    display:flex; align-items:flex-start; justify-content:center; padding:28px;
+  }
+  .wrap{width:100%; max-width:var(--max-w); margin:0 auto;}
+  header{display:flex;gap:16px;align-items:center; margin-bottom:18px}
+  h1{font-size:20px;margin:0}
+  .meta{color:var(--muted);font-size:13px}
+  .controls{margin-left:auto; display:flex; gap:8px; align-items:center}
+  .btn{background:var(--glass); border:1px solid rgba(255,255,255,0.04); color:inherit; padding:8px 10px; border-radius:9px; cursor:pointer; font-size:13px}
+  .btn:focus{outline:3px solid color-mix(in srgb, var(--accent) 30%, transparent)}
+  .search{display:flex; gap:8px; align-items:center; background:var(--card); padding:12px; border-radius:12px; margin-bottom:16px; border:1px solid rgba(255,255,255,0.03)}
+  .search input{background:transparent;border:0;color:inherit;font-size:15px; width:100%; outline:none}
+  .toolbar{display:flex; gap:8px; align-items:center}
+  .chip{padding:6px 9px;border-radius:999px;background:rgba(255,255,255,0.02);cursor:pointer;font-size:13px;border:1px solid transparent}
+  .chip[aria-pressed="true"]{background:linear-gradient(90deg,var(--accent),#7dd3fc); color:#04293a; font-weight:600; border-color:rgba(0,0,0,0.08)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+  .card{background:var(--card); padding:14px; border-radius:var(--card-radius); border:1px solid rgba(255,255,255,0.03)}
+  .card h3{margin:0 0 8px 0;font-size:15px}
+  .keys{display:flex; gap:6px;flex-wrap:wrap}
+  .k{background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:6px;font-weight:600;font-size:13px}
+  .card footer{margin-top:10px;display:flex;gap:8px;align-items:center}
+  .ad-slot{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:12px; display:flex; align-items:center; justify-content:center; min-height:90px; border:1px dashed rgba(255,255,255,0.04)}
+  .ad-slot small{color:var(--muted)}
+  .copy-btn{margin-left:auto; background:transparent;border:1px solid rgba(255,255,255,0.04); padding:6px 8px;border-radius:8px; cursor:pointer}
+  .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+  .footer{margin-top:18px; display:flex; gap:12px; align-items:center; justify-content:space-between; color:var(--muted); font-size:13px}
+  @media (max-width:420px){header{flex-direction:column;align-items:flex-start} .controls{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app" data-theme="dark">
+  <header>
+    <div>
+      <h1>QuickKeys — raccourcis clavier</h1>
+      <div class="meta">App interactive — appuie sur <kbd>/</kbd> pour rechercher</div>
+    </div>
+
+    <div class="controls" role="toolbar" aria-label="Contrôles">
+      <div class="toolbar" role="tablist" aria-label="Système">
+        <button class="chip" data-os="win" aria-pressed="true">Windows</button>
+        <button class="chip" data-os="mac" aria-pressed="false">macOS</button>
+        <button class="chip" data-os="linux" aria-pressed="false">Linux</button>
+      </div>
+      <button class="btn" id="themeToggle" aria-pressed="false" title="Basculer thème">🌙 Thème</button>
+    </div>
+  </header>
+
+  <div class="search" role="search" aria-label="Rechercher raccourcis">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <input id="search" type="search" placeholder="Rechercher (ex: copier, onglet, zoom) — appuyez sur /" aria-label="Recherche des raccourcis" />
+    <div style="width:12px"></div>
+  </div>
+
+  <!-- zone pub -->
+  <div class="ad-slot" id="ad-ads-105868564" role="region" aria-label="Publicité">
+    <!-- Pattern d'intégration : data-ad-id pour que le script de la régie puisse cibler l'élément -->
+    <div data-ad-id="ads-105868564" id="ad-slot-inner" aria-hidden="false">
+      <!-- Contenu de secours : remplace par le script fourni par ta régie publicitaire -->
+      <div style="text-align:center">
+        <small>Publicité — emplacement <strong>ads-105868564</strong></small>
+        <div style="margin-top:8px;color:var(--muted);font-size:13px">Script de la régie non fourni — zone de fallback</div>
+      </div>
+    </div>
+  </div>
+
+  <main style="margin-top:12px">
+    <section class="grid" id="shortcutsList" aria-live="polite">
+      <!-- Cartes générées par JS -->
+    </section>
+  </main>
+
+  <div class="footer">
+    <div>Astuce : sélectionne un système ci‑dessous pour voir les raccourcis correspondants.</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn" id="printBtn">🖨️ Imprimer</button>
+      <div style="font-size:12px;color:var(--muted)">© QuickKeys</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/*
+  QuickKeys - script d'interaction
+  - La publicité est intégrée dans #ad-slot-inner avec data-ad-id="ads-105868564".
+  - Remplace le contenu fallback par le script de ta régie (ex: loader async).
+  - Accessible, recherche, filtrage par OS, copie vers le presse‑papier.
+*/
+
+/* Données exemples de raccourcis — tu peux ajouter/modifier */
+const SHORTCUTS = [
+  {id:'copy', title:'Copier', desc:'Copier la sélection dans le presse-papiers', keys:{win:['Ctrl','C'], mac:['⌘','C'], linux:['Ctrl','C']}},
+  {id:'paste', title:'Coller', desc:'Coller depuis le presse-papiers', keys:{win:['Ctrl','V'], mac:['⌘','V'], linux:['Ctrl','V']}},
+  {id:'undo', title:'Annuler', desc:'Annuler la dernière action', keys:{win:['Ctrl','Z'], mac:['⌘','Z'], linux:['Ctrl','Z']}},
+  {id:'redo', title:'Rétablir', desc:'Rétablir l’action annulée', keys:{win:['Ctrl','Y'], mac:['⌘','Shift','Z'], linux:['Ctrl','Y']}},
+  {id:'find', title:'Rechercher', desc:'Ouvrir la recherche', keys:{win:['Ctrl','F'], mac:['⌘','F'], linux:['Ctrl','F']}},
+  {id:'newtab', title:'Nouvel onglet', desc:"Ouvrir un nouvel onglet dans le navigateur", keys:{win:['Ctrl','T'], mac:['⌘','T'], linux:['Ctrl','T']}},
+  {id:'close', title:'Fermer onglet', desc:"Fermer l'onglet courant", keys:{win:['Ctrl','W'], mac:['⌘','W'], linux:['Ctrl','W']}},
+  {id:'fullscreen', title:'Plein écran', desc:"Basculer en plein écran", keys:{win:['F11'], mac:['Ctrl','⌘','F'], linux:['F11']}},
+  {id:'switch-app', title:'Basculer application', desc:'Basculer entre les applications', keys:{win:['Alt','Tab'], mac:['⌘','Tab'], linux:['Alt','Tab']}}
+];
+
+/* Etat */
+let state = {os:'win', query:'', theme:'dark'};
+
+/* Utils */
+function el(tag, props={}, ...children){
+  const e = document.createElement(tag);
+  for(const k in props){
+    if(k.startsWith('on') && typeof props[k]==='function') e.addEventListener(k.slice(2).toLowerCase(), props[k]);
+    else if(k==='html') e.innerHTML = props[k];
+    else e.setAttribute(k, props[k]);
+  }
+  children.forEach(c => { if(c==null) return; e.append(typeof c === 'string'? document.createTextNode(c) : c); });
+  return e;
+}
+
+/* Formatage clé */
+function renderKeys(keysArr){
+  return keysArr.map(k => {
+    const span = el('span', {class:'k', role:'text', 'aria-hidden':'false'});
+    span.textContent = k;
+    return span;
+  });
+}
+
+/* Render list */
+function renderList(){
+  const container = document.getElementById('shortcutsList');
+  container.innerHTML = '';
+  const q = state.query.trim().toLowerCase();
+  const filtered = SHORTCUTS.filter(s => {
+    if(q === '') return true;
+    return (s.title + ' ' + s.desc + ' ' + Object.values(s.keys).flat().join(' ')).toLowerCase().includes(q);
+  });
+
+  if(filtered.length === 0){
+    container.appendChild(el('div',{class:'card'}, el('h3',{}, 'Aucun résultat'), el('div',{style:'color:var(--muted);margin-top:8px'}, 'Essayez un autre mot-clé.')));
+    return;
+  }
+
+  filtered.forEach(s => {
+    const c = el('article',{class:'card', tabindex:0, role:'article','aria-labelledby':`h-${s.id}`});
+    c.appendChild(el('h3',{id:`h-${s.id}`}, s.title));
+    c.appendChild(el('p', {style:'margin:0 0 8px 0;color:var(--muted);font-size:13px'}, s.desc));
+
+    const keysBox = el('div',{class:'keys', 'aria-hidden':'false'});
+    const osKeys = s.keys[state.os] || [];
+    renderKeys(osKeys).forEach(k => keysBox.appendChild(k));
+    c.appendChild(keysBox);
+
+    const footer = el('footer',{});
+    const copyBtn = el('button',{class:'copy-btn', onclick:()=>copyShortcut(osKeys,s.title), title:'Copier le raccourci'});
+    copyBtn.textContent = 'Copier';
+    copyBtn.setAttribute('aria-label', `Copier le raccourci ${s.title}`);
+    footer.appendChild(copyBtn);
+    c.appendChild(footer);
+
+    container.appendChild(c);
+  });
+}
+
+/* Copier dans le presse-papiers */
+async function copyShortcut(keysArr, title){
+  const text = title + ' — ' + keysArr.join(' + ');
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast('Copié : ' + text);
+  }catch(e){
+    showToast('Impossible de copier — sélection manuelle', true);
+  }
+}
+
+/* Toast minimal */
+let toastTimer=0;
+function showToast(msg, bad=false){
+  clearTimeout(toastTimer);
+  let t = document.getElementById('q-toast');
+  if(!t){
+    t = el('div',{id:'q-toast', style:'position:fixed;right:18px;bottom:18px;padding:10px 14px;border-radius:10px;background:rgba(2,6,23,0.6);color:white;backdrop-filter:blur(4px);z-index:9999'});
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.background = bad ? 'linear-gradient(90deg,#ef4444,#f97316)' : 'linear-gradient(90deg,var(--accent),#7dd3fc)';
+  toastTimer = setTimeout(()=> t.remove(), 2400);
+}
+
+/* Theme toggle */
+function toggleTheme(){
+  const app = document.getElementById('app');
+  app.dataset.theme = app.dataset.theme === 'dark' ? 'light' : 'dark';
+  state.theme = app.dataset.theme;
+  document.getElementById('themeToggle').setAttribute('aria-pressed', app.dataset.theme === 'dark' ? 'false' : 'true');
+}
+
+/* OS selector */
+function setupOsChips(){
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      const os = chip.getAttribute('data-os');
+      state.os = os;
+      document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed','false'));
+      chip.setAttribute('aria-pressed','true');
+      renderList();
+    });
+    chip.addEventListener('keydown', (ev) => {
+      if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); chip.click(); }
+    });
+  });
+}
+
+/* Search */
+const searchInput = document.getElementById('search');
+searchInput.addEventListener('input', (e)=>{ state.query = e.target.value; renderList(); });
+
+/* Global keybindings */
+window.addEventListener('keydown', (e) => {
+  // focus search on '/'
+  if(e.key === '/' && document.activeElement !== searchInput){
+    e.preventDefault();
+    searchInput.focus();
+    return;
+  }
+  // copy focused card's shortcut with key 'c' (if focused within article)
+  if(e.key.toLowerCase() === 'c'){
+    const a = document.activeElement.closest && document.activeElement.closest('.card');
+    if(a){
+      const titleId = a.getAttribute('aria-labelledby');
+      const id = titleId && titleId.replace('h-','');
+      const s = SHORTCUTS.find(x=>x.id===id);
+      if(s){ copyShortcut(s.keys[state.os], s.title); }
+    }
+  }
+});
+
+/* Print */
+document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+
+/* Theme toggle button */
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+/* Initialisation */
+setupOsChips();
+renderList();
+
+/* ------------------------------------------------------------------
+  Intégration publicité — modèle sûr :
+  - L'élément #ad-slot-inner contient data-ad-id="ads-105868564".
+  - Si ta régie t'a fourni un script à injecter, mets le script ici.
+  Exemple (pseudo) :
+    <script async src="https://regie.example/loader.js"></script>
+    <script>window.regie.loadAd('ads-105868564')</script>
+  Ici on simule une requête d'annonce pour l'exemple (fallback visuel).
+-------------------------------------------------------------------*/
+
+/* Exemple de simulation (ne pas garder en production) : remplacez par le script réel */
+(function simulateAd(){
+  // Si tu fournis un vrai script, supprime ce simulateur.
+  const slot = document.getElementById('ad-slot-inner');
+  // show a small demo banner after short delay to mimic ad load
+  setTimeout(()=> {
+    if(!slot) return;
+    // vérifier si la régie a déjà inséré un enfant réel (tu peux adapter la logique)
+    if(slot.querySelector('[data-rendered-by-regie]')) return;
+    slot.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;justify-content:center;flex-direction:row;">
+        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='60'><rect rx='8' width='100%' height='100%' fill='%230b1220'/><text x='50%' y='50%' fill='%23ffffff' font-size='12' font-family='Arial' text-anchor='middle' dominant-baseline='middle'>PUB • ads-105868564</text></svg>" alt="" style="width:140px;height:auto;border-radius:8px;"/>
+        <div style="text-align:left">
+          <div style="font-weight:700;color:var(--accent)">Offre spéciale</div>
+          <div style="color:var(--muted);font-size:13px">Promo dédiée — cliquez pour en savoir plus</div>
+        </div>
+      </div>
+    `;
+    slot.setAttribute('data-rendered-by-regie','demo');
+  }, 600);
+})();
+
+/* Accessibility helpers: focus visible */
+document.addEventListener('keydown', ()=> document.body.classList.add('user-using-keyboard'));
+</script>
+</body>
+</html>
