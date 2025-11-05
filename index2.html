@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="fr">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de Bord - Mission Bénin</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c5530 0%, #8B4513 50%, #DAA520 100%);
+            min-height: 100%;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c5530, #8B4513);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .film-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .film-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #2c5530;
+            overflow-x: auto;
+            padding: 0 1rem;
+        }
+
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-tab:hover {
+            background: rgba(44, 85, 48, 0.1);
+            color: #2c5530;
+        }
+
+        .nav-tab.active {
+            color: #2c5530;
+            background: white;
+            border-bottom-color: #DAA520;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            min-height: 60%;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            border-left: 4px solid #DAA520;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c5530;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .characteristics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .char-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #2c5530;
+        }
+
+        .char-label {
+            font-weight: bold;
+            color: #2c5530;
+            margin-bottom: 0.5rem;
+        }
+
+        .char-value {
+            color: #666;
+        }
+
+        .objective-text {
+            line-height: 1.7;
+            color: #444;
+            text-align: justify;
+            font-size: 1.05rem;
+        }
+
+        .timeline-item {
+            background: #f8f9fa;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid #DAA520;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateX(5px);
+        }
+
+        .timeline-phase {
+            font-weight: bold;
+            color: #2c5530;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .timeline-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .music-link {
+            color: #8B4513;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .music-link:hover {
+            color: #DAA520;
+        }
+
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .music-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #8B4513;
+            transition: all 0.3s ease;
+        }
+
+        .music-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .music-title {
+            font-weight: bold;
+            color: #2c5530;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .music-player {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .video-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .video-frame {
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .vertical-video {
+            width: 100%;
+            max-width: 400px;
+            height: 600px;
+        }
+
+        .poster-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .poster-item {
+            text-align: center;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .poster-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+
+        .status-badge {
+            background: #DAA520;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            cursor: pointer;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .close-modal:hover {
+            color: #DAA520;
+        }
+
+        .gallery-image {
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                text-align: left;
+                padding: 0.8rem 1rem;
+            }
+            
+            .film-title {
+                font-size: 2rem;
+            }
+            
+            .video-frame {
+                height: 250px;
+            }
+            
+            .vertical-video {
+                height: 400px;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="dashboard-container">
+   <header class="header">
+    <h1 class="film-title" id="filmTitle">Mission Bénin</h1>
+   </header>
+   <nav class="nav-tabs"><button class="nav-tab active" onclick="showTab('characteristics')"> 🎬 Caractéristiques </button> <button class="nav-tab" onclick="showTab('objectives')"> 🎯 Objectifs </button> <button class="nav-tab" onclick="showTab('structure')"> 📋 Structure Narrative </button> <button class="nav-tab" onclick="showTab('music')"> 🎵 Musiques </button> <button class="nav-tab" onclick="showTab('trailer')"> 🎥 Bande Annonce </button> <button class="nav-tab" onclick="showTab('posters')"> 🖼️ Affiches </button> <button class="nav-tab" onclick="showTab('interviews')"> 🎤 Interviews </button> <button class="nav-tab" onclick="showTab('noemie')"> 👤 Vidéo Noémie </button>
+   </nav><!-- Caractéristiques -->
+   <div id="characteristics" class="tab-content active">
+    <div class="content-card">
+     <h2 class="card-title">🎬 Caractéristiques du Film</h2>
+     <div class="characteristics-grid">
+      <div class="char-item">
+       <div class="char-label">
+        Genre
+       </div>
+       <div class="char-value" id="genreValue">
+        Documentaire
+       </div>
+      </div>
+      <div class="char-item">
+       <div class="char-label">
+        Durée
+       </div>
+       <div class="char-value" id="durationValue">
+        15-20 minutes
+       </div>
+      </div>
+      <div class="char-item">
+       <div class="char-label">
+        Titre
+       </div>
+       <div class="char-value" id="titleValue">
+        Mission Bénin
+       </div>
+      </div>
+      <div class="char-item">
+       <div class="char-label">
+        Statut
+       </div>
+       <div class="char-value">
+        <span class="status-badge">En production</span>
+       </div>
+      </div>
+      <div class="char-item">
+       <div class="char-label">
+        Protagonistes
+       </div>
+       <div class="char-value">
+        Noémie et Suzanne (volontaires FIDESCO)
+       </div>
+      </div>
+      <div class="char-item">
+       <div class="char-label">
+        Organisations
+       </div>
+       <div class="char-value">
+        Association Sainte Camille de Lellis, FIDESCO
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="content-card">
+     <h2 class="card-title">📍 Contexte</h2>
+     <div class="image-gallery"><img src="IMG_7751.jpeg" alt="Bénin 1" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> <img src="IMG_7752.jpeg" alt="Bénin 2" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> <img src="IMG_7753.jpeg" alt="Bénin 3" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> <img src="IMG_7754.jpeg" alt="Bénin 4" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> <img src="IMG_7755.jpeg" alt="Bénin 5" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> <img src="IMG_7756.jpeg" alt="Bénin 6" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> <img src="IMG_7757.jpeg" alt="Bénin 7" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';">
+     </div>
+    </div>
+   </div><!-- Objectifs -->
+   <div id="objectives" class="tab-content">
+    <div class="content-card">
+     <h2 class="card-title">🎯 Objectif du Film</h2>
+     <p class="objective-text">Ce film propose au spectateur un regard direct sur des réalités souvent ignorées, en montrant que la misère n'est pas un concept abstrait : elle est vécue, ressentie, et fait du quotidien un véritable combat pour ceux qui en souffrent. Il révèle aussi la résilience et l'espoir qu'on ces habitants alors que tout semble perdu, montrant leurs joie de vivre, leur sens de l'hospitalité, leur foi...</p>
+     <p class="objective-text">L'intention est double : provoquer, parfois, un certain inconfort nécessaire pour que la réalité soit perçue sans filtre, tout en inspirant et en donnant de l'espoir, en montrant des actions concrètes qui changent des vies. À travers le parcours de Noémie et Suzanne (2 volontaires envoyé en mission au Bénin) et des volontaires qui l'accompagnent, le film explore la prise en charge gratuite des personnes en situation de troubles psychiatriques, les témoignages de patients guéris ou en voie de guérison, et met en lumière le travail remarquable d'organisations comme l'Association Sainte Camille de Lellis et FIDESCO.</p>
+     <p class="objective-text">Il offre également un regard sur la culture locale et les contrastes saisissants entre grandes villes et villages, révélant les disparités économiques et sociales du Bénin. En mêlant réalisme et humanité, le film cherche à montrer la dureté du monde sans sombrer dans le pessimisme, et à sensibiliser le spectateur à l'importance de la solidarité et de l'engagement, pour qu'il quitte la projection en étant au courant de la dure réalité de ce qui se passe au Bénin, tout en ressentant un sentiment d'espoir en l'humanité.</p>
+    </div>
+   </div><!-- Structure Narrative -->
+   <div id="structure" class="tab-content">
+    <div class="content-card">
+     <h2 class="card-title">📋 Structure Narrative Prévue</h2>
+     <div class="timeline-item">
+      <div class="timeline-phase">
+       1. Ouverture du Documentaire (45 secondes)
+      </div>
+      <div class="timeline-description">
+       Images au drone du Bénin, avec une <span class="music-link" onclick="showTab('music')">musique au piano</span> et des voix d'enfant à qui on demande le métier qu'ils veulent faire plus tard. Ça se termine par un enfant qui demande « toi tu veux faire quoi comme métier ».
+      </div>
+     </div>
+     <div class="timeline-item">
+      <div class="timeline-phase">
+       2. Interview de Noémie - Transition France/Bénin
+      </div>
+      <div class="timeline-description">
+       On enchaîne sur l'interview de Noémie où elle répond à la question d'introduction (« qu'est-ce ce que tu voulais faire quand tu avais 3 ans, ton rêve le plus fou ») pour faire un passage entre la France et le Bénin. Apparition progressive de la <span class="music-link" onclick="showTab('music')">musique numéro 2</span>.
+      </div>
+     </div>
+     <div class="timeline-item">
+      <div class="timeline-phase">
+       3. Joie de Vivre Béninoise
+      </div>
+      <div class="timeline-description">
+       Au refrain de la <span class="music-link" onclick="showTab('music')">musique numéro 2</span>, on fait des plans de coupe du Bénin en montrant la joie de vivre, le djembé (intégration des vidéos au format vertical côte à côte) montage assez dynamique. Douce transition en écho sur la <span class="music-link" onclick="showTab('music')">musique 3 (Rest Upon the Edge)</span>.
+      </div>
+     </div>
+     <div class="timeline-item">
+      <div class="timeline-phase">
+       4. Témoignage de Guérison
+      </div>
+      <div class="timeline-description">
+       Pendant cette <span class="music-link" onclick="showTab('music')">musique (numéro 3)</span>, interview d'un ancien malade qui a été guéri par la fondation sainte Camille de Lellis. Il explique d'abord ce que fait la fondation puis bascule sur son témoignage de vie. On finit par lui demander son rapport à la religion, on coupe la musique.
+      </div>
+     </div>
+     <div class="timeline-item">
+      <div class="timeline-phase">
+       5. Foi et Espoir
+      </div>
+      <div class="timeline-description">
+       On retrouve l'interview de Noémie VEYRET qui nous parle de la foi des Béninois et du fait que Dieu est leur moyen de se rattacher à de l'espoir, plus sa foi personnelle et la différence de la manière de pratiquer la religion. Cela amorce sur la question des différences culturelles (<span class="music-link" onclick="showTab('music')">musique numéro 4</span>).
+      </div>
+     </div>
+     <div class="timeline-item">
+      <div class="timeline-phase">
+       6. Choc Culturel
+      </div>
+      <div class="timeline-description">
+       Interview de Suzanne, qui parle plutôt du choc culturel en racontant des anecdotes sur la différence de modes de vie, particulièrement la façon dont attacher les humains est une chose courante au Bénin. Fin de la <span class="music-link" onclick="showTab('music')">musique numéro 4</span>.
+      </div>
+     </div>
+     <div class="timeline-item">
+      <div class="timeline-phase">
+       7. Partie Sensible
+      </div>
+      <div class="timeline-description">
+       Bascule sur partie sensible du documentaire avec des images (floutées)... Travail en cours de développement.
+      </div>
+     </div>
+    </div>
+   </div><!-- Musiques -->
+   <div id="music" class="tab-content">
+    <div class="content-card">
+     <h2 class="card-title">🎵 Bande Sonore Prévue</h2>
+     <div class="music-grid">
+      <div class="music-item">
+       <div class="music-title">
+        🎹 Musique 1 - Intro
+       </div>
+       <p>Musique d'ouverture au piano pour accompagner les images drone et les voix d'enfants.</p>
+       <audio controls class="music-player"><source src="Intro.mp3" type="audio/mpeg"> Votre navigateur ne supporte pas l'élément audio.
+       </audio>
+      </div>
+      <div class="music-item">
+       <div class="music-title">
+        🎶 Musique 2 - Transition
+       </div>
+       <p>Musique pour la transition France/Bénin et les plans de joie de vivre.</p>
+       <audio controls class="music-player"><source src="Musique 2.m4a" type="audio/mp4"> Votre navigateur ne supporte pas l'élément audio.
+       </audio>
+      </div>
+      <div class="music-item">
+       <div class="music-title">
+        🎵 Musique 3 - Rest Upon the Edge
+       </div>
+       <p>Musique émouvante pour accompagner le témoignage de guérison.</p>
+       <audio controls class="music-player"><source src="Musique 3.mp3" type="audio/mpeg"> Votre navigateur ne supporte pas l'élément audio.
+       </audio>
+      </div>
+      <div class="music-item">
+       <div class="music-title">
+        🔍 Musique 4 - En recherche
+       </div>
+       <p>Musique pour accompagner les différences culturelles. <span class="status-badge">En cours de sélection</span></p>
+      </div>
+      <div class="music-item">
+       <div class="music-title">
+        🎼 Musique 5 - Finale
+       </div>
+       <p>Musique de conclusion du documentaire.</p>
+       <audio controls class="music-player"><source src="Musique 5.mp3" type="audio/mpeg"> Votre navigateur ne supporte pas l'élément audio.
+       </audio>
+      </div>
+     </div>
+    </div>
+   </div><!-- Bande Annonce -->
+   <div id="trailer" class="tab-content">
+    <div class="content-card">
+     <h2 class="card-title">🎥 Première Bande Annonce</h2>
+     <div class="video-container">
+      <video class="video-frame" controls poster=""><source src="https://veyret.freeboxos.fr:45474/share/LP6MbN2Nn1RdT5g9/MISSION%20B%C3%89NIN%20(2026)%20%20Trailer%20VF%20%E2%80%93%20Film%20Documentaire.mp4" type="video/mp4"> Votre navigateur ne supporte pas la lecture de vidéos.
+      </video>
+     </div>
+    </div>
+   </div><!-- Affiches -->
+   <div id="posters" class="tab-content">
+    <div class="content-card">
+     <h2 class="card-title">🖼️ Affiches Potentielles</h2>
+     <div class="poster-gallery">
+      <div class="poster-item"><img src="91941D94-657E-4A4B-86F6-7B037D139BD7.png" alt="Affiche Mission Bénin" class="poster-image" onerror="this.style.display='none'; this.parentElement.innerHTML='<p>Affiche en cours de chargement...</p>';">
+       <h3>Proposition d'affiche principale</h3>
+      </div>
+     </div>
+    </div>
+   </div><!-- Interviews -->
+   <div id="interviews" class="tab-content">
+    <div class="content-card">
+     <h2 class="card-title">🎤 Questions d'Interview</h2>
+     <div class="content-card">
+      <h3 class="card-title">👤 Questionnaire Noémie VEYRET</h3>
+      <div class="timeline-item">
+       <div class="timeline-phase">
+        Question d'introduction
+       </div>
+       <div class="timeline-description">
+        Qu'est-ce que tu voulais faire quand tu étais petite et qu'est-ce qui t'a poussé aujourd'hui à partir au Bénin ?
+       </div>
+      </div>
+      <div class="timeline-item">
+       <div class="timeline-phase">
+        Questions principales
+       </div>
+       <div class="timeline-description">
+        <ul style="line-height: 1.8; margin: 0; padding-left: 1.5rem;">
+         <li>Raconte une anecdote de quelque chose qui t'a marqué dès ton arrivée qui t'a fait un peu rire</li>
+         <li>Quelle est la chose qui a été le plus difficile pour toi ?</li>
+         <li>La différence de culture, comment l'apprivoiser ?</li>
+         <li>(Ton témoignage de vie)</li>
+         <li>Les choses qui contrastent le plus avec la vie française</li>
+         <li>La différence entre le regard de Dieu en occident et ici (culture)</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+     <div class="content-card">
+      <h3 class="card-title">🤔 Autres Interviews</h3>
+      <div class="timeline-item">
+       <div class="timeline-phase">
+        Questions en cours de réflexion
+       </div>
+       <div class="timeline-description">
+        Les questions pour les autres personnes interviewées sont actuellement en cours d'élaboration.
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Vidéo Noémie -->
+   <div id="noemie" class="tab-content">
+    <div class="content-card">
+     <h2 class="card-title">👤 Vidéo de Noémie Veyret</h2>
+     <div class="video-container">
+      <video class="video-frame vertical-video" controls poster=""><source src="https://veyret.freeboxos.fr:45474/share/rG9JXztnOoxqoneI/Octobre.mp4" type="video/mp4"> Votre navigateur ne supporte pas la lecture de vidéos.
+      </video>
+     </div>
+    </div>
+   </div>
+  </div><!-- Modal pour agrandir les images -->
+  <div id="imageModal" class="modal" onclick="closeModal()"><span class="close-modal" onclick="closeModal()">×</span> <img class="modal-content" id="modalImage">
+  </div>
+  <script>
+        const defaultConfig = {
+            film_title: "Mission Bénin",
+            duration: "15-20 minutes",
+            genre: "Documentaire"
+        };
+
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = 'block';
+            modalImg.src = imageSrc;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        async function onConfigChange(config) {
+            const filmTitle = config.film_title || defaultConfig.film_title;
+            const duration = config.duration || defaultConfig.duration;
+            const genre = config.genre || defaultConfig.genre;
+
+            document.getElementById('filmTitle').textContent = filmTitle;
+            document.getElementById('titleValue').textContent = filmTitle;
+            document.getElementById('durationValue').textContent = duration;
+            document.getElementById('genreValue').textContent = genre;
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["film_title", config.film_title || defaultConfig.film_title],
+                ["duration", config.duration || defaultConfig.duration],
+                ["genre", config.genre || defaultConfig.genre]
+            ]);
+        }
+
+        // Initialize SDK
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const cards = document.querySelectorAll('.content-card, .timeline-item, .music-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998f8d8bf68a74f3',t:'MTc2MjIxMTUwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
