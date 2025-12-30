@@ -39,12 +39,6 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    .film-subtitle {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      margin-bottom: 1rem;
-    }
-
     .nav-tabs {
       display: flex;
       background: #f8f9fa;
@@ -220,12 +214,6 @@
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     }
 
-    .vertical-video {
-      width: 100%;
-      max-width: 400px;
-      height: 600px;
-    }
-
     .poster-gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -263,6 +251,7 @@
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease;
+      cursor: pointer;
     }
 
     .gallery-image:hover {
@@ -316,11 +305,7 @@
       color: #DAA520;
     }
 
-    .gallery-image {
-      cursor: pointer;
-    }
-
-    /* Styles pour les Rapports */
+    /* CSS pour les Rapports */
     .report-accordion {
       cursor: pointer;
       display: flex;
@@ -388,33 +373,64 @@
     .reading-view {
       display: none;
       background: #fffdf5;
-      padding: 2rem;
+      padding: 2.5rem;
       border-radius: 8px;
       border: 1px solid #ddd;
-      color: #333;
+      color: #2c3e50;
       line-height: 1.8;
       font-size: 1.1rem;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
     }
 
-    .reading-view h3, .reading-view h4 {
+    .reading-view h3 {
+      color: #8B4513;
+      border-bottom: 2px solid #DAA520;
+      padding-bottom: 0.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+    }
+
+    .reading-view h4 {
       color: #2c5530;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     
+    .reading-view p {
+        margin-bottom: 1.2rem;
+        text-align: justify;
+    }
+
     .reading-view blockquote {
-      border-left: 4px solid #DAA520;
+      border-left: 5px solid #2c5530;
+      background: rgba(44, 85, 48, 0.05);
       margin: 1.5rem 0;
-      padding-left: 1rem;
+      padding: 1rem 1.5rem;
       font-style: italic;
-      color: #555;
+      color: #444;
+      border-radius: 0 8px 8px 0;
     }
 
     .report-header-info {
+        font-size: 0.95rem;
+        color: #555;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #f0f4f1;
+        border-radius: 8px;
+        border: 1px solid #dcdcdc;
+    }
+    
+    .report-contact {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px dashed #ccc;
         font-size: 0.9rem;
         color: #666;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #eee;
     }
 
     @keyframes fadeIn {
@@ -426,26 +442,18 @@
       .nav-tabs {
         flex-direction: column;
       }
-
       .nav-tab {
         text-align: left;
         padding: 0.8rem 1rem;
       }
-
       .film-title {
         font-size: 2rem;
       }
-
       .video-frame {
         height: 250px;
       }
-
-      .vertical-video {
-        height: 400px;
-      }
-      
       .reading-view {
-          padding: 1rem;
+          padding: 1.2rem;
           font-size: 1rem;
       }
     }
@@ -690,123 +698,100 @@
                     </div>
 
                     <div id="report1-text" class="reading-view">
+                        
                         <div class="report-header-info">
-                            <strong>FIDESCO - Noémie VEYRET</strong><br>
-                            Animatrice sociale - Association Saint Camille de Lellis<br>
+                            <h2 style="color:#2c5530; margin-top:0;">FIDESCO - Noémie VEYRET</h2>
+                            <strong>Animatrice sociale</strong><br>
+                            Adresse: Association Saint Camille de Lellis<br>
                             Centre Padre Pio « padre d'amour »<br>
                             BP 128-Avrankou<br>
-                            Mail: noemie.veyret2004@gmail.com<br>
-                            <strong>Nous aider:</strong> <a href="http://www.fidesco.fr/veyret2025" target="_blank" style="color:#2c5530;">www.fidesco.fr/veyret2025</a>
+                            Mail: <a href="mailto:noemie.veyret2004@gmail.com">noemie.veyret2004@gmail.com</a><br>
+                            Date: 03/11/2025<br>
+                            <strong>Nous aider:</strong> <a href="http://www.fidesco.fr/veyret2025" target="_blank" style="color:#2c5530; font-weight:bold;">www.fidesco.fr/veyret2025</a>
+                            <br><br>
+                            <strong>M. ET MME LUDOVIC ET PASCALINE VEYRET</strong><br>
+                            35 B ALLEE DU CHATEAU<br>
+                            01340 ATTIGNAT
                         </div>
 
                         <h3>LE MOT DU DIRECTEUR</h3>
-                        <blockquote>
-                            "Chère Madame, cher Monsieur,<br>
-                            Il y a quelque temps déjà, Noémie Veyret vous annonçait son départ en volontariat au Bénin.
-                            Ça y est, elle est arrivée sur le terrain ! La voici au service de la mission, nous nous en réjouissons !"
-                        </blockquote>
-                        <p>
-                            Après une phase de découverte et d'acclimatation, elle a rédigé quelques pages qui relatent ses premiers pas dans sa
-                            nouvelle vie. Je suis très heureux de vous les partager. Vous pourrez ainsi découvrir le contexte de son action auprès
-                            des plus pauvres.
-                        </p>
-                        <p>
-                            "Aidez-vous les uns les autres à construire des ponts par le dialogue, par la rencontre, tous unis pour être un seul
-                            peuple, toujours dans la paix." Par cette phrase, le Pape Léon XIV nous exhorte à la paix, au dialogue et à l'unité; un
-                            appel qui résonne profondément avec ce que vivent nos volontaires aux quatre coins du monde.
-                        </p>
-                        <p>
-                            <strong>Comment faire pour nous aider ?</strong><br>
-                            - En mettant en place un prélèvement automatique de 18€ / mois (6,12€ après défiscalisation)<br>
-                            - En faisant un don de 450€ pour deux ans (153€ après défiscalisation) ou 230€ pour une année de mission.
-                        </p>
-                        <p style="text-align:right; font-style:italic;">
-                            Hubert Laurent, Directeur de Fidesco
-                        </p>
+                        <p>Chère Madame, cher Monsieur,</p>
+                        <p>Il y a quelque temps déjà, Noémie Veyret vous annonçait son départ en volontariat au Bénin. Ça y est, elle est arrivée sur le terrain ! La voici au service de la mission, nous nous en réjouissons !</p>
+                        <p>Après une phase de découverte et d'acclimatation, elle a rédigé quelques pages qui relatent ses premiers pas dans sa nouvelle vie. Je suis très heureux de vous les partager. Vous pourrez ainsi découvrir le contexte de son action auprès des plus pauvres.</p>
                         
-                        <hr style="border:0; border-top: 2px dashed #DAA520; margin: 2rem 0;">
+                        <blockquote>
+                        "Aidez-vous les uns les autres à construire des ponts par le dialogue, par la rencontre, tous unis pour être un seul peuple, toujours dans la paix."
+                        </blockquote>
+                        
+                        <p>Par cette phrase, le Pape Léon XIV nous exhorte à la paix, au dialogue et à l'unité; un appel qui résonne profondément avec ce que vivent nos volontaires aux quatre coins du monde.</p>
+                        <p>Grâce au soutien de nombreux donateurs, Fidesco permet chaque année à des familles, des couples et des jeunes de partir se mettre au service de la mission. Nous avons plus que jamais besoin de vous pour continuer à maintenir la présence de nos volontaires sur le terrain !</p>
+                        
+                        <div style="background:#eef5e9; padding:1rem; border-radius:8px; margin: 1rem 0;">
+                        <strong>Comment faire ?</strong>
+                        <ul>
+                            <li>En mettant en place un prélèvement automatique de 18€ / mois (qui revient à 6,12€ / mois après défiscalisation)</li>
+                            <li>En faisant un don de 450€ pour deux ans (153€ après défiscalisation) ou 230€ pour une année de mission.</li>
+                        </ul>
+                        </div>
 
-                        <h3>RAPPORT DE NOÉMIE</h3>
-                        <p>
-                            Chers parrains et marraines, chers amis, chère famille,<br><br>
-                            Je tenais avant tout à vous remercier de tout cœur pour votre investissement au sein de ma
-                            mission et vous assurer de ma prière. Votre engagement me permet de vivre pleinement
-                            cette belle aventure et je vous en suis très reconnaissante.
-                        </p>
-                        <p>
-                            Me voilà arrivée il y a déjà trois mois au Bénin, avec ma binôme Suzanne, le 1er septembre
-                            2025. Les premières semaines ont été rythmées par beaucoup de découvertes
-                            de cette nouvelle culture et de notre mission.
-                        </p>
-                        <p>
-                            Avant cela, je vais vous rappeler le contexte : Avant de débuter
-                            ma vie professionnelle de psychomotricienne, j'ai ressenti le besoin de m'engager dans une
-                            mission humanitaire. Je recherchais une expérience forte, en dehors de ma zone de confort,
-                            qui me permettrait de m'ouvrir à d'autres cultures. Me voici maintenant envoyée au Bénin, au sein de l'association Saint
-                            Camille de Lellis, pour un an en tant qu'animatrice sociale.
-                        </p>
+                        <p>Les volontaires sur le terrain ont besoin de se sentir soutenus. Participer financièrement à la mission est un geste certes matériel, mais il témoigne aussi d'une proximité et d'un soutien concret. Je me fais le porte parole de Noémie pour vous dire combien votre présence compte pour sa mission. Aidez-la dans son engagement, parrainez sa mission et recevez tous ses rapports de mission trimestriels.</p>
+                        <p>Nous vous remercions d'avance de tout ce que vous pourrez faire.</p>
+                        <p>Dans la joie de la mission,<br><strong>Hubert Laurent</strong><br>Directeur de Fidesco</p>
+
+                        <div class="report-contact">
+                        PS: Pour toute question, contactez notre chargée de parrainage: Jeanne MAURIES - 01 58 10 74 96 - don@fidesco.fr<br>
+                        PS 2: Si vous ne souhaitez pas devenir parrain, nous nous engageons à ne plus vous solliciter dans le cadre de nos communications.
+                        </div>
+
+                        <hr style="border:0; border-top: 3px dashed #DAA520; margin: 3rem 0;">
+
+                        <h3>RAPPORT DE MISSION N°1 - NOÉMIE</h3>
+                        
+                        <p>Chers parrains et marraines, chers amis, chère famille,</p>
+                        <p>Je tenais avant tout à vous remercier de tout cœur pour votre investissement au sein de ma mission et vous assurer de ma prière. Votre engagement me permet de vivre pleinement cette belle aventure et je vous en suis très reconnaissante.</p>
+                        <p>Me voilà arrivée il y a déjà trois mois au Bénin, avec ma binôme Suzanne, le 1er septembre 2025. Les premières semaines ont été rythmées par beaucoup de découvertes de cette nouvelle culture, et de notre mission et je vais tenter de vous faire gouter à mon aventure dans ce premier rapport de mission.</p>
+                        <p>Mais avant cela, je vais vous rappeler dans quelle contexte je suis partie. Avant de débuter ma vie professionnelle de psychomotricienne, j'ai ressenti le besoin de m'engager dans une mission humanitaire. Je recherchais une expérience forte, en dehors de ma zone de confort, qui me permettrai de m'ouvrir à d'autres cultures et de grandir aussi bien humainement que spirituellement.</p>
+                        <p>Après avoir beaucoup reçu, j'ai profondément à cœur de consacrer une année au service des autres, dans un esprit de gratuité et de disponibilité. Nous avons bénéficié de plusieurs temps de formation grâce à Fidesco, qui nous ont permis de partir avec de bons bagages, prêtes pour la mission! Me voici maintenant envoyée au Bénin, au sein de l'association Saint Camille de Lellis, pour un an en tant qu'animatrice sociale.</p>
 
                         <h4>🌍 Découverte de la culture béninoise</h4>
-                        <p>
-                            Dès notre arrivée, nous avons découvert les routes, pour certaines tout juste goudronnées,
-                            et pour d'autres encore faites de terre battue que l'on nomme des vons, ainsi qu'une toute
-                            nouvelle façon de conduire ! Ici, on ne klaxonne pas pour exprimer son mécontentement,
-                            mais pour annoncer sa présence ou saluer quelqu'un au passage.
-                        </p>
-                        <p>
-                            Leur notion du temps et des « j'arrive bientôt » est légèrement différente. Les Béninois ne se
-                            pressent pas, ils ne courent jamais, ils prennent leur temps, ce qui nous apprend
-                            à ralentir. D'ailleurs, il vaut mieux éviter de le faire, au risque d'affoler tout
-                            le monde, car ici, quand on court, c'est qu'il y a un danger imminent !
-                        </p>
+                        <p>Dès notre arrivée, nous avons découvert les routes, pour certaines tout juste goudronnées, et pour d'autres encore faites de terre battue que l'on nomme des vons, ainsi qu'une toute nouvelle façon de conduire ! Je pense qu'en France, on utilise autant le klaxon, mais pas du tout pour les mêmes raisons. Ici, on ne klaxonne pas pour exprimer son mécontentement, mais pour annoncer sa présence ou saluer quelqu'un au passage.</p>
+                        <p>Les voitures sont souvent pleines à craquer, et les motos sont partout. Là où, en France, il nous semblerait impensable de transporter certaines choses sur une moto, au Bénin, tout passe : familles nombreuses, cochons, meubles, fours... ! Les panneaux de signalisation sont plutôt rares, ce qui rend la conduite... disons, plus libre, voire un peu sportive parfois.</p>
+                        <p>Leur notion du temps et des « j'arrive bientôt » est légèrement différente. Les Béninois ne se pressent pas, ils ne courent jamais, ils prennent leur temps, ce qui nous apprend à ralentir et à ne pas courir. D'ailleurs, il vaut mieux éviter de le faire, au risque d'affoler tout le monde, car ici, quand on court, c'est qu'il y a un danger imminent !</p>
+                        <p>C'est une sensation étrange que nous avons ressentie avec Suzanne : avoir à la fois l'impression que les Béninois vivent au ralenti et que le temps, lui, passe à une vitesse folle. Peut-être parce que nous vivons davantage le moment présent, l'ici et maintenant, et que nos journées sont plus longues et plus intenses.</p>
 
-                        <h4>🥁 La musique et la danse</h4>
-                        <p>
-                            Comment parler de la culture béninoise sans parler de la musique, qui rythme nos journées
-                            (et même nos nuits). Elle anime les prières, les fêtes, les réunions.
-                            Je vous donnerai l'exemple de la fête de la chorale à laquelle nous avons participé.
-                            Très vite, beaucoup de personnes sont venues nous chercher pour nous amener à l'avant et nous inviter à danser. 
-                            Beaucoup de gens riaient lorsque nous essayions de reproduire leurs mouvements... Je pense que nous
-                            avons encore une belle marge de progression !
-                        </p>
+                        <h4>🥁 La musique, rythme des journées</h4>
+                        <p>Comment parler de la culture béninoise sans parler de la musique, qui rythme nos journées (et même nos nuits de temps en temps). On en entend à tout moment, de plus ou moins loin. Elle anime les prières, les fêtes, les réunions; on chante et on danse. Elle unit les gens sans un mot, ce qui nous a permis de créer des liens assez facilement avec des personnes qui ne parlent pas français.</p>
+                        <p>Je vous donnerai l'exemple de la fête de la chorale à laquelle nous avons participé. Lorsque nous sommes arrivées, les gens étaient en pleine louange. Nous avons donc eu le réflexe de rester à l'écart pour ne pas déranger. Mais, étant blanches, nous ne sommes évidemment pas passées inaperçues. Très vite, beaucoup de personnes sont venues nous chercher pour nous amener à l'avant et nous inviter à danser.</p>
+                        <p>Sans un mot, nous avons dansé et créé du lien avec plusieurs personnes autour de nous en tentant d'avoir le même rythme qu'eux, mais il est difficile pour nous, bonnes Européennes que nous sommes, de faire « vibrer » notre corps comme ils essaient patiemment de nous l'apprendre. Beaucoup de gens riaient lorsque nous essayions de reproduire leurs mouvements... Je pense que nous avons encore une belle marge de progression !</p>
+                        <p>La musique, pendant les messes, est également un élément très important de la liturgie. On y retrouve souvent des chants accompagnés de beaux instruments, tels que le tam-tam ou le gong, qui rythment les mélodies. Nous pouvons aussi danser pendant la messe si l'envie nous prend c'est tout à fait normal, pour mon plus grand bonheur!</p>
 
                         <h4>🍍 Le marché et la cuisine</h4>
-                        <p>
-                            Autre grande découverte : le marché. Ici, la négociation n'est pas une option, surtout quand
-                            on est blanche ! On y trouve toutes sortes de produits : ignames, bananes, ananas, mangues, manioc, crincrin, riz...
-                            Ici, la base de l'alimentation est ce qu'ils appellent « la pâte », un mélange de farine de maïs épaissie à la cuisson.
-                        </p>
-                        <p>
-                            Attention : ici, on ne parle pas à table car nous risquerions de nous étouffer ! C'est une coutume que nous avons découverte lors du premier repas partagé avec « papa Amadji ».
-                        </p>
+                        <p>Autre grande découverte : le marché. Ici, la négociation n'est pas une option surtout quand on est blanche ! Avec le temps, je pense que je vais développer un talent de négociatrice insoupçonné. On y trouve toutes sortes de produits, principalement des aliments locaux : ignames, bananes, ananas, mangues, manioc, crincrin, riz, arachides, ainsi que des chèvres et des poules. On y croise aussi des vendeurs de tissus traditionnels, le wax qu'on achète de temps en temps pour nous confectionne des tenues béninoises. Certaines marchandes se déplacent avec leur étalage posé sur la tête sans jamais rien faire tomber, avec une agilité et une force remarquable.</p>
+                        <p>Nous avons dû aussi nous adapter à de nouveaux plats et surtout à la répétition des mêmes mets. J'ai compris dès les premiers jours que la cuisine béninoise était moins variée que la nôtre, lorsqu'un Béninois m'a demandé quel était « le plat préféré des Français », question à laquelle je n'ai pas su répondre tant la gastronomie française est diversifiée. Ici, la base de l'alimentation est ce qu'ils appellent « la pâte », un mélange de farine de maïs épaissie à la cuisson.</p>
+                        <p>La culture béninoise partage cependant avec la nôtre l'importance du repas comme moment de convivialité et de partage. Mais attention: ici, on ne parle pas à table car nous risquerions de nous étouffer ! C'est une coutume que nous avons découverte dès notre arrivée à Avrankou, lors du premier repas partagé avec « papa Amadji », le directeur du centre. Le silence à table nous avait d'abord mises mal à l'aise: nous pensions l'avoir dérangé ou offensé. Nous avons vite été rassurées par nos collègues en apprenant qu'il s'agissait simplement d'une habitude culturelle.</p>
 
-                        <h4>🙏 L'accueil et la foi</h4>
-                        <p>
-                            Les Béninois ont un profond sens de l'accueil. Je me souviens notamment d'Éric, l'un de nos collègues de travail, qui vit avec
-                            sa femme et leurs quatre enfants dans une seule pièce d'à peine six mètres carrés.
-                            Et pourtant, il avait tenu à nous recevoir dignement : il avait même acheté une bouteille de
-                            vin pour partager un repas avec nous.
-                        </p>
-                        <p>
-                            Toute leur vie, leurs rêves, leur guérison reposent sur leur foi. Elle est leur pilier et
-                            parfois même le seul auquel ils peuvent s'accrocher dans les moments difficiles.
-                            Un jour, la mère d'un patient m'a dit : <em>« On a toujours besoin d'un plus petit que soi »</em>.
-                        </p>
-                        <p>
-                            En résumé, je peux dire que ce début d'aventure béninoise est à la fois déroutant et d'une
-                            grande richesse. Peu à peu, nous nous laissons apprivoiser par cette culture.
-                        </p>
-                        <p>
-                            A très bientôt pour de nouvelles aventures,<br>
-                            <strong>Noémie</strong>
-                        </p>
+                        <h4>🤝 Accueil et Adaptation</h4>
+                        <p>Les Béninois ont un profond sens de l'accueil. Dès nos premiers jours au Bénin, nous avons été invitées à déjeuner chez plusieurs personnes, alors même qu'elles n'avaient que très peu de moyens. Je me souviens notamment d'Éric, l'un de nos collègues de travail, qui vit avec sa femme et leurs quatre enfants dans une seule pièce d'à peine six mètres carrés. Et pourtant, il avait tenu à nous recevoir dignement : il avait même acheté une bouteille de vin pour partager un repas avec nous. Éric ne savait pas comment déboucher la bouteille j'ai donc pris un grand plaisir, en bonne Française, à lui montrer la technique !</p>
+                        <p>Cette rencontre nous a profondément touchées. Elle nous a permis de prendre conscience de cette pauvreté discrète mais bien réelle, et de la grande générosité qui l'accompagne souvent.</p>
+                        <p>Les professionnels de santé du centre se sont aussi montrés très accueillants et disponibles. Ils ont été de véritables repères et soutiens dans nos débuts, nous permettant de poser toutes nos questions pour mieux comprendre la culture béninoise et nous adapter à notre nouvelle vie sur place.</p>
+                        <p>L'adaptation culturelle me demande cependant encore un peu de temps, notamment dans le rapport au corps. En effet, la pudeur, les gestes, le toucher ne sont pas les mêmes. J'ai, par exemple, été assez surprise au début, en serrant la main d'un Béninois, de constater qu'il ne la lâchait pas après les premières salutations mais seulement à la fin de la conversation !</p>
+                        
+                        <h4>✝️ La foi au cœur de la vie</h4>
+                        <p>Nous faisons aussi l'expérience, parfois déstabilisante, d'être perçues comme « différentes » en raison de notre couleur de peau. Les enfants, en particulier, nous interpellent souvent dans la rue en criant « Yovo ! ».</p>
+                        <p>« Dieu est grand ». Toute leur vie, leurs rêves, leur guérison reposent sur leur foi. Elle est leur pilier et parfois même le seul auquel ils peuvent s'accrocher dans les moments difficiles.</p>
+                        <p>Un jour, la mère d'un patient m'a dit : <em>« On a toujours besoin d'un plus petit que soi »</em>. Ces mots m'ont particulièrement touchée. Elle récapitule parfaitement ce que je vis ici : les malades m'enseignent la simplicité, l'amour gratuit, le pardon et la patience.</p>
+                        <p>Finalement, la mission m'amène à accepter mes limites et mes faiblesses et m'aide à mieux accueillir et comprendre celles des autres, en saisissant humblement que nous sommes appelés à le servir le Christ avec toute notre humanité, faite à la fois de richesses et de fragilités.</p>
+                        
+                        <p>En résumé, je peux dire que ce début d'aventure béninoise est à la fois déroutant et d'une grande richesse. Peu à peu, nous nous laissons apprivoiser par cette culture et par les personnes que nous rencontrons. Nous sentons nos cœurs s'ouvrir et se transformer jour après jour.</p>
+                        <p>Je compte toujours sur vos prières, afin que le Seigneur m'accompagne, m'inspire et fasse grandir en moi, chaque jour, la joie de servir et d'aimer.</p>
+                        <p>A très bientôt pour de nouvelles aventures,<br><strong>Noémie</strong></p>
+
                     </div>
                 </div>
             </div>
             
         </div>
     </div>
-
 
   </div>
 
