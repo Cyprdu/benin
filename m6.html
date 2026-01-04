@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.6/shaka-player.compiled.js"></script>
+    <title>Lecteur M6 Test</title>
+    <style>
+        body { background-color: #222; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+        video { width: 80%; max-width: 1000px; box-shadow: 0 0 20px black; }
+    </style>
+  </head>
+  <body>
+    
+    <video id="video" controls autoplay></video>
+
+    <script>
+      async function init() {
+        const video = document.getElementById('video');
+        const player = new shaka.Player(video);
+
+        // --- CONFIGURATION DES CLES ---
+        player.configure({
+          drm: {
+            clearKeys: {
+              // 'KEY-ID': 'KEY'
+              '433ffba670963e70857859a9dff4be04': '51ede3a821229fe81e71282c8eff80e3'
+            }
+          }
+        });
+
+        // --- CHARGEMENT DU LIEN MPD ---
+        try {
+          await player.load('https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-m6/cmaf_cenc00/dash-short-hd.mpd');
+          console.log('Vidéo chargée avec succès !');
+        } catch (e) {
+          console.error('Erreur de chargement', e);
+          alert("Erreur : " + e.code + ". Vérifiez la console (F12) pour plus de détails.");
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', init);
+    </script>
+  </body>
+</html>
