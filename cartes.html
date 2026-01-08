@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards Vocabulaire Espagnol</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--text);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        #stats {
+            margin-bottom: 20px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        /* Container de la carte pour l'effet 3D */
+        .card-container {
+            perspective: 1000px;
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            text-align: center;
+            border-radius: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: var(--card-bg);
+            user-select: none;
+        }
+
+        .card-front {
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .card-back {
+            background-color: var(--primary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+        }
+
+        button {
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #btn-fail {
+            background-color: var(--danger);
+        }
+
+        #btn-success {
+            background-color: var(--success);
+        }
+
+        #btn-restart {
+            background-color: var(--primary);
+            display: none; /* Caché par défaut */
+        }
+
+        .instruction {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        #finished-message {
+            display: none;
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--success);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Révision Vocabulaire</h1>
+    <div id="stats">Cartes restantes : <span id="count">0</span></div>
+
+    <div id="game-area">
+        <div class="card-container" onclick="flipCard()">
+            <div class="card" id="flashcard">
+                <div class="card-face card-front" id="front-text">
+                    Chargement...
+                </div>
+                <div class="card-face card-back" id="back-text">
+                    ...
+                </div>
+            </div>
+        </div>
+        <p class="instruction">Clique sur la carte pour voir la réponse</p>
+    </div>
+
+    <div id="finished-message">
+        🎉 Bravo ! Tu as validé tous les mots !
+    </div>
+
+    <div class="controls">
+        <button id="btn-fail" onclick="markInvalid()">Pas validé ❌</button>
+        <button id="btn-success" onclick="markValid()">Validé ✅</button>
+        <button id="btn-restart" onclick="initGame()">Recommencer 🔄</button>
+    </div>
+
+    <script>
+        // Liste des mots
+        const vocabularyList = [
+            { fr: "Les différences", es: "Las diferencias" },
+            { fr: "L'égalité", es: "La igualdad" },
+            { fr: "La lutte", es: "La lucha" },
+            { fr: "Le mélange", es: "La mezcla" },
+            { fr: "La minorité / La majorité", es: "La minoría / La mayoría" },
+            { fr: "La pluralité", es: "La pluralidad" },
+            { fr: "Le respect", es: "El respeto" },
+            { fr: "Respecter", es: "Respetar" },
+            { fr: "Lutter", es: "Luchar" },
+            { fr: "Être différent", es: "Ser diferente" },
+            { fr: "Être distinct/e", es: "Ser distinto/a" },
+            { fr: "Être égal/e", es: "Ser igual" },
+            { fr: "L'exclusion", es: "La exclusión" },
+            { fr: "Le mépris", es: "El desprecio" },
+            { fr: "La discrimination", es: "La discriminación" },
+            { fr: "L'homophobie", es: "La homofobia" },
+            { fr: "L'intolérance", es: "La intolerancia" },
+            { fr: "Les préjugés", es: "Los prejuicios" },
+            { fr: "Le racisme", es: "El racismo" },
+            { fr: "Le rejet", es: "El rechazo" },
+            { fr: "La xénophobie", es: "La xenofobia" },
+            { fr: "Mépriser", es: "Despreciar" },
+            { fr: "Discriminer", es: "Discriminar" },
+            { fr: "Exclure", es: "Excluir" },
+            { fr: "Rejeter", es: "Rechazar" },
+            { fr: "Immigrant", es: "Inmigrante" },
+            { fr: "Une embarcation de fortune", es: "Una patera" },
+            { fr: "Sans-papiers", es: "Indocumentado/a" },
+            { fr: "Légal / Illégal", es: "Legal / Ilegal" },
+            { fr: "Risquer sa vie", es: "Arriesgar su vida" },
+            { fr: "Immigrer", es: "Inmigrar" },
+            { fr: "Avoir les papiers", es: "Tener papeles" },
+            { fr: "Journée de la fierté (Pride)", es: "Día del orgullo" },
+            { fr: "Identité de genre", es: "Identidad de género" },
+            { fr: "L'orientation sexuelle", es: "La orientación sexual" },
+            { fr: "La visibilité", es: "La visibilidad" },
+            { fr: "Hétérosexuel", es: "Heterosexual" },
+            { fr: "Homosexuel", es: "Homosexual" },
+            { fr: "Lesbiennes", es: "Lesbianas" },
+            { fr: "Faire son coming out", es: "Salir del armario" },
+            { fr: "L'acceptation", es: "La aceptación" },
+            { fr: "Les droits", es: "Los derechos" },
+            { fr: "La dignité", es: "La dignidad" },
+            { fr: "La fierté", es: "El orgullo" },
+            { fr: "La reconnaissance", es: "El reconocimiento" },
+            { fr: "La tolérance", es: "La tolerancia" },
+            { fr: "Accepter", es: "Aceptar" },
+            { fr: "S'intégrer", es: "Integrarse" },
+            { fr: "Tolérer", es: "Tolerar" },
+            { fr: "Être accepté/e", es: "Ser aceptado/a" },
+            { fr: "Être tolérant/e", es: "Ser tolerante" }
+        ];
+
+        let currentDeck = [];
+        let currentCardIndex = 0;
+
+        const cardElement = document.getElementById('flashcard');
+        const frontText = document.getElementById('front-text');
+        const backText = document.getElementById('back-text');
+        const countDisplay = document.getElementById('count');
+        const btnFail = document.getElementById('btn-fail');
+        const btnSuccess = document.getElementById('btn-success');
+        const btnRestart = document.getElementById('btn-restart');
+        const gameArea = document.getElementById('game-area');
+        const finishedMessage = document.getElementById('finished-message');
+
+        // Mélanger un tableau (Algorithme de Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initGame() {
+            // Cloner la liste originale pour ne pas la modifier
+            currentDeck = [...vocabularyList];
+            // Mélanger les cartes
+            shuffleArray(currentDeck);
+            
+            // Réinitialiser l'affichage
+            gameArea.style.display = 'block';
+            finishedMessage.style.display = 'none';
+            btnFail.style.display = 'inline-block';
+            btnSuccess.style.display = 'inline-block';
+            btnRestart.style.display = 'none';
+            
+            loadNextCard();
+        }
+
+        function loadNextCard() {
+            if (currentDeck.length === 0) {
+                endGame();
+                return;
+            }
+
+            // Remettre la carte face visible (côté français)
+            cardElement.classList.remove('is-flipped');
+
+            // Mettre à jour le compteur
+            countDisplay.innerText = currentDeck.length;
+
+            // Petit délai pour laisser l'animation de retour se faire si nécessaire
+            setTimeout(() => {
+                const card = currentDeck[0]; // On prend toujours la première carte du paquet mélangé
+                frontText.innerText = card.fr;
+                backText.innerText = card.es;
+            }, 200);
+        }
+
+        function flipCard() {
+            cardElement.classList.toggle('is-flipped');
+        }
+
+        function markValid() {
+            // Enlever la carte du paquet (la première)
+            currentDeck.shift();
+            loadNextCard();
+        }
+
+        function markInvalid() {
+            // Prendre la carte actuelle
+            const currentCard = currentDeck.shift();
+            // La remettre à la fin du paquet (ou on pourrait la remélanger)
+            currentDeck.push(currentCard);
+            loadNextCard();
+        }
+
+        function endGame() {
+            gameArea.style.display = 'none';
+            finishedMessage.style.display = 'block';
+            btnFail.style.display = 'none';
+            btnSuccess.style.display = 'none';
+            btnRestart.style.display = 'inline-block';
+            countDisplay.innerText = "0";
+        }
+
+        // Lancer le jeu au chargement
+        initGame();
+
+    </script>
+</body>
+</html>
