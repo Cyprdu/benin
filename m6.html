@@ -1,44 +1,70 @@
-
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Lecteur M6 Live - Test</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.6/shaka-player.compiled.js"></script>
-    <title>Lecteur M6 Test</title>
     <style>
-        body { background-color: #222; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
-        video { width: 80%; max-width: 1000px; box-shadow: 0 0 20px black; }
+        body {
+            background-color: #222;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        video {
+            width: 80%;
+            max-width: 1000px;
+            box-shadow: 0 0 20px black;
+            border-radius: 8px;
+            background-color: black;
+        }
+        h1 { margin-bottom: 20px; font-size: 1.2rem; opacity: 0.8; }
     </style>
-  </head>
-  <body>
-    
-    <video id="video" controls autoplay></video>
+</head>
+<body>
+
+    <h1>Test Flux DASH + ClearKey</h1>
+    <video id="video" controls autoplay poster="https://img.freepik.com/premium-vector/play-button-icon-vector-illustration_23-2147930193.jpg?w=2000"></video>
 
     <script>
-      async function init() {
-        const video = document.getElementById('video');
-        const player = new shaka.Player(video);
+        async function init() {
+            const video = document.getElementById('video');
+            const player = new shaka.Player(video);
 
-        // --- CONFIGURATION DES CLES ---
-        player.configure({
-          drm: {
-            clearKeys: {
-              // 'KEY-ID': 'KEY'
-              '433ffba670963e70857859a9dff4be04': '51ede3a821229fe81e71282c8eff80e3'
+            // Gestion des erreurs
+            player.addEventListener('error', (event) => {
+                console.error('Code d\'erreur Shaka :', event.detail.code, event.detail);
+            });
+
+            // --- CONFIGURATION DES CLES DRM (ClearKey) ---
+            // Note: Les clés doivent être valides au moment de la lecture.
+            player.configure({
+                drm: {
+                    clearKeys: {
+                        // Key ID : Key Value
+                        '433ffba670963e70857859a9dff4be04': '51ede3a821229fe81e71282c8eff80e3'
+                    }
+                }
+            });
+
+            // --- CHARGEMENT DU FLUX ---
+            const mpdUrl = 'https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-m6/cmaf_cenc00/dash-short-hd.mpd';
+
+            try {
+                await player.load(mpdUrl);
+                console.log('Vidéo chargée et prête à être lue !');
+            } catch (e) {
+                console.error('Erreur de chargement', e);
+                alert("Erreur de chargement : " + e.code + "\n\nOuvrez la console (F12) pour voir si c'est une erreur CORS ou DRM.");
             }
-          }
-        });
-
-        // --- CHARGEMENT DU LIEN MPD ---
-        try {
-          await player.load('https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-m6/cmaf_cenc00/dash-short-hd.mpd');
-          console.log('Vidéo chargée avec succès !');
-        } catch (e) {
-          console.error('Erreur de chargement', e);
-          alert("Erreur : " + e.code + ". Vérifiez la console (F12) pour plus de détails.");
         }
-      }
 
-      document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', init);
     </script>
-  </body>
+</body>
 </html>
