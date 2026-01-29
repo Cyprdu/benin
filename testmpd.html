@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -554,11 +555,11 @@
         // Configuration du générique de début (skip intro)
         skip_intro_enabled: true,
         skip_intro_start: "00:00:00", // Début du générique (format HH:MM:SS)
-        skip_intro_end: "00:00:53",   // Fin du générique
+        skip_intro_end: "00:00:57",   // Fin du générique
         
         // Configuration du générique de fin (skip credits)
         skip_credits_enabled: true,
-        skip_credits_start: "02:43:25", // Début du générique de fin
+        skip_credits_start: "02:43:22", // Début du générique de fin
         redirect_url: "info-{tmdb_id}.html" // URL de redirection (sera remplacé par l'ID TMDB)
     };
 
@@ -990,24 +991,33 @@
     });
 
     /* ==================== RENOMMAGE PISTES AUDIO QTZ ==================== */
-    function renameQTZAudioTracks() {
-        if (!player) return;
+    function getAudioTrackDisplayName(track) {
+        // Si la langue est QTZ ou QAA, renommer en Audio Description
+        if (track.language && (track.language.toLowerCase() === 'qtz' || track.language.toLowerCase() === 'qaa')) {
+            return 'Audio Description';
+        }
         
-        const audioTracks = player.getVariantTracks();
-        audioTracks.forEach(track => {
-            if (track.language && (track.language.toLowerCase() === 'qtz' || track.language.toLowerCase() === 'qaa')) {
-                track.displayName = 'Audio Description';
-            }
-        });
+        // Sinon utiliser le label ou la langue
+        if (track.label) return track.label;
+        if (track.language === 'fr') return 'Français';
+        if (track.language === 'en') return 'English';
+        return track.language ? track.language.toUpperCase() : 'Audio';
     }
 
     /* ==================== CHARGEMENT SPRITES ==================== */
     async function loadSprites() {
         try {
             const url = `https://zebi.topstrime.online/thumbnails/movie-${MOVIE_CONFIG.tmdb_id}/meta.json`;
+            console.log('Tentative de chargement sprites:', url);
+            
             const response = await fetch(url);
+            if (!response.ok) {
+                console.error('Erreur HTTP sprites:', response.status);
+                return;
+            }
+            
             spriteData = await response.json();
-            console.log('Sprites chargés:', spriteData);
+            console.log('Sprites chargés avec succès:', spriteData);
         } catch (e) {
             console.error('Erreur chargement sprites:', e);
             spriteData = null;
@@ -1015,41 +1025,69 @@
     }
 
     function getSpriteInfoAtTime(time) {
-        if (!spriteData || !spriteData.sprites) return null;
+        if (!spriteData || !spriteData.sprites) {
+            return null;
+        }
+        
+        // Convertir le temps en millisecondes
+        const timeMs = time * 1000;
         
         for (const sprite of spriteData.sprites) {
-            if (time >= sprite.start && time < sprite.end) {
-                return sprite;
+            if (timeMs >= sprite.start && timeMs < sprite.end) {
+                return {
+                    file: sprite.file,
+                    start: sprite.start,
+                    end: sprite.end,
+                    // Propriétés globales
+                    interval: spriteData.interval,
+                    cols: spriteData.tile[0],
+                    rows: spriteData.tile[1],
+                    width: spriteData.size[0],
+                    height: spriteData.size[1]
+                };
             }
         }
         return null;
     }
 
     async function drawSpritePreview(spriteInfo, time) {
-        if (!spriteInfo) return;
+        if (!spriteInfo || !spriteInfo.file) {
+            return;
+        }
         
         // Charger l'image sprite si pas déjà chargée
-        if (!loadedSprites[spriteInfo.url]) {
+        if (!loadedSprites[spriteInfo.file]) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
             
-            await new Promise((resolve, reject) => {
-                img.onload = resolve;
-                img.onerror = reject;
-                img.src = `https://zebi.topstrime.online/thumbnails/movie-${MOVIE_CONFIG.tmdb_id}/${spriteInfo.url}`;
-            });
+            const fullUrl = `https://zebi.topstrime.online/thumbnails/movie-${MOVIE_CONFIG.tmdb_id}/${spriteInfo.file}`;
             
-            loadedSprites[spriteInfo.url] = img;
+            try {
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = (e) => {
+                        console.error('Erreur chargement image sprite:', fullUrl);
+                        reject(e);
+                    };
+                    img.src = fullUrl;
+                });
+                
+                loadedSprites[spriteInfo.file] = img;
+            } catch (e) {
+                console.error('Impossible de charger le sprite:', e);
+                return;
+            }
         }
         
-        const img = loadedSprites[spriteInfo.url];
+        const img = loadedSprites[spriteInfo.file];
         const ctx = previewCanvas.getContext('2d');
         
         // Calculer quelle vignette afficher
-        const timeInSprite = time - spriteInfo.start;
-        const thumbnailIndex = Math.floor(timeInSprite / spriteInfo.interval);
+        const timeMs = time * 1000; // Convertir en millisecondes
+        const timeInSprite = timeMs - spriteInfo.start;
+        const thumbnailIndex = Math.floor(timeInSprite / (spriteInfo.interval * 1000)); // interval est en secondes
         
-        const cols = spriteInfo.cols || 10;
+        const cols = spriteInfo.cols;
         const row = Math.floor(thumbnailIndex / cols);
         const col = thumbnailIndex % cols;
         
@@ -1058,11 +1096,15 @@
         
         // Dessiner la vignette
         ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
-        ctx.drawImage(
-            img,
-            col * thumbWidth, row * thumbHeight, thumbWidth, thumbHeight,
-            0, 0, previewCanvas.width, previewCanvas.height
-        );
+        try {
+            ctx.drawImage(
+                img,
+                col * thumbWidth, row * thumbHeight, thumbWidth, thumbHeight,
+                0, 0, previewCanvas.width, previewCanvas.height
+            );
+        } catch (e) {
+            console.error('Erreur dessin canvas:', e);
+        }
     }
 
     /* ==================== INIT PLAYER ==================== */
@@ -1092,9 +1134,6 @@
             try {
                 await player.load(MOVIE_CONFIG.mpd_url);
                 playerLoaded = true;
-                
-                // Renommer les pistes QTZ
-                renameQTZAudioTracks();
                 
                 loadState();
                 showUI();
@@ -1373,19 +1412,9 @@
             audioLangs.forEach(lang => {
                 const btn = document.createElement('button');
                 
-                // Utiliser le nom personnalisé si disponible
+                // Utiliser la fonction pour obtenir le nom d'affichage
                 const track = audioTracks.find(t => t.language === lang);
-                let langName;
-                
-                if (track && track.displayName) {
-                    langName = track.displayName;
-                } else if (lang === 'fr') {
-                    langName = 'Français';
-                } else if (lang === 'en') {
-                    langName = 'English';
-                } else {
-                    langName = lang.toUpperCase();
-                }
+                const langName = getAudioTrackDisplayName(track);
                 
                 btn.innerText = langName;
                 
