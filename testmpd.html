@@ -506,8 +506,6 @@
 
 <script>
     /* --- CONFIGURATION SOUS-TITRES JSON --- */
-    // Ajoutez ici vos sous-titres externes
-    // NOTE: L'URL est factice, elle échouera mais n'empêchera plus la lecture
     const EXTERNAL_SUBS_CONFIG = [
         {
           "langue": "Français",
@@ -770,6 +768,23 @@
         }
     });
 
+    /* --- CHARGEMENT SOUS-TITRES EXTERNES (ASYNCHRONE) --- */
+    async function loadExternalSubtitles() {
+        if (!EXTERNAL_SUBS_CONFIG || EXTERNAL_SUBS_CONFIG.length === 0) return;
+        
+        for(const sub of EXTERNAL_SUBS_CONFIG) {
+            try {
+                if(sub.url_sub && sub.url_sub.startsWith('http')) {
+                    // On tente d'ajouter la piste
+                    await player.addTextTrackAsync(sub.url_sub, sub.langue, 'subtitles', 'text/vtt');
+                }
+            } catch(e) {
+                // Si ça échoue (lien mort, CORS, etc), on log juste l'erreur mais on ne bloque rien
+                console.warn(`Impossible de charger les sous-titres (${sub.langue}):`, e);
+            }
+        }
+    }
+
     /* --- INIT PLAYER --- */
     async function init() {
         if(!checkSecurity()) return;
@@ -794,30 +809,15 @@
                 // Chargement de la vidéo
                 await player.load('https://cdn-downloads2.ig1-cdn.com/drm/84/112/14978771694785/stream.ism/stream.mpd');
                 
-                // IMPORTANT : On définit le lecteur comme chargé ICI, AVANT les sous-titres externes
-                // Cela débloque les boutons Play/Pause même si les sous-titres échouent
+                // IMPORTANT : On débloque l'UI immédiatement après le chargement de la vidéo
                 playerLoaded = true;
                 showUI();
-                loadState(); // Restaurer la progression
-
-                // --- CHARGEMENT DES SOUS-TITRES EXTERNES (JSON) ---
-                if(EXTERNAL_SUBS_CONFIG && EXTERNAL_SUBS_CONFIG.length > 0) {
-                    // On ne bloque pas l'exécution principale avec 'await' ici pour l'ensemble
-                    // On lance le processus mais on laisse le code continuer
-                    (async () => {
-                        for(const sub of EXTERNAL_SUBS_CONFIG) {
-                            try {
-                                if(sub.url_sub && sub.url_sub.startsWith('http')) {
-                                    await player.addTextTrackAsync(sub.url_sub, sub.langue, 'subtitles', 'text/vtt');
-                                }
-                            } catch(e) {
-                                console.warn("Erreur chargement sous-titre externe (ignoré) :", e);
-                            }
-                        }
-                    })();
-                }
-
+                loadState(); 
                 loadThumbnails();
+                
+                // On lance le chargement des sous-titres en "tâche de fond" sans attendre le résultat
+                // Le `void` devant indique explicitement qu'on ignore la promesse retournée
+                void loadExternalSubtitles();
                 
                 adBreaks = calculateAdBreaks(video.duration);
                 createAdMarkers();
@@ -841,7 +841,7 @@
             
             } catch (e) { 
                 console.error('Erreur de chargement:', e); 
-                // Même en cas d'erreur partielle, on tente de débloquer l'interface si la vidéo est là
+                // Securité ultime : si erreur mais video chargée, on active quand même
                 if(video.readyState >= 1) playerLoaded = true; 
             }
         }
@@ -1073,7 +1073,7 @@
             audioLangs.forEach(lang => {
                 const btn = document.createElement('button');
                 
-                /* --- MODIFICATION DEMANDÉE : RENOMMAGE QTZ --- */
+                /* --- RENOMMAGE QTZ --- */
                 let langName;
                 if (lang === 'fr') langName = 'Français';
                 else if (lang === 'en') langName = 'English';
