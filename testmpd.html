@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Lecteur</title>
+    <link rel="icon" type="image/png" href="favico.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
@@ -575,6 +575,11 @@
             'https://delivery.tf1.fr/pub-dlhigh/08844598-e20a-4927-aac6-170d3eeaa202',
             'https://delivery.tf1.fr/pub-dlhigh/a4171275-7240-480b-b4cc-a223dd01466f'
         ]
+    };
+
+    // Configuration de l'affichage des prévisualisations
+    const PREVIEW_CONFIG = {
+        sprites_enabled: true  // Mettre à false pour désactiver les prévisualisations
     };
 
     // API TMDB
@@ -1156,11 +1161,17 @@
         if(!checkSecurity()) return;
 
         // Charger les données
-        await Promise.all([
+        const loadPromises = [
             loadExternalSubtitles(),
-            loadMovieTitle(),
-            loadSprites()
-        ]);
+            loadMovieTitle()
+        ];
+        
+        // Charger les sprites uniquement si activé
+        if (PREVIEW_CONFIG.sprites_enabled) {
+            loadPromises.push(loadSprites());
+        }
+        
+        await Promise.all(loadPromises);
 
         shaka.polyfill.installAll();
         if (shaka.Player.isBrowserSupported()) {
@@ -1339,10 +1350,16 @@
         tooltip.style.left = e.clientX + "px";
         previewTimeText.innerText = formatTime(targetTime);
         
-        // Afficher la preview sprite
-        const spriteInfo = getSpriteInfoAtTime(targetTime);
-        if (spriteInfo) {
-            await drawSpritePreview(spriteInfo, targetTime);
+        // Afficher la preview sprite uniquement si activé
+        if (PREVIEW_CONFIG.sprites_enabled) {
+            const spriteInfo = getSpriteInfoAtTime(targetTime);
+            if (spriteInfo) {
+                await drawSpritePreview(spriteInfo, targetTime);
+            }
+        } else {
+            // Effacer le canvas si les sprites sont désactivés
+            const ctx = previewCanvas.getContext('2d');
+            ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
         }
     });
     
