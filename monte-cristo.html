@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Lecteur MPD Gemini</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+    <style>
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #video-container { width: 80%; max-width: 900px; box-shadow: 0 0 20px rgba(0,255,0,0.2); }
+        video { width: 100%; height: auto; outline: none; }
+    </style>
+</head>
+<body>
+
+    <div id="video-container">
+        <video id="video" controls autoplay></video>
+    </div>
+
+    <script>
+        const manifestUri = 'https://cdn-downloads2.ig1-cdn.com/drm/84/112/14978771694785/stream.ism/stream.mpd';
+        
+        // Vos clés au format Clearkey
+        const clearKeys = {
+            'c14f0337543ae6e51b38ca115c2dff3e': 'f2bd1553bc9e5236621ccc9ede9c6b43'
+        };
+
+        async function initApp() {
+            shaka.polyfill.installAll();
+            if (shaka.Player.isBrowserSupported()) {
+                initPlayer();
+            } else {
+                console.error('Navigateur non supporté !');
+            }
+        }
+
+        async function initPlayer() {
+            const video = document.getElementById('video');
+            const player = new shaka.Player(video);
+
+            // Configuration du DRM Clearkey
+            player.configure({
+                drm: {
+                    clearKeys: clearKeys
+                }
+            });
+
+            try {
+                await player.load(manifestUri);
+                console.log('La vidéo a été chargée avec succès !');
+            } catch (e) {
+                console.error('Erreur lors du chargement', e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
