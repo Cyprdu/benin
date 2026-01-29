@@ -2,57 +2,85 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Lecteur MPD Gemini</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecteur Premium DASH</title>
+    
+    <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+    <link href="https://unpkg.com/@videojs/themes@1.0.1/city/index.css" rel="stylesheet">
+
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        #video-container { width: 80%; max-width: 900px; box-shadow: 0 0 20px rgba(0,255,0,0.2); }
-        video { width: 100%; height: auto; outline: none; }
+        body { background-color: #1a1a1a; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+        .container { width: 90%; max-width: 1000px; }
+        .video-js { width: 100%; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        /* Personnalisation de la couleur de sélection */
+        .vjs-matrix.video-js { color: #00ff00; }
+        .vjs-city .vjs-big-play-button { border: none; background-color: rgba(0,0,0,0.7); }
     </style>
 </head>
 <body>
 
-    <div id="video-container">
-        <video id="video" controls autoplay></video>
-    </div>
+<div class="container">
+    <video id="my-video" class="video-js vjs-theme-city vjs-big-play-centered" controls preload="auto" width="900" height="500">
+        <p class="vjs-no-js">Veuillez activer JavaScript pour voir cette vidéo.</p>
+    </video>
+</div>
 
-    <script>
-        const manifestUri = 'https://cdn-downloads2.ig1-cdn.com/drm/84/112/14978771694785/stream.ism/stream.mpd';
-        
-        // Vos clés au format Clearkey
-        const clearKeys = {
-            'c14f0337543ae6e51b38ca115c2dff3e': 'f2bd1553bc9e5236621ccc9ede9c6b43'
-        };
+<script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/videojs-shaka-player@1.1.0/dist/videojs-shaka-player.min.js"></script>
 
-        async function initApp() {
-            shaka.polyfill.installAll();
-            if (shaka.Player.isBrowserSupported()) {
-                initPlayer();
-            } else {
-                console.error('Navigateur non supporté !');
-            }
-        }
+<script>
+    const manifestUri = 'https://cdn-downloads2.ig1-cdn.com/drm/84/112/14978771694785/stream.ism/stream.mpd';
+    
+    // Configuration des clés DRM
+    const keyId = 'c14f0337543ae6e51b38ca115c2dff3e';
+    const key = 'f2bd1553bc9e5236621ccc9ede9c6b43';
 
-        async function initPlayer() {
-            const video = document.getElementById('video');
-            const player = new shaka.Player(video);
+    var player = videojs('my-video', {
+        autoplay: false,
+        controls: true,
+        responsive: true,
+        fluid: true,
+        playbackRates: [0.5, 1, 1.5, 2],
+        controlBar: {
+            children: [
+                'playToggle',
+                'volumePanel',
+                'currentTimeDisplay',
+                'timeDivider',
+                'durationDisplay',
+                'progressControl',
+                'liveDisplay',
+                'remainingTimeDisplay',
+                'subsCapsButton', // Bouton Sous-titres
+                'audioTrackButton', // Bouton Langues
+                'qualitySelector', // Sélecteur de qualité
+                'fullscreenToggle',
+            ],
+        },
+    });
 
-            // Configuration du DRM Clearkey
-            player.configure({
-                drm: {
-                    clearKeys: clearKeys
+    // Configuration de la source avec les clés DRM
+    player.src({
+        src: manifestUri,
+        type: 'application/dash+xml',
+        keySystemOptions: [
+            {
+                name: 'org.w3.clearkey',
+                options: {
+                    clearkeys: {
+                        [keyId]: key
+                    }
                 }
-            });
-
-            try {
-                await player.load(manifestUri);
-                console.log('La vidéo a été chargée avec succès !');
-            } catch (e) {
-                console.error('Erreur lors du chargement', e);
             }
-        }
+        ]
+    });
 
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
+    player.ready(function() {
+        console.log('Le lecteur est prêt avec les options de langue et de qualité.');
+    });
+</script>
+
 </body>
 </html>
