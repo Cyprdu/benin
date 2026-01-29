@@ -11,7 +11,7 @@
         body, html { margin: 0; padding: 0; background: #000; height: 100%; font-family: 'Roboto', sans-serif; overflow: hidden; color: white; user-select: none; -webkit-user-select: none; }
         body.hide-cursor { cursor: none !important; }
         
-        /* Protection Capture d'écran (CSS Trick - ne fonctionne pas sur tous les OS sans DRM hardware) */
+        /* Protection Capture d'écran */
         @media screen and (display-mode: picture-in-picture) { body { display: none !important; } }
         
         #player-container { position: relative; width: 100%; height: 100%; background: #000; overflow: hidden; }
@@ -507,6 +507,7 @@
 <script>
     /* --- CONFIGURATION SOUS-TITRES JSON --- */
     // Ajoutez ici vos sous-titres externes
+    // NOTE: L'URL est factice, elle échouera mais n'empêchera plus la lecture
     const EXTERNAL_SUBS_CONFIG = [
         {
           "langue": "Français",
@@ -790,25 +791,33 @@
             });
             
             try {
+                // Chargement de la vidéo
                 await player.load('https://cdn-downloads2.ig1-cdn.com/drm/84/112/14978771694785/stream.ism/stream.mpd');
                 
+                // IMPORTANT : On définit le lecteur comme chargé ICI, AVANT les sous-titres externes
+                // Cela débloque les boutons Play/Pause même si les sous-titres échouent
+                playerLoaded = true;
+                showUI();
+                loadState(); // Restaurer la progression
+
                 // --- CHARGEMENT DES SOUS-TITRES EXTERNES (JSON) ---
                 if(EXTERNAL_SUBS_CONFIG && EXTERNAL_SUBS_CONFIG.length > 0) {
-                    for(const sub of EXTERNAL_SUBS_CONFIG) {
-                        try {
-                            // On ajoute la piste. Le paramètre "language" est utilisé pour l'affichage dans le menu.
-                            await player.addTextTrackAsync(sub.url_sub, sub.langue, 'subtitles', 'text/vtt');
-                        } catch(e) {
-                            console.warn("Erreur chargement sous-titre externe :", e);
+                    // On ne bloque pas l'exécution principale avec 'await' ici pour l'ensemble
+                    // On lance le processus mais on laisse le code continuer
+                    (async () => {
+                        for(const sub of EXTERNAL_SUBS_CONFIG) {
+                            try {
+                                if(sub.url_sub && sub.url_sub.startsWith('http')) {
+                                    await player.addTextTrackAsync(sub.url_sub, sub.langue, 'subtitles', 'text/vtt');
+                                }
+                            } catch(e) {
+                                console.warn("Erreur chargement sous-titre externe (ignoré) :", e);
+                            }
                         }
-                    }
+                    })();
                 }
 
-                playerLoaded = true;
-                
-                loadState(); // Restaurer la progression et les réglages
                 loadThumbnails();
-                showUI();
                 
                 adBreaks = calculateAdBreaks(video.duration);
                 createAdMarkers();
@@ -832,7 +841,8 @@
             
             } catch (e) { 
                 console.error('Erreur de chargement:', e); 
-                playerLoaded = false;
+                // Même en cas d'erreur partielle, on tente de débloquer l'interface si la vidéo est là
+                if(video.readyState >= 1) playerLoaded = true; 
             }
         }
     }
@@ -1030,7 +1040,6 @@
                     if (langName === 'fr') langName = 'Français';
                     else if (langName === 'en') langName = 'English';
                     else if (langName.length < 3) langName = langName.toUpperCase();
-                    // Sinon on laisse tel quel (pour les subs JSON custom comme "Français")
                     
                     btn.innerText = langName;
                     
