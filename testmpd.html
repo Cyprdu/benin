@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,7 +12,7 @@
         body, html { margin: 0; padding: 0; background: #000; height: 100%; font-family: 'Roboto', sans-serif; overflow: hidden; color: white; user-select: none; -webkit-user-select: none; }
         body.hide-cursor { cursor: none !important; }
         
-        /* Protection Capture d'écran */
+        /* Protection Capture d'écran (CSS Trick - ne fonctionne pas sur tous les OS sans DRM hardware) */
         @media screen and (display-mode: picture-in-picture) { body { display: none !important; } }
         
         #player-container { position: relative; width: 100%; height: 100%; background: #000; overflow: hidden; }
@@ -386,14 +387,14 @@
         .menu-popup button.active::before { 
             content: '';
             position: absolute; 
-            left: 20px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            width: 19px; 
-            height: 15px; 
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 19px;
+            height: 15px;
             background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOSIgaGVpZ2h0PSIxNSIgdmlld0JveD0iMCAwIDE5IDE1Ij48dGl0bGU+UmVjdGFuZ2xlIDUwICsgUmVjdGFuZ2xlIDUwIENvcHk8L3RpdGxlPjxnIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZD0iTTIuMTIxIDZsNi4zNjQgNi4zNjQtMi4xMjEgMi4xMjJMMCA4LjEyMnoiLz48cGF0aCBkPSJNMTguNzI4IDIuMTIxTDcuMTIgMTMuNzI4IDUgMTEuNjA3IDE2LjYwNyAwbDIuMTIgMi4xMjF6Ii8+PC9nPjwvc3ZnPg==');
-            background-size: contain; 
-            background-repeat: no-repeat; 
+            background-size: contain;
+            background-repeat: no-repeat;
         }
         
         .menu-subtext { 
@@ -418,7 +419,7 @@
         }
     </style>
 </head>
-<body id="main-body" oncontextmenu="return false;"> 
+<body id="main-body" oncontextmenu="return false;">
 <div id="security-warning">
     <h1>Lecture impossible</h1>
     <p>Votre navigateur ou environnement n'est pas sécurisé pour la lecture de ce contenu.</p>
@@ -505,12 +506,14 @@
 </div>
 
 <script>
-    /* --- CONFIGURATION SOUS-TITRES JSON --- */
-    const EXTERNAL_SUBS_CONFIG = [
+    /* --- CONFIGURATION SOUS-TITRES EXTERNES --- */
+    // Ajoutez vos sous-titres externes ici
+    const EXTERNAL_SUBTITLES = [
         {
-          "langue": "Français",
-          "url_sub": "https://moncamp.fr/sous-titres/Le.Comte.de.Monte-Cristo-fr.vtt"
+            "langue": "Français Audio Description",
+            "url_sub": "https://www.planetvod.fr/res/medias/album/vtt/785/149787716947852.srt"
         }
+        // Vous pouvez ajouter d'autres sous-titres ici
     ];
 
     /* --- CONFIGURATION PUB --- */
@@ -549,7 +552,7 @@
 
     let player;
     let uiTimer;
-    let clickTimer; // Pour le double clic
+    let clickTimer;
     let thumbnails = [];
     let isMenuOpen = false;
     let playerLoaded = false;
@@ -558,6 +561,8 @@
     let currentAdBreak = null;
     let adQueue = [];
     let returnTime = 0;
+    let externalSubtitleTracks = [];
+    let currentExternalSubtitle = null;
 
     const TMDB_API_KEY = '4bc94a8598883f3aa823b1eff6536a9e';
     const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YmM5NGE4NTk4ODgzZjNhYTgyM2IxZWZmNjUzNmE5ZSIsIm5iZiI6MTc2OTAxNTQ2OS44NDgsInN1YiI6IjY5NzEwOGFkYmM1ODc1OWVkYzA4ZGE2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IyDx0X9qH6RIAPdxwODeMSZKMBgMxu07Gg6TgZZOCMw';
@@ -570,6 +575,86 @@
         high: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 20V4L8.115 7.934A.5.5 0 0 1 7.867 8H3.5a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h4.367a.5.5 0 0 1 .248.066L15 20z"/><path fill="#fff" d="M17.5 12a2 2 0 0 1-2 2v-4a2 2 0 0 1 2 2z"/><path fill="#fff" fill-rule="evenodd" d="M18.536 7.08a.75.75 0 0 1 1.053.125A7.72 7.72 0 0 1 21.25 12a7.72 7.72 0 0 1-1.661 4.795.75.75 0 1 1-1.178-.929A6.22 6.22 0 0 0 19.75 12c0-1.46-.5-2.802-1.339-3.866a.75.75 0 0 1 .125-1.053z" clip-rule="evenodd"/><path fill="#fff" fill-rule="evenodd" d="M20.524 4.438a.75.75 0 0 1 1.055.103 11.705 11.705 0 0 1 2.671 7.46c0 2.83-1.002 5.43-2.67 7.458a.75.75 0 1 1-1.16-.953A10.205 10.205 0 0 0 22.75 12a10.2 10.2 0 0 0-2.33-6.506.75.75 0 0 1 .104-1.056z" clip-rule="evenodd"/></svg>',
         max: '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" fill="none" viewBox="0 0 25 24"><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 20V4L8.115 7.934A.5.5 0 0 1 7.867 8H3.5a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h4.367a.5.5 0 0 1 .248.066L15 20z"/><path fill="#fff" d="M17.5 12a2 2 0 0 1-2 2v-4a2 2 0 0 1 2 2z"/><path fill="#fff" fill-rule="evenodd" d="M18.536 7.08a.75.75 0 0 1 1.053.125A7.72 7.72 0 0 1 21.25 12a7.72 7.72 0 0 1-1.661 4.795.75.75 0 1 1-1.178-.929A6.22 6.22 0 0 0 19.75 12c0-1.46-.5-2.802-1.339-3.866a.75.75 0 0 1 .125-1.053z" clip-rule="evenodd"/><path fill="#fff" fill-rule="evenodd" d="M20.524 4.438a.75.75 0 0 1 1.055.103 11.705 11.705 0 0 1 2.671 7.46c0 2.83-1.002 5.43-2.67 7.458a.75.75 0 1 1-1.16-.953A10.205 10.205 0 0 0 22.75 12a10.2 10.2 0 0 0-2.33-6.506.75.75 0 0 1 .104-1.056z" clip-rule="evenodd"/></svg>'
     };
+
+    /* --- GESTION DES SOUS-TITRES EXTERNES SRT --- */
+    async function loadExternalSubtitles() {
+        for (const subConfig of EXTERNAL_SUBTITLES) {
+            try {
+                const response = await fetch(subConfig.url_sub);
+                const srtContent = await response.text();
+                const cues = parseSRT(srtContent);
+                
+                externalSubtitleTracks.push({
+                    language: subConfig.langue,
+                    cues: cues,
+                    url: subConfig.url_sub
+                });
+            } catch (e) {
+                console.error(`Erreur chargement sous-titre ${subConfig.langue}:`, e);
+            }
+        }
+    }
+
+    function parseSRT(srtText) {
+        const cues = [];
+        const blocks = srtText.trim().split(/\n\s*\n/);
+        
+        for (const block of blocks) {
+            const lines = block.split('\n');
+            if (lines.length < 3) continue;
+            
+            const timeLine = lines[1];
+            const timeMatch = timeLine.match(/(\d{2}):(\d{2}):(\d{2}),(\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2}),(\d{3})/);
+            
+            if (timeMatch) {
+                const startTime = parseInt(timeMatch[1]) * 3600 + parseInt(timeMatch[2]) * 60 + parseInt(timeMatch[3]) + parseInt(timeMatch[4]) / 1000;
+                const endTime = parseInt(timeMatch[5]) * 3600 + parseInt(timeMatch[6]) * 60 + parseInt(timeMatch[7]) + parseInt(timeMatch[8]) / 1000;
+                const text = lines.slice(2).join('\n');
+                
+                cues.push({
+                    startTime: startTime,
+                    endTime: endTime,
+                    text: text
+                });
+            }
+        }
+        
+        return cues;
+    }
+
+    function displayExternalSubtitle(time) {
+        if (!currentExternalSubtitle) {
+            subtitleContainer.innerHTML = '';
+            return;
+        }
+        
+        const activeCue = currentExternalSubtitle.cues.find(
+            cue => time >= cue.startTime && time <= cue.endTime
+        );
+        
+        if (activeCue) {
+            subtitleContainer.innerHTML = `<span>${activeCue.text}</span>`;
+        } else {
+            subtitleContainer.innerHTML = '';
+        }
+    }
+
+    function selectExternalSubtitle(language) {
+        const track = externalSubtitleTracks.find(t => t.language === language);
+        currentExternalSubtitle = track || null;
+        
+        // Désactiver les sous-titres du player
+        if (player) {
+            player.setTextTrackVisibility(false);
+        }
+        
+        saveState();
+    }
+
+    function disableExternalSubtitles() {
+        currentExternalSubtitle = null;
+        subtitleContainer.innerHTML = '';
+    }
 
     /* --- GESTION DU CACHE (LOCALSTORAGE) --- */
     function saveState() {
@@ -584,7 +669,13 @@
         if(audioTracks) localStorage.setItem('hobbit_lang_audio', audioTracks.language);
         
         // État sous-titres (on/off)
-        localStorage.setItem('hobbit_subs_visible', player.isTextTrackVisible());
+        if (currentExternalSubtitle) {
+            localStorage.setItem('hobbit_subs_visible', 'external');
+            localStorage.setItem('hobbit_external_sub', currentExternalSubtitle.language);
+        } else {
+            localStorage.setItem('hobbit_subs_visible', player.isTextTrackVisible());
+            localStorage.removeItem('hobbit_external_sub');
+        }
     }
 
     function loadState() {
@@ -601,7 +692,6 @@
 
     /* --- SECURITE --- */
     function checkSecurity() {
-        // 1. Vérifie si le contexte est sécurisé (HTTPS ou localhost)
         if (!window.isSecureContext) {
             document.body.innerHTML = '';
             securityWarning.style.display = 'flex';
@@ -615,7 +705,7 @@
     function calculateAdBreaks(duration) {
         if (!PUB_ENABLED) return [];
         const breaks = [];
-        const intervalSeconds = 30 * 60; // Toutes les 30 min
+        const intervalSeconds = 30 * 60;
         for (let time = intervalSeconds; time < duration - 60; time += intervalSeconds) {
             breaks.push(time);
         }
@@ -639,7 +729,6 @@
         returnTime = video.currentTime;
         video.pause();
         
-        // LOGIQUE DEMANDEE : Bumper -> 1 Random -> Bumper
         const randomAd = AD_VIDEOS_POOL[Math.floor(Math.random() * AD_VIDEOS_POOL.length)];
         adQueue = [AD_BUMPER, randomAd, AD_BUMPER];
         
@@ -679,18 +768,28 @@
 
     adVideo.addEventListener('timeupdate', () => {
         const remaining = Math.ceil(adVideo.duration - adVideo.currentTime);
-        const totalRemaining = remaining + (adQueue.length * 15); // Estimation
+        const totalRemaining = remaining + (adQueue.length * 15);
         adCountdown.textContent = `Publicité - ${formatTime(totalRemaining)} restantes`;
     });
 
     adVideo.addEventListener('ended', playNextAd);
 
     video.addEventListener('timeupdate', () => {
-        if (!PUB_ENABLED || !video.duration || currentAdBreak !== null) return;
+        if (!PUB_ENABLED || !video.duration || currentAdBreak !== null) {
+            // Afficher les sous-titres externes si actifs
+            if (currentExternalSubtitle) {
+                displayExternalSubtitle(video.currentTime);
+            }
+            return;
+        }
         
         const currentTime = video.currentTime;
-        // Sauvegarde progression toutes les 5 sec environ
         if(Math.floor(currentTime) % 5 === 0) saveState();
+        
+        // Afficher les sous-titres externes si actifs
+        if (currentExternalSubtitle) {
+            displayExternalSubtitle(currentTime);
+        }
 
         const nearestBreak = adBreaks.find(t => Math.abs(currentTime - t) < 0.5);
         if (nearestBreak && !video.paused) {
@@ -768,32 +867,30 @@
         }
     });
 
-    /* --- CHARGEMENT SOUS-TITRES EXTERNES (ASYNCHRONE) --- */
-    async function loadExternalSubtitles() {
-        if (!EXTERNAL_SUBS_CONFIG || EXTERNAL_SUBS_CONFIG.length === 0) return;
+    /* --- RENOMMAGE PISTES AUDIO QTZ --- */
+    function renameQTZAudioTracks() {
+        if (!player) return;
         
-        for(const sub of EXTERNAL_SUBS_CONFIG) {
-            try {
-                if(sub.url_sub && sub.url_sub.startsWith('http')) {
-                    // On tente d'ajouter la piste
-                    await player.addTextTrackAsync(sub.url_sub, sub.langue, 'subtitles', 'text/vtt');
-                }
-            } catch(e) {
-                // Si ça échoue (lien mort, CORS, etc), on log juste l'erreur mais on ne bloque rien
-                console.warn(`Impossible de charger les sous-titres (${sub.langue}):`, e);
+        const audioTracks = player.getVariantTracks();
+        audioTracks.forEach(track => {
+            if (track.language && track.language.toLowerCase() === 'qtz') {
+                // Créer une propriété personnalisée pour le nom d'affichage
+                track.displayName = 'Français audio description';
             }
-        }
+        });
     }
 
     /* --- INIT PLAYER --- */
     async function init() {
         if(!checkSecurity()) return;
 
+        // Charger les sous-titres externes
+        await loadExternalSubtitles();
+
         shaka.polyfill.installAll();
         if (shaka.Player.isBrowserSupported()) {
             player = new shaka.Player(video);
             
-            // Config DRM Clearkey
             player.configure({
                 streaming: { alwaysStreamText: true },
                 textDisplayFactory: () => new shaka.text.UITextDisplayer(video, subtitleContainer),
@@ -806,43 +903,43 @@
             });
             
             try {
-                // Chargement de la vidéo
                 await player.load('https://cdn-downloads2.ig1-cdn.com/drm/84/112/14978771694785/stream.ism/stream.mpd');
-                
-                // IMPORTANT : On débloque l'UI immédiatement après le chargement de la vidéo
                 playerLoaded = true;
-                showUI();
-                loadState(); 
-                loadThumbnails();
                 
-                // On lance le chargement des sous-titres en "tâche de fond" sans attendre le résultat
-                // Le `void` devant indique explicitement qu'on ignore la promesse retournée
-                void loadExternalSubtitles();
+                // Renommer les pistes QTZ
+                renameQTZAudioTracks();
+                
+                loadState();
+                loadThumbnails();
+                showUI();
                 
                 adBreaks = calculateAdBreaks(video.duration);
                 createAdMarkers();
                 
-                // Restaurer langues audio/subs depuis cache
                 setTimeout(() => {
                     const savedSub = localStorage.getItem('hobbit_lang_sub');
                     const savedAudio = localStorage.getItem('hobbit_lang_audio');
                     const savedSubsVisible = localStorage.getItem('hobbit_subs_visible');
+                    const savedExternalSub = localStorage.getItem('hobbit_external_sub');
 
                     if(savedAudio) player.selectAudioLanguage(savedAudio);
                     else player.selectAudioLanguage('fr');
 
-                    if(savedSub) player.selectTextLanguage(savedSub);
-                    else player.selectTextLanguage('fr');
-                    
-                    if(savedSubsVisible === 'false') player.setTextTrackVisibility(false);
-                    else player.setTextTrackVisibility(true);
-
+                    // Restaurer les sous-titres externes ou internes
+                    if (savedSubsVisible === 'external' && savedExternalSub) {
+                        selectExternalSubtitle(savedExternalSub);
+                    } else {
+                        if(savedSub) player.selectTextLanguage(savedSub);
+                        else player.selectTextLanguage('fr');
+                        
+                        if(savedSubsVisible === 'false') player.setTextTrackVisibility(false);
+                        else player.setTextTrackVisibility(true);
+                    }
                 }, 500);
-            
+                
             } catch (e) { 
                 console.error('Erreur de chargement:', e); 
-                // Securité ultime : si erreur mais video chargée, on active quand même
-                if(video.readyState >= 1) playerLoaded = true; 
+                playerLoaded = false;
             }
         }
     }
@@ -877,7 +974,6 @@
         
         clearTimeout(uiTimer);
         if (!video.paused && !isMenuOpen) {
-            // Disparition après 7 secondes
             uiTimer = setTimeout(() => {
                 uiLayer.classList.remove('visible');
                 subtitleContainer.classList.remove('controls-visible');
@@ -894,23 +990,21 @@
         subtitleContainer.classList.add('controls-visible');
     });
 
-    // Gestion du Simple Clic (Play/Pause) vs Double Clic (Fullscreen)
     clickLayer.addEventListener('click', (e) => { 
         if (!playerLoaded) return;
         if (clickTimer) {
             clearTimeout(clickTimer);
             clickTimer = null;
-            toggleFullscreen(); // C'est un double clic
+            toggleFullscreen();
         } else {
             clickTimer = setTimeout(() => {
                 clickTimer = null;
-                togglePlay(); // C'est un simple clic
+                togglePlay();
                 showUI();
-            }, 250); // Délai d'attente pour vérifier si un 2ème clic arrive
+            }, 250);
         }
     });
 
-    // Empêcher le clic droit
     window.addEventListener('contextmenu', (e) => e.preventDefault());
 
     function toggleFullscreen() {
@@ -1023,40 +1117,55 @@
             
             const offBtn = document.createElement('button');
             offBtn.innerText = "Désactivé";
-            if (!player.isTextTrackVisible()) offBtn.className = 'active';
+            if (!player.isTextTrackVisible() && !currentExternalSubtitle) offBtn.className = 'active';
             offBtn.onclick = () => { 
-                player.setTextTrackVisibility(false); 
+                player.setTextTrackVisibility(false);
+                disableExternalSubtitles();
                 saveState();
                 closeAllMenus();
             };
             menu.appendChild(offBtn);
             
+            // Sous-titres du MPD
             const textTracks = player.getTextTracks();
             if (textTracks && textTracks.length > 0) {
                 textTracks.forEach(track => {
                     const btn = document.createElement('button');
-                    // Formatage du nom de la langue
-                    let langName = track.language;
-                    if (langName === 'fr') langName = 'Français';
-                    else if (langName === 'en') langName = 'English';
-                    else if (langName.length < 3) langName = langName.toUpperCase();
-                    
+                    const langName = track.language === 'fr' ? 'Français' : 
+                                   track.language === 'en' ? 'English' : track.language.toUpperCase();
                     btn.innerText = langName;
                     
                     const currentTrack = player.isTextTrackVisible() ? player.getTextLanguages()[0] : null;
-                    if (player.isTextTrackVisible() && currentTrack === track.language) {
+                    if (player.isTextTrackVisible() && currentTrack === track.language && !currentExternalSubtitle) {
                         btn.className = 'active';
                     }
                     
                     btn.onclick = () => { 
                         player.selectTextLanguage(track.language); 
                         player.setTextTrackVisibility(true);
+                        disableExternalSubtitles();
                         saveState();
                         closeAllMenus();
                     };
                     menu.appendChild(btn);
                 });
             }
+
+            // Sous-titres externes
+            externalSubtitleTracks.forEach(track => {
+                const btn = document.createElement('button');
+                btn.innerText = track.language;
+                
+                if (currentExternalSubtitle && currentExternalSubtitle.language === track.language) {
+                    btn.className = 'active';
+                }
+                
+                btn.onclick = () => {
+                    selectExternalSubtitle(track.language);
+                    closeAllMenus();
+                };
+                menu.appendChild(btn);
+            });
 
             const hr = document.createElement('div'); 
             hr.className = 'menu-separator'; 
@@ -1073,13 +1182,20 @@
             audioLangs.forEach(lang => {
                 const btn = document.createElement('button');
                 
-                /* --- RENOMMAGE QTZ --- */
+                // Utiliser le nom personnalisé si disponible
+                const track = audioTracks.find(t => t.language === lang);
                 let langName;
-                if (lang === 'fr') langName = 'Français';
-                else if (lang === 'en') langName = 'English';
-                else if (lang === 'qtz') langName = 'Français audio description';
-                else langName = lang.toUpperCase();
-
+                
+                if (track && track.displayName) {
+                    langName = track.displayName;
+                } else if (lang === 'fr') {
+                    langName = 'Français';
+                } else if (lang === 'en') {
+                    langName = 'English';
+                } else {
+                    langName = lang.toUpperCase();
+                }
+                
                 btn.innerText = langName;
                 
                 const current = audioTracks.find(t => t.active);
