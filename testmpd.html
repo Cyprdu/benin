@@ -284,77 +284,6 @@
         }
         .seek-container:hover .seek-fill::after { opacity: 1; }
 
-        /* --- AD MARKERS --- */
-        .ad-marker {
-            position: absolute;
-            top: 0;
-            width: 8px;
-            height: 100%;
-            background: #ffcc00;
-            border-radius: 2px;
-            transform: translateX(-50%);
-            z-index: 1;
-        }
-
-        /* --- AD OVERLAY --- */
-        #ad-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 300;
-        }
-        #ad-video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .ad-countdown {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.8);
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-size: 14px;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        /* --- PREVIEW --- */
-        .preview-tooltip { 
-            position: absolute; 
-            bottom: 35px; 
-            transform: translateX(-50%); 
-            background: transparent; 
-            display: none; 
-            flex-direction: column; 
-            align-items: center; 
-            pointer-events: none; 
-            z-index: 100; 
-            filter: drop-shadow(0 3px 10px rgba(0,0,0,0.8)); 
-        }
-        #preview-canvas { 
-            width: 240px; 
-            height: 135px; 
-            background: #111; 
-            border-radius: 3px; 
-            border: 2px solid rgba(255,255,255,0.3); 
-            display: block;
-        }
-        .preview-time { 
-            margin-top: 6px; 
-            text-shadow: 0 2px 4px rgba(0,0,0,1); 
-            color: #fff; 
-            font-size: 14px; 
-            font-weight: bold; 
-        }
-
         /* --- MENUS --- */
         .menu-popup {
             position: absolute;
@@ -454,10 +383,6 @@
 
 <div id="player-container">
     <video id="video"></video>
-    <div id="ad-overlay">
-        <video id="ad-video"></video>
-        <div class="ad-countdown" id="ad-countdown"></div>
-    </div>
     <div id="subtitle-container"></div>
     <button id="skip-intro-btn" class="skip-sequence-btn">Passer l'introduction</button>
     <button id="skip-credits-btn" class="skip-sequence-btn">Fin du film</button>
@@ -522,10 +447,6 @@
             <div class="time-display" id="time-display">0:00:00 / 0:00:00</div>
             <div class="seek-container" id="seek-container">
                 <div class="seek-fill" id="seek-fill"></div>
-                <div class="preview-tooltip" id="preview-tooltip">
-                    <canvas id="preview-canvas" width="240" height="135"></canvas>
-                    <div class="preview-time" id="preview-time">00:00</div>
-                </div>
             </div>
         </div>
 
@@ -564,33 +485,12 @@
         redirect_url: "info-{tmdb_id}.html" // URL de redirection (sera remplacé par l'ID TMDB)
     };
 
-    // Configuration des pubs (si activé)
-    const PUB_CONFIG = {
-        enabled: false,
-        ad_bumper: 'https://pub-cdn.cdn-0.diff.tf1.fr/2/USP-0x0/73/92/14407392/ssm/14407392-1200-64k.mp4',
-        ad_videos_pool: [
-            'https://pub-cdn.cdn-0.diff.tf1.fr/2/USP-0x0/74/78/14417478/ssm/14417478-1200-64k-qvbr.mp4',
-            'https://delivery.tf1.fr/pub-dlhigh/5d2f011a-0641-4f2e-971d-3625828807d9',
-            'https://delivery.tf1.fr/pub-dlhigh/854a7ca4-81b6-4466-b919-8ff6886180b0',
-            'https://delivery.tf1.fr/pub-dlhigh/08844598-e20a-4927-aac6-170d3eeaa202',
-            'https://delivery.tf1.fr/pub-dlhigh/a4171275-7240-480b-b4cc-a223dd01466f'
-        ]
-    };
-
-    // Configuration de l'affichage des prévisualisations
-    const PREVIEW_CONFIG = {
-        sprites_enabled: false  // Mettre à false pour désactiver les prévisualisations
-    };
-
     // API TMDB
     const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YmM5NGE4NTk4ODgzZjNhYTgyM2IxZWZmNjUzNmE5ZSIsIm5iZiI6MTc2OTAxNTQ2OS44NDgsInN1YiI6IjY5NzEwOGFkYmM1ODc1OWVkYzA4ZGE2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IyDx0X9qH6RIAPdxwODeMSZKMBgMxu07Gg6TgZZOCMw';
 
     /* ==================== ELEMENTS DOM ==================== */
     const body = document.getElementById('main-body');
     const video = document.getElementById('video');
-    const adVideo = document.getElementById('ad-video');
-    const adOverlay = document.getElementById('ad-overlay');
-    const adCountdown = document.getElementById('ad-countdown');
     const uiLayer = document.getElementById('ui-layer');
     const clickLayer = document.getElementById('click-layer');
     const iconPlay = document.getElementById('icon-play');
@@ -598,9 +498,6 @@
     const timeDisplay = document.getElementById('time-display');
     const seekFill = document.getElementById('seek-fill');
     const seekContainer = document.getElementById('seek-container');
-    const previewCanvas = document.getElementById('preview-canvas');
-    const previewTimeText = document.getElementById('preview-time');
-    const tooltip = document.getElementById('preview-tooltip');
     const volRange = document.getElementById('vol-range');
     const volIcon = document.getElementById('vol-icon');
     const subtitleContainer = document.getElementById('subtitle-container');
@@ -613,15 +510,9 @@
     let player;
     let uiTimer;
     let clickTimer;
-    let spriteData = null;
-    let loadedSprites = {};
     let isMenuOpen = false;
     let playerLoaded = false;
     let xrayVisible = false;
-    let adBreaks = [];
-    let currentAdBreak = null;
-    let adQueue = [];
-    let returnTime = 0;
     let externalSubtitleTracks = [];
     let currentExternalSubtitle = null;
 
@@ -824,81 +715,8 @@
         return true;
     }
 
-    /* ==================== LOGIQUE PUBS ==================== */
-    function calculateAdBreaks(duration) {
-        if (!PUB_CONFIG.enabled) return [];
-        const breaks = [];
-        const intervalSeconds = 30 * 60;
-        for (let time = intervalSeconds; time < duration - 60; time += intervalSeconds) {
-            breaks.push(time);
-        }
-        return breaks;
-    }
-
-    function createAdMarkers() {
-        document.querySelectorAll('.ad-marker').forEach(m => m.remove());
-        adBreaks.forEach(time => {
-            const marker = document.createElement('div');
-            marker.className = 'ad-marker';
-            marker.style.left = ((time / video.duration) * 100) + '%';
-            seekContainer.appendChild(marker);
-        });
-    }
-
-    async function playAdBreak(breakTime) {
-        if (!PUB_CONFIG.enabled) return;
-        
-        currentAdBreak = breakTime;
-        returnTime = video.currentTime;
-        video.pause();
-        
-        const randomAd = PUB_CONFIG.ad_videos_pool[Math.floor(Math.random() * PUB_CONFIG.ad_videos_pool.length)];
-        adQueue = [PUB_CONFIG.ad_bumper, randomAd, PUB_CONFIG.ad_bumper];
-        
-        adOverlay.style.display = 'flex';
-        uiLayer.style.display = 'none';
-        
-        await playNextAd();
-    }
-
-    async function playNextAd() {
-        if (adQueue.length === 0) {
-            endAdBreak();
-            return;
-        }
-        
-        const adUrl = adQueue.shift();
-        adVideo.src = adUrl;
-        
-        try {
-            await adVideo.play();
-        } catch (e) {
-            console.error('Erreur pub:', e);
-            await playNextAd();
-        }
-    }
-
-    function endAdBreak() {
-        adOverlay.style.display = 'none';
-        uiLayer.style.display = 'flex';
-        video.currentTime = returnTime;
-        video.play();
-        currentAdBreak = null;
-        
-        adBreaks = adBreaks.filter(t => t !== returnTime);
-        createAdMarkers();
-    }
-
-    adVideo.addEventListener('timeupdate', () => {
-        const remaining = Math.ceil(adVideo.duration - adVideo.currentTime);
-        const totalRemaining = remaining + (adQueue.length * 15);
-        adCountdown.textContent = `Publicité - ${formatTime(totalRemaining)} restantes`;
-    });
-
-    adVideo.addEventListener('ended', playNextAd);
-
     video.addEventListener('timeupdate', () => {
-        if (!video.duration || currentAdBreak !== null) {
+        if (!video.duration) {
             if (currentExternalSubtitle) {
                 displayExternalSubtitle(video.currentTime);
             }
@@ -916,14 +734,6 @@
 
         // Vérifier les boutons skip
         checkSkipButtons();
-
-        // Gestion pubs
-        if (PUB_CONFIG.enabled) {
-            const nearestBreak = adBreaks.find(t => Math.abs(currentTime - t) < 0.5);
-            if (nearestBreak && !video.paused) {
-                playAdBreak(nearestBreak);
-            }
-        }
     });
 
     /* ==================== AUDIO & UI ==================== */
@@ -1010,168 +820,15 @@
         return track.language ? track.language.toUpperCase() : 'Audio';
     }
 
-    /* ==================== CHARGEMENT SPRITES ==================== */
-    async function loadSprites() {
-        try {
-            const url = `https://zebi.topstrime.online/thumbnails/movie-${MOVIE_CONFIG.tmdb_id}/meta.json`;
-            console.log('📊 Chargement sprites depuis:', url);
-            
-            const response = await fetch(url);
-            if (!response.ok) {
-                console.error('❌ Erreur HTTP sprites:', response.status);
-                return;
-            }
-            
-            spriteData = await response.json();
-            console.log('✅ Sprites chargés:', spriteData);
-            console.log(`   - ${spriteData.sprites.length} fichiers sprite`);
-            console.log(`   - Intervalle: ${spriteData.interval}s entre chaque vignette`);
-            console.log(`   - Grille: ${spriteData.tile[0]}x${spriteData.tile[1]}`);
-            console.log(`   - Taille vignette: ${spriteData.size[0]}x${spriteData.size[1]}px`);
-        } catch (e) {
-            console.error('❌ Erreur chargement sprites:', e);
-            spriteData = null;
-        }
-    }
-
-    function getSpriteInfoAtTime(time) {
-        if (!spriteData || !spriteData.sprites) {
-            return null;
-        }
-        
-        // time est déjà en secondes (comme start et end dans le JSON)
-        for (const sprite of spriteData.sprites) {
-            if (time >= sprite.start && time < sprite.end) {
-                return {
-                    file: sprite.file,
-                    start: sprite.start,     // en secondes
-                    end: sprite.end,         // en secondes
-                    interval: spriteData.interval,    // 10 secondes
-                    cols: spriteData.tile[0],         // 10
-                    rows: spriteData.tile[1],         // 10
-                    thumbWidth: spriteData.size[0],   // 160px
-                    thumbHeight: spriteData.size[1]   // 90px
-                };
-            }
-        }
-        return null;
-    }
-
-    async function drawSpritePreview(spriteInfo, time) {
-        if (!spriteInfo || !spriteInfo.file) {
-            console.log('⚠️ Pas de sprite info');
-            return;
-        }
-        
-        // Charger l'image sprite si pas déjà chargée
-        if (!loadedSprites[spriteInfo.file]) {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            
-            const fullUrl = `https://zebi.topstrime.online/thumbnails/movie-${MOVIE_CONFIG.tmdb_id}/${spriteInfo.file}`;
-            console.log('🖼️ Chargement image sprite:', spriteInfo.file);
-            
-            try {
-                await new Promise((resolve, reject) => {
-                    const timeout = setTimeout(() => {
-                        reject(new Error('Timeout'));
-                    }, 5000);
-                    
-                    img.onload = () => {
-                        clearTimeout(timeout);
-                        console.log(`✅ Image chargée: ${spriteInfo.file} (${img.width}x${img.height})`);
-                        resolve();
-                    };
-                    img.onerror = (e) => {
-                        clearTimeout(timeout);
-                        console.error('❌ Erreur chargement:', fullUrl);
-                        reject(e);
-                    };
-                    img.src = fullUrl;
-                });
-                
-                loadedSprites[spriteInfo.file] = img;
-            } catch (e) {
-                console.error('❌ Impossible de charger le sprite:', e);
-                return;
-            }
-        }
-        
-        const img = loadedSprites[spriteInfo.file];
-        
-        // Vérifier que l'image est valide
-        if (!img.complete || img.naturalWidth === 0) {
-            console.error('❌ Image non valide');
-            return;
-        }
-        
-        const ctx = previewCanvas.getContext('2d');
-        
-        /*
-         * CALCUL DE LA VIGNETTE À AFFICHER
-         * 
-         * Exemple: time = 1705 secondes
-         * - spriteInfo.start = 1000 (début de ce fichier sprite)
-         * - spriteInfo.end = 2000 (fin de ce fichier sprite)
-         * - spriteInfo.interval = 10 (une vignette toutes les 10 secondes)
-         * 
-         * timeInSprite = 1705 - 1000 = 705 secondes depuis le début de ce sprite
-         * thumbnailIndex = floor(705 / 10) = 70
-         * 
-         * Grille 10x10 = 100 vignettes par sprite
-         * row = floor(70 / 10) = 7 (8ème ligne, index 0)
-         * col = 70 % 10 = 0 (1ère colonne)
-         */
-        
-        const timeInSprite = time - spriteInfo.start;  // Temps depuis le début de CE sprite (en secondes)
-        const thumbnailIndex = Math.floor(timeInSprite / spriteInfo.interval);  // Quelle vignette dans la grille 10x10
-        
-        const row = Math.floor(thumbnailIndex / spriteInfo.cols);
-        const col = thumbnailIndex % spriteInfo.cols;
-        
-        // Position dans l'image source (en pixels)
-        const sx = col * spriteInfo.thumbWidth;   // 160px * col
-        const sy = row * spriteInfo.thumbHeight;  // 90px * row
-        
-        console.log(`🎯 Affichage vignette:
-   Temps vidéo: ${time.toFixed(1)}s
-   Fichier: ${spriteInfo.file}
-   Temps dans sprite: ${timeInSprite.toFixed(1)}s
-   Index vignette: ${thumbnailIndex}
-   Position: ligne ${row}, colonne ${col}
-   Découpe: (${sx}, ${sy}, ${spriteInfo.thumbWidth}, ${spriteInfo.thumbHeight})`);
-        
-        // Dessiner la vignette
-        ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
-        
-        try {
-            ctx.drawImage(
-                img,
-                sx, sy, spriteInfo.thumbWidth, spriteInfo.thumbHeight,     // Source: portion de l'image sprite
-                0, 0, previewCanvas.width, previewCanvas.height            // Destination: canvas entier
-            );
-            console.log('✅ Vignette affichée');
-        } catch (e) {
-            console.error('❌ Erreur drawImage:', e);
-        }
-    }
-
     /* ==================== INIT PLAYER ==================== */
     async function init() {
         if(!checkSecurity()) return;
 
         // Charger les données
-        const loadPromises = [
+        await Promise.all([
             loadExternalSubtitles(),
             loadMovieTitle()
-        ];
-        
-        // Charger les sprites uniquement si activé
-        if (PREVIEW_CONFIG.sprites_enabled) {
-            loadPromises.push(loadSprites());
-        }
-        
-        await Promise.all(loadPromises);
+        ]);
 
         shaka.polyfill.installAll();
         if (shaka.Player.isBrowserSupported()) {
@@ -1192,9 +849,6 @@
                 
                 loadState();
                 showUI();
-                
-                adBreaks = calculateAdBreaks(video.duration);
-                createAdMarkers();
                 
                 setTimeout(() => {
                     const savedSub = localStorage.getItem(getStorageKey('lang_sub'));
@@ -1341,29 +995,6 @@
         timeDisplay.innerText = formatTime(video.currentTime) + " / " + formatTime(video.duration);
     };
 
-    seekContainer.addEventListener('mousemove', async (e) => {
-        if (!playerLoaded) return;
-        const rect = seekContainer.getBoundingClientRect();
-        const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-        const targetTime = pos * video.duration;
-        tooltip.style.display = 'flex'; 
-        tooltip.style.left = e.clientX + "px";
-        previewTimeText.innerText = formatTime(targetTime);
-        
-        // Afficher la preview sprite uniquement si activé
-        if (PREVIEW_CONFIG.sprites_enabled) {
-            const spriteInfo = getSpriteInfoAtTime(targetTime);
-            if (spriteInfo) {
-                await drawSpritePreview(spriteInfo, targetTime);
-            }
-        } else {
-            // Effacer le canvas si les sprites sont désactivés
-            const ctx = previewCanvas.getContext('2d');
-            ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
-        }
-    });
-    
-    seekContainer.addEventListener('mouseleave', () => tooltip.style.display = 'none');
     seekContainer.addEventListener('click', (e) => {
         if (!playerLoaded) return;
         e.stopPropagation();
