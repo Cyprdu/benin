@@ -1009,18 +1009,22 @@
     async function loadSprites() {
         try {
             const url = `https://zebi.topstrime.online/thumbnails/movie-${MOVIE_CONFIG.tmdb_id}/meta.json`;
-            console.log('Tentative de chargement sprites:', url);
+            console.log('📊 Chargement sprites depuis:', url);
             
             const response = await fetch(url);
             if (!response.ok) {
-                console.error('Erreur HTTP sprites:', response.status);
+                console.error('❌ Erreur HTTP sprites:', response.status);
                 return;
             }
             
             spriteData = await response.json();
-            console.log('Sprites chargés avec succès:', spriteData);
+            console.log('✅ Sprites chargés:', spriteData);
+            console.log(`   - ${spriteData.sprites.length} fichiers sprite`);
+            console.log(`   - Intervalle: ${spriteData.interval}s entre chaque vignette`);
+            console.log(`   - Grille: ${spriteData.tile[0]}x${spriteData.tile[1]}`);
+            console.log(`   - Taille vignette: ${spriteData.size[0]}x${spriteData.size[1]}px`);
         } catch (e) {
-            console.error('Erreur chargement sprites:', e);
+            console.error('❌ Erreur chargement sprites:', e);
             spriteData = null;
         }
     }
@@ -1030,21 +1034,18 @@
             return null;
         }
         
-        // Convertir le temps en millisecondes
-        const timeMs = time * 1000;
-        
+        // time est déjà en secondes (comme start et end dans le JSON)
         for (const sprite of spriteData.sprites) {
-            if (timeMs >= sprite.start && timeMs < sprite.end) {
+            if (time >= sprite.start && time < sprite.end) {
                 return {
                     file: sprite.file,
-                    start: sprite.start,
-                    end: sprite.end,
-                    // Propriétés globales
-                    interval: spriteData.interval,
-                    cols: spriteData.tile[0],
-                    rows: spriteData.tile[1],
-                    width: spriteData.size[0],
-                    height: spriteData.size[1]
+                    start: sprite.start,     // en secondes
+                    end: sprite.end,         // en secondes
+                    interval: spriteData.interval,    // 10 secondes
+                    cols: spriteData.tile[0],         // 10
+                    rows: spriteData.tile[1],         // 10
+                    thumbWidth: spriteData.size[0],   // 160px
+                    thumbHeight: spriteData.size[1]   // 90px
                 };
             }
         }
@@ -1053,13 +1054,8 @@
 
     async function drawSpritePreview(spriteInfo, time) {
         if (!spriteInfo || !spriteInfo.file) {
+            console.log('⚠️ Pas de sprite info');
             return;
-        }
-        
-        // Initialiser les dimensions du canvas si pas encore fait
-        if (previewCanvas.width === 0) {
-            previewCanvas.width = 240;
-            previewCanvas.height = 135;
         }
         
         // Charger l'image sprite si pas déjà chargée
@@ -1068,22 +1064,22 @@
             img.crossOrigin = 'anonymous';
             
             const fullUrl = `https://zebi.topstrime.online/thumbnails/movie-${MOVIE_CONFIG.tmdb_id}/${spriteInfo.file}`;
-            console.log('Chargement sprite:', fullUrl);
+            console.log('🖼️ Chargement image sprite:', spriteInfo.file);
             
             try {
                 await new Promise((resolve, reject) => {
                     const timeout = setTimeout(() => {
-                        reject(new Error('Timeout chargement sprite'));
+                        reject(new Error('Timeout'));
                     }, 5000);
                     
                     img.onload = () => {
                         clearTimeout(timeout);
-                        console.log('Sprite chargé:', spriteInfo.file, 'Dimensions:', img.width, 'x', img.height);
+                        console.log(`✅ Image chargée: ${spriteInfo.file} (${img.width}x${img.height})`);
                         resolve();
                     };
                     img.onerror = (e) => {
                         clearTimeout(timeout);
-                        console.error('Erreur chargement image sprite:', fullUrl);
+                        console.error('❌ Erreur chargement:', fullUrl);
                         reject(e);
                     };
                     img.src = fullUrl;
@@ -1091,48 +1087,54 @@
                 
                 loadedSprites[spriteInfo.file] = img;
             } catch (e) {
-                console.error('Impossible de charger le sprite:', e);
+                console.error('❌ Impossible de charger le sprite:', e);
                 return;
             }
         }
         
         const img = loadedSprites[spriteInfo.file];
-        const ctx = previewCanvas.getContext('2d');
         
+        // Vérifier que l'image est valide
         if (!img.complete || img.naturalWidth === 0) {
-            console.error('Image sprite non valide');
+            console.error('❌ Image non valide');
             return;
         }
         
-        // Calculer quelle vignette afficher
-        const timeMs = time * 1000; // Convertir en millisecondes
-        const timeInSprite = timeMs - spriteInfo.start; // Temps depuis le début de ce sprite
-        const thumbnailIndex = Math.floor(timeInSprite / (spriteInfo.interval * 1000)); // interval est en secondes
+        const ctx = previewCanvas.getContext('2d');
         
-        const cols = spriteInfo.cols; // 10
-        const row = Math.floor(thumbnailIndex / cols);
-        const col = thumbnailIndex % cols;
+        /*
+         * CALCUL DE LA VIGNETTE À AFFICHER
+         * 
+         * Exemple: time = 1705 secondes
+         * - spriteInfo.start = 1000 (début de ce fichier sprite)
+         * - spriteInfo.end = 2000 (fin de ce fichier sprite)
+         * - spriteInfo.interval = 10 (une vignette toutes les 10 secondes)
+         * 
+         * timeInSprite = 1705 - 1000 = 705 secondes depuis le début de ce sprite
+         * thumbnailIndex = floor(705 / 10) = 70
+         * 
+         * Grille 10x10 = 100 vignettes par sprite
+         * row = floor(70 / 10) = 7 (8ème ligne, index 0)
+         * col = 70 % 10 = 0 (1ère colonne)
+         */
         
-        const thumbWidth = spriteInfo.width;   // 160px
-        const thumbHeight = spriteInfo.height; // 90px
+        const timeInSprite = time - spriteInfo.start;  // Temps depuis le début de CE sprite (en secondes)
+        const thumbnailIndex = Math.floor(timeInSprite / spriteInfo.interval);  // Quelle vignette dans la grille 10x10
         
-        // Position source dans l'image sprite
-        const sx = col * thumbWidth;
-        const sy = row * thumbHeight;
+        const row = Math.floor(thumbnailIndex / spriteInfo.cols);
+        const col = thumbnailIndex % spriteInfo.cols;
         
-        console.log('Affichage vignette:', {
-            time: time,
-            timeMs: timeMs,
-            timeInSprite: timeInSprite,
-            thumbnailIndex: thumbnailIndex,
-            row: row,
-            col: col,
-            sx: sx,
-            sy: sy,
-            thumbWidth: thumbWidth,
-            thumbHeight: thumbHeight,
-            imgDimensions: `${img.width}x${img.height}`
-        });
+        // Position dans l'image source (en pixels)
+        const sx = col * spriteInfo.thumbWidth;   // 160px * col
+        const sy = row * spriteInfo.thumbHeight;  // 90px * row
+        
+        console.log(`🎯 Affichage vignette:
+   Temps vidéo: ${time.toFixed(1)}s
+   Fichier: ${spriteInfo.file}
+   Temps dans sprite: ${timeInSprite.toFixed(1)}s
+   Index vignette: ${thumbnailIndex}
+   Position: ligne ${row}, colonne ${col}
+   Découpe: (${sx}, ${sy}, ${spriteInfo.thumbWidth}, ${spriteInfo.thumbHeight})`);
         
         // Dessiner la vignette
         ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
@@ -1140,12 +1142,12 @@
         try {
             ctx.drawImage(
                 img,
-                sx, sy, thumbWidth, thumbHeight,           // Source (portion de l'image sprite)
-                0, 0, previewCanvas.width, previewCanvas.height  // Destination (canvas entier)
+                sx, sy, spriteInfo.thumbWidth, spriteInfo.thumbHeight,     // Source: portion de l'image sprite
+                0, 0, previewCanvas.width, previewCanvas.height            // Destination: canvas entier
             );
-            console.log('Vignette dessinée avec succès');
+            console.log('✅ Vignette affichée');
         } catch (e) {
-            console.error('Erreur dessin canvas:', e);
+            console.error('❌ Erreur drawImage:', e);
         }
     }
 
