@@ -345,6 +345,7 @@
             background: #111; 
             border-radius: 3px; 
             border: 2px solid rgba(255,255,255,0.3); 
+            display: block;
         }
         .preview-time { 
             margin-top: 6px; 
@@ -522,7 +523,7 @@
             <div class="seek-container" id="seek-container">
                 <div class="seek-fill" id="seek-fill"></div>
                 <div class="preview-tooltip" id="preview-tooltip">
-                    <canvas id="preview-canvas"></canvas>
+                    <canvas id="preview-canvas" width="240" height="135"></canvas>
                     <div class="preview-time" id="preview-time">00:00</div>
                 </div>
             </div>
@@ -555,11 +556,11 @@
         // Configuration du générique de début (skip intro)
         skip_intro_enabled: true,
         skip_intro_start: "00:00:00", // Début du générique (format HH:MM:SS)
-        skip_intro_end: "00:00:57",   // Fin du générique
+        skip_intro_end: "00:04:30",   // Fin du générique
         
         // Configuration du générique de fin (skip credits)
         skip_credits_enabled: true,
-        skip_credits_start: "02:43:22", // Début du générique de fin
+        skip_credits_start: "02:45:00", // Début du générique de fin
         redirect_url: "info-{tmdb_id}.html" // URL de redirection (sera remplacé par l'ID TMDB)
     };
 
@@ -1055,17 +1056,33 @@
             return;
         }
         
+        // Initialiser les dimensions du canvas si pas encore fait
+        if (previewCanvas.width === 0) {
+            previewCanvas.width = 240;
+            previewCanvas.height = 135;
+        }
+        
         // Charger l'image sprite si pas déjà chargée
         if (!loadedSprites[spriteInfo.file]) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
             
             const fullUrl = `https://zebi.topstrime.online/thumbnails/movie-${MOVIE_CONFIG.tmdb_id}/${spriteInfo.file}`;
+            console.log('Chargement sprite:', fullUrl);
             
             try {
                 await new Promise((resolve, reject) => {
-                    img.onload = resolve;
+                    const timeout = setTimeout(() => {
+                        reject(new Error('Timeout chargement sprite'));
+                    }, 5000);
+                    
+                    img.onload = () => {
+                        clearTimeout(timeout);
+                        console.log('Sprite chargé:', spriteInfo.file, 'Dimensions:', img.width, 'x', img.height);
+                        resolve();
+                    };
                     img.onerror = (e) => {
+                        clearTimeout(timeout);
                         console.error('Erreur chargement image sprite:', fullUrl);
                         reject(e);
                     };
@@ -1082,26 +1099,51 @@
         const img = loadedSprites[spriteInfo.file];
         const ctx = previewCanvas.getContext('2d');
         
+        if (!img.complete || img.naturalWidth === 0) {
+            console.error('Image sprite non valide');
+            return;
+        }
+        
         // Calculer quelle vignette afficher
         const timeMs = time * 1000; // Convertir en millisecondes
-        const timeInSprite = timeMs - spriteInfo.start;
+        const timeInSprite = timeMs - spriteInfo.start; // Temps depuis le début de ce sprite
         const thumbnailIndex = Math.floor(timeInSprite / (spriteInfo.interval * 1000)); // interval est en secondes
         
-        const cols = spriteInfo.cols;
+        const cols = spriteInfo.cols; // 10
         const row = Math.floor(thumbnailIndex / cols);
         const col = thumbnailIndex % cols;
         
-        const thumbWidth = spriteInfo.width;
-        const thumbHeight = spriteInfo.height;
+        const thumbWidth = spriteInfo.width;   // 160px
+        const thumbHeight = spriteInfo.height; // 90px
+        
+        // Position source dans l'image sprite
+        const sx = col * thumbWidth;
+        const sy = row * thumbHeight;
+        
+        console.log('Affichage vignette:', {
+            time: time,
+            timeMs: timeMs,
+            timeInSprite: timeInSprite,
+            thumbnailIndex: thumbnailIndex,
+            row: row,
+            col: col,
+            sx: sx,
+            sy: sy,
+            thumbWidth: thumbWidth,
+            thumbHeight: thumbHeight,
+            imgDimensions: `${img.width}x${img.height}`
+        });
         
         // Dessiner la vignette
         ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+        
         try {
             ctx.drawImage(
                 img,
-                col * thumbWidth, row * thumbHeight, thumbWidth, thumbHeight,
-                0, 0, previewCanvas.width, previewCanvas.height
+                sx, sy, thumbWidth, thumbHeight,           // Source (portion de l'image sprite)
+                0, 0, previewCanvas.width, previewCanvas.height  // Destination (canvas entier)
             );
+            console.log('Vignette dessinée avec succès');
         } catch (e) {
             console.error('Erreur dessin canvas:', e);
         }
