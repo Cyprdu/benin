@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refuge des oubliés - Documentaire</title>
-    <!-- Polices Google Fonts pour un rendu cinéma haut de gamme -->
+    <!-- Polices Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -324,26 +324,24 @@
             width: auto;
             max-width: 220px;
             object-fit: contain;
-            /* Uniformisation : on force les logos en blanc pur et légèrement transparents */
             filter: grayscale(100%) brightness(0) invert(1) opacity(0.7);
             transition: filter 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
         }
 
-        /* Au survol, le logo retrouve sa couleur d'origine pour être respectueux de la charte */
         .partner-logo:hover {
             filter: none;
             opacity: 1;
             transform: scale(1.05);
         }
 
-        /* Lecteur plein écran (Overlay / Modal) */
+        /* LECTEUR VIDÉO (Plein écran / Overlay) */
         .video-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.95);
+            background-color: #000;
             z-index: 9999;
             display: flex;
             align-items: center;
@@ -359,13 +357,9 @@
         }
 
         .video-container {
-            width: 90%;
-            max-width: 1000px;
-            aspect-ratio: 16/9;
+            width: 100%;
+            height: 100%;
             position: relative;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.8);
-            border-radius: 8px;
-            overflow: hidden;
             background: #000;
         }
 
@@ -375,38 +369,36 @@
             border: none;
         }
 
+        /* Bouton fermer flottant */
         .close-btn {
             position: absolute;
-            top: -50px;
-            right: 0;
-            background: none;
-            border: none;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
             color: #fff;
-            font-size: 1.5rem;
+            font-size: 0.9rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
-            transition: color 0.2s ease;
+            transition: background-color 0.2s, color 0.2s;
+            z-index: 10;
         }
 
         .close-btn:hover {
-            color: var(--accent-color);
+            background-color: var(--accent-color);
+            color: #fff;
         }
 
         .close-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             fill: currentColor;
-        }
-
-        @media (max-width: 768px) {
-            .close-btn {
-                top: -40px;
-                font-size: 1.1rem;
-            }
         }
 
         footer {
@@ -430,7 +422,7 @@
                         <img src="https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg" alt="Affiche Refuge des oubliés" class="poster-img">
                         <div class="poster-play-overlay">
                             <div class="play-icon-large">
-                                <svg viewBox="0 0 24 24" width="36" height="36" fill="#white">
+                                <svg viewBox="0 0 24 24" width="36" height="36" fill="white">
                                     <path d="M8 5v14l11-7z"/>
                                 </svg>
                             </div>
@@ -513,9 +505,9 @@
         </div>
     </footer>
 
-    <!-- MODAL DU LECTEUR VIDÉO (Plein écran) -->
+    <!-- CONTENEUR DU LECTEUR (Sert de cible pour le plein écran natif) -->
     <div class="video-overlay" id="videoOverlay">
-        <div class="video-container">
+        <div class="video-container" id="videoContainer">
             <button class="close-btn" id="closeVideo">
                 Fermer
                 <svg viewBox="0 0 24 24">
@@ -526,49 +518,88 @@
         </div>
     </div>
 
-    <!-- CODE JAVASCRIPT (Gestion de la lecture vidéo) -->
+    <!-- CODE JAVASCRIPT -->
     <script>
         const videoOverlay = document.getElementById('videoOverlay');
+        const videoContainer = document.getElementById('videoContainer');
         const videoIframe = document.getElementById('videoIframe');
         const mainPlayBtn = document.getElementById('mainPlayBtn');
         const posterPlay = document.getElementById('posterPlay');
         const closeVideo = document.getElementById('closeVideo');
 
-        // URL d'intégration YouTube (avec paramètre Autoplay)
+        // URL d'intégration YouTube (avec lecture automatique forcée)
         const videoUrl = "https://www.youtube.com/embed/OCO9W9VPPc0?autoplay=1&modestbranding=1&rel=0";
 
-        // Fonction pour ouvrir la vidéo
+        // Demande de passage au plein écran natif du navigateur
+        function requestNativeFullscreen(element) {
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) { /* Safari / Chrome iOS */
+                element.webkitRequestFullscreen();
+            } else if (element.mozRequestFullScreen) { /* Firefox */
+                element.mozRequestFullScreen();
+            } else if (element.msRequestFullscreen) { /* IE/Edge */
+                element.msRequestFullscreen();
+            }
+        }
+
+        // Sortie du plein écran natif
+        function exitNativeFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+
+        // Fonction pour démarrer la vidéo et passer en plein écran
         function openPlayer() {
             videoIframe.src = videoUrl;
             videoOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Empêche le défilement en arrière-plan
+            document.body.style.overflow = 'hidden'; // Bloque le scroll
+            
+            // Force le navigateur à basculer en plein écran
+            requestNativeFullscreen(videoOverlay);
         }
 
-        // Fonction pour fermer la vidéo
+        // Fonction pour fermer la vidéo et stopper le flux
         function closePlayer() {
-            videoIframe.src = ""; // Coupe la vidéo en vidant la source
+            videoIframe.src = ""; // Stop le son et l'image de la vidéo
             videoOverlay.classList.remove('active');
-            document.body.style.overflow = 'auto'; // Réactive le défilement
+            document.body.style.overflow = 'auto'; // Restaure le scroll
+            
+            // Si le navigateur est toujours en plein écran, on en sort
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
+                exitNativeFullscreen();
+            }
         }
 
-        // Événements au clic
+        // Événements de clics
         mainPlayBtn.addEventListener('click', openPlayer);
         posterPlay.addEventListener('click', openPlayer);
         closeVideo.addEventListener('click', closePlayer);
 
-        // Fermer la vidéo si on clique en dehors du cadre
-        videoOverlay.addEventListener('click', (e) => {
-            if (e.target === videoOverlay) {
+        // Détection de la fermeture du plein écran par l'utilisateur (Touche ESC / Échap ou bouton retour)
+        function onFullscreenChange() {
+            const isFullscreen = document.fullscreenElement || 
+                                 document.webkitFullscreenElement || 
+                                 document.mozFullScreenElement || 
+                                 document.msFullscreenElement;
+            
+            // Si l'utilisateur a quitté le plein écran natif, on coupe la vidéo proprement
+            if (!isFullscreen && videoOverlay.classList.contains('active')) {
                 closePlayer();
             }
-        });
+        }
 
-        // Touche Échap pour quitter la vidéo
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape" && videoOverlay.classList.contains('active')) {
-                closePlayer();
-            }
-        });
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+        document.addEventListener('mozfullscreenchange', onFullscreenChange);
+        document.addEventListener('MSFullscreenChange', onFullscreenChange);
     </script>
 </body>
 </html>
