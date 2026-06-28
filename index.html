@@ -1,315 +1,696 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Refuge des oubliés</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refuge des Oubliés - Documentaire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: #0a0a0a;
-      color: #e8d5b0;
-      font-family: 'Georgia', serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow-x: hidden;
-    }
+        :root {
+            --gold: #C9A84C;
+            --dark: #0a0a0a;
+            --dark-card: #111111;
+            --dark-mid: #1a1a1a;
+            --text-light: #f0ece4;
+            --text-muted: #9a9080;
+            --accent: #C9A84C;
+        }
 
-    .page-bg {
-      position: fixed;
-      inset: 0;
-      background: 
-        radial-gradient(ellipse at 20% 50%, rgba(139, 90, 43, 0.08) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, rgba(139, 90, 43, 0.05) 0%, transparent 50%),
-        #0a0a0a;
-      z-index: 0;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .film-poster {
-      position: fixed;
-      top: 0; right: 0;
-      width: 42%;
-      height: 100vh;
-      object-fit: cover;
-      object-position: center top;
-      opacity: 0.55;
-      z-index: 1;
-      mask-image: linear-gradient(to right, transparent 5%, black 100%);
-      -webkit-mask-image: linear-gradient(to right, transparent 5%, black 100%);
-    }
+        body {
+            background-color: var(--dark);
+            color: var(--text-light);
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+        }
 
-    .overlay-gradient {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(
-        to right,
-        rgba(10, 10, 10, 0.97) 35%,
-        rgba(10, 10, 10, 0.75) 60%,
-        rgba(10, 10, 10, 0.3) 100%
-      );
-      z-index: 1;
-    }
+        /* ─── HERO ─── */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-    .content {
-      position: relative;
-      z-index: 2;
-      max-width: 600px;
-      padding: 48px 48px 48px 48px;
-    }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg');
+            background-size: cover;
+            background-position: center top;
+            filter: brightness(0.35);
+            transform: scale(1.05);
+            transition: transform 8s ease;
+        }
 
-    .genre-badge {
-      display: inline-block;
-      border: 1px solid rgba(201, 163, 76, 0.5);
-      color: #c9a34c;
-      font-size: 0.7rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      padding: 5px 16px;
-      margin-bottom: 28px;
-    }
+        .hero:hover .hero-bg {
+            transform: scale(1.0);
+        }
 
-    h1 {
-      font-size: 3.4rem;
-      font-weight: 400;
-      line-height: 1.1;
-      letter-spacing: 0.02em;
-      margin-bottom: 36px;
-      color: #f5e6c8;
-    }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(10,10,10,0.2) 0%,
+                rgba(10,10,10,0.1) 40%,
+                rgba(10,10,10,0.85) 100%
+            );
+        }
 
-    h1 em {
-      font-style: normal;
-      color: #c9a34c;
-    }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+        }
 
-    .description {
-      font-size: 1rem;
-      line-height: 1.85;
-      color: #b8a88a;
-      margin-bottom: 48px;
-      max-width: 520px;
-    }
+        .hero-tag {
+            display: inline-block;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 0.35rem 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.2s forwards;
+        }
 
-    .btn-watch {
-      background: transparent;
-      border: 1.5px solid #c9a34c;
-      color: #c9a34c;
-      font-family: 'Georgia', serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding: 14px 48px;
-      cursor: pointer;
-      transition: background 0.3s, color 0.3s;
-    }
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: 0.04em;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.5s forwards;
+        }
 
-    .btn-watch:hover {
-      background: #c9a34c;
-      color: #0a0a0a;
-    }
+        .hero-title span {
+            color: var(--gold);
+        }
 
-    /* ── Modal ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-    }
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            font-family: 'Arial', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 1rem 2.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.8s forwards;
+        }
 
-    .modal-box {
-      background: #141210;
-      border: 1px solid rgba(201,163,76,0.25);
-      padding: 44px 52px;
-      text-align: center;
-      max-width: 380px;
-      width: 90%;
-    }
+        .play-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
 
-    .modal-box h2 {
-      font-size: 1.1rem;
-      font-weight: 400;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #c9a34c;
-      margin-bottom: 28px;
-    }
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 7px 0 7px 14px;
+            border-color: transparent transparent transparent currentColor;
+            display: inline-block;
+        }
 
-    .modal-box input[type="password"] {
-      width: 100%;
-      background: #0f0d0b;
-      border: 1px solid rgba(201,163,76,0.3);
-      color: #e8d5b0;
-      font-family: 'Georgia', serif;
-      font-size: 1.2rem;
-      letter-spacing: 0.3em;
-      text-align: center;
-      padding: 12px 16px;
-      outline: none;
-      margin-bottom: 20px;
-    }
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            animation: fadeIn 1s ease 1.5s forwards;
+        }
 
-    .modal-box input[type="password"]:focus {
-      border-color: #c9a34c;
-    }
+        .scroll-hint span {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
 
-    .modal-btn {
-      background: #c9a34c;
-      border: none;
-      color: #0a0a0a;
-      font-family: 'Georgia', serif;
-      font-size: 0.8rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding: 12px 36px;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: pulse 2s ease infinite;
+        }
 
-    .modal-btn:hover { opacity: 0.8; }
+        /* ─── SYNOPSIS ─── */
+        .section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
 
-    .modal-error {
-      color: #d4553a;
-      font-size: 0.8rem;
-      margin-top: 14px;
-      display: none;
-      letter-spacing: 0.05em;
-    }
+        .section-label {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-    .modal-close {
-      position: absolute;
-      top: 14px; right: 18px;
-      background: none;
-      border: none;
-      color: #666;
-      font-size: 1.4rem;
-      cursor: pointer;
-      line-height: 1;
-    }
+        .section-label::after {
+            content: '';
+            flex: 0 0 50px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.5;
+        }
 
-    /* ── Video overlay ── */
-    .video-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: #000;
-    }
+        .synopsis-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 5rem;
+            align-items: center;
+        }
 
-    .video-overlay iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
+        .synopsis-poster {
+            position: relative;
+        }
 
-    .video-close {
-      position: absolute;
-      top: 18px; right: 24px;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 2rem;
-      cursor: pointer;
-      line-height: 1;
-      z-index: 201;
-    }
-  </style>
+        .synopsis-poster img {
+            width: 100%;
+            display: block;
+            border-radius: 2px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+        }
+
+        .synopsis-poster::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 2px;
+            pointer-events: none;
+        }
+
+        .synopsis-text {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: #c5bdb0;
+            font-style: italic;
+        }
+
+        .synopsis-text p::first-letter {
+            font-size: 3.5rem;
+            line-height: 0.8;
+            float: left;
+            margin-right: 0.15em;
+            margin-top: 0.05em;
+            color: var(--gold);
+            font-style: normal;
+        }
+
+        .director-credit {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(201,168,76,0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .director-credit .label {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .director-credit .name {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            letter-spacing: 0.05em;
+        }
+
+        .divider {
+            width: 1px;
+            height: 30px;
+            background: rgba(201,168,76,0.3);
+        }
+
+        /* ─── SÉPARATEUR ─── */
+        .separator {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .separator hr {
+            border: none;
+            border-top: 1px solid rgba(201,168,76,0.15);
+        }
+
+        /* ─── MISSIONARIES ─── */
+        .missionaries-section {
+            background: var(--dark-mid);
+        }
+
+        .missionaries-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .missionary-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        .missionary-img-wrap {
+            position: relative;
+            width: 180px;
+            height: 180px;
+        }
+
+        .missionary-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid rgba(201,168,76,0.3);
+            filter: grayscale(20%);
+            transition: filter 0.3s ease;
+        }
+
+        .missionary-card:hover .missionary-img-wrap img {
+            filter: grayscale(0%);
+        }
+
+        .missionary-img-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid rgba(201,168,76,0.15);
+        }
+
+        .missionary-name {
+            font-size: 1.3rem;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+        }
+
+        .missionary-role {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-top: -0.5rem;
+        }
+
+        /* ─── PARTNERS ─── */
+        .partners-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4rem;
+            align-items: center;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .partner-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .partner-logo {
+            height: 60px;
+            width: auto;
+            max-width: 160px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.6;
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        .partner-item:hover .partner-logo {
+            opacity: 1;
+            filter: brightness(0) saturate(100%) invert(74%) sepia(50%) saturate(400%) hue-rotate(5deg) brightness(95%);
+        }
+
+        .partner-name {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: #050505;
+            border-top: 1px solid rgba(201,168,76,0.1);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 1.4rem;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-sub {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* ─── MODAL ─── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-inner {
+            position: relative;
+            width: 90vw;
+            max-width: 1000px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -3rem;
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-family: 'Arial', sans-serif;
+            letter-spacing: 0.1em;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: var(--gold);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            border: 1px solid rgba(201,168,76,0.2);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50%       { opacity: 1; }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .synopsis-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .synopsis-poster {
+                max-width: 280px;
+                margin: 0 auto;
+            }
+
+            .missionaries-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .partners-grid {
+                gap: 2.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="page-bg"></div>
-  <img class="film-poster" src="https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg" alt="Affiche Refuge des oubliés">
-  <div class="overlay-gradient"></div>
+    <!-- ══════════════ HERO ══════════════ -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
 
-  <div class="content">
-    <div class="genre-badge">Documentaire</div>
-    <h1>Refuge des <em>oubliés</em></h1>
-    <p class="description">
-      Au Bénin, pays de plus de 14 millions d'habitants, il n'existe qu'un seul hôpital psychiatrique public, dont l'accès est conditionné par des moyens financiers que la majorité ne possède pas. Face à cette détresse, l'association Saint-Camille de Lellis se mobilise pour offrir une prise en charge totalement gratuite à ces malades délaissés. C'est au sein de cette mission que Noémie et Suzanne se sont engagées bénévolement. À travers leur regard, ce documentaire nous plonge au cœur d'une dure réalité, révélant pourtant, au-delà de la souffrance et de la précarité, la joie profonde et contagieuse qui habite les malades.
-    </p>
-    <button class="btn-watch" id="btnWatch">&#9654; Regarder</button>
-  </div>
+        <div class="hero-content">
+            <div class="hero-tag">Documentaire</div>
+            <h1 class="hero-title">Refuge des<br><span>Oubliés</span></h1>
+            <button class="play-btn" id="playBtn" aria-label="Voir la bande-annonce">
+                <span class="play-icon"></span>
+                Voir le documentaire
+            </button>
+        </div>
 
-  <!-- Password Modal -->
-  <div class="modal-overlay" id="passwordModal">
-    <div class="modal-box">
-      <h2>Accès protégé</h2>
-      <input type="password" id="passwordInput" placeholder="Mot de passe" autocomplete="off">
-      <button class="modal-btn" id="confirmBtn">Valider</button>
-      <p class="modal-error" id="passwordError">Mot de passe incorrect.</p>
+        <div class="scroll-hint">
+            <span>Découvrir</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ══════════════ SYNOPSIS ══════════════ -->
+    <section class="section">
+        <div class="section-label">Synopsis</div>
+
+        <div class="synopsis-grid">
+            <div class="synopsis-poster">
+                <img
+                    src="https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg"
+                    alt="Affiche du documentaire Refuge des Oubliés"
+                />
+            </div>
+
+            <div>
+                <div class="synopsis-text">
+                    <p>Au Bénin, pays de plus de 14&nbsp;millions d'habitants, il n'existe qu'un seul hôpital psychiatrique public, dont l'accès est conditionné par des moyens financiers que la majorité ne possède pas. Face à cette détresse, l'association Saint-Camille de Lellis se mobilise pour offrir une prise en charge totalement gratuite à ces malades délaissés.</p>
+                </div>
+                <br>
+                <div class="synopsis-text" style="font-style: normal; font-size: 1rem; color: #a09890;">
+                    <p>C'est au sein de cette mission que Noémie et Suzanne se sont engagées bénévolement. À travers leur regard, ce documentaire nous plonge au cœur d'une dure réalité, révélant pourtant, au-delà de la souffrance et de la précarité, la joie profonde et contagieuse qui habite les malades.</p>
+                </div>
+
+                <div class="director-credit">
+                    <div>
+                        <div class="label">Réalisateur</div>
+                        <div class="name">Cyprien Veyret</div>
+                    </div>
+                    <div class="divider"></div>
+                    <div>
+                        <div class="label">Genre</div>
+                        <div class="name">Documentaire</div>
+                    </div>
+                    <div class="divider"></div>
+                    <div>
+                        <div class="label">Pays</div>
+                        <div class="name">Bénin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ MISSIONARIES ══════════════ -->
+    <section class="missionaries-section">
+        <div class="section">
+            <div class="section-label">Missionnaires au cœur du film</div>
+
+            <div class="missionaries-grid">
+                <div class="missionary-card">
+                    <div class="missionary-img-wrap">
+                        <img
+                            src="https://www.fidesco.fr/images-mission-vsi-catholique/elementor/thumbs/veyret2025-portrait-r7jjs99dezviqi282ud2relejjyojwnfze5xhtq2u8.jpg"
+                            alt="Portrait de Noémie Veyret"
+                        />
+                    </div>
+                    <div>
+                        <div class="missionary-name">Noémie Veyret</div>
+                        <div class="missionary-role">Missionnaire bénévole</div>
+                    </div>
+                </div>
+
+                <div class="missionary-card">
+                    <div class="missionary-img-wrap">
+                        <img
+                            src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/06/callies2025-portrait-300x300.jpg"
+                            alt="Portrait de Suzanne Callies"
+                        />
+                    </div>
+                    <div>
+                        <div class="missionary-name">Suzanne Callies</div>
+                        <div class="missionary-role">Missionnaire bénévole</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ PARTNERS ══════════════ -->
+    <section class="section">
+        <div class="section-label">Partenaires</div>
+
+        <div class="partners-grid">
+            <div class="partner-item">
+                <img
+                    class="partner-logo"
+                    src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/01/logo-fidesco.svg"
+                    alt="Logo Fidesco"
+                />
+                <span class="partner-name">Fidesco</span>
+            </div>
+
+            <div class="partner-item">
+                <img
+                    class="partner-logo"
+                    src="https://associationsaintcamille.org/wp-content/uploads/2018/06/cropped-LOGO-AMELIORE-2-1.png"
+                    alt="Logo Association Saint Camille de Lellis"
+                />
+                <span class="partner-name">Association Saint-Camille de Lellis</span>
+            </div>
+
+            <div class="partner-item">
+                <img
+                    class="partner-logo"
+                    src="https://lalande.ent.auvergnerhonealpes.fr/lectureFichiergw.do?ID_FICHIER=1491401240635"
+                    alt="Logo Lycée Lalande"
+                />
+                <span class="partner-name">Lycée Lalande</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ FOOTER ══════════════ -->
+    <footer>
+        <div class="footer-title">Refuge des Oubliés</div>
+        <div class="footer-sub">Un documentaire de Cyprien Veyret &nbsp;·&nbsp; Bénin</div>
+    </footer>
+
+    <!-- ══════════════ MODAL VIDÉO ══════════════ -->
+    <div class="modal-overlay" id="videoModal" role="dialog" aria-modal="true" aria-label="Lecteur vidéo">
+        <div class="modal-inner">
+            <button class="modal-close" id="closeModal">
+                ✕ &nbsp;Fermer
+            </button>
+            <div class="video-container">
+                <iframe
+                    id="youtubeFrame"
+                    src=""
+                    title="Refuge des Oubliés - Documentaire"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                ></iframe>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Video Overlay -->
-  <div class="video-overlay" id="videoOverlay">
-    <iframe id="videoFrame" src="" allow="autoplay; fullscreen"></iframe>
-    <button class="video-close" id="videoClose">×</button>
-  </div>
+    <script>
+        const playBtn     = document.getElementById('playBtn');
+        const modal       = document.getElementById('videoModal');
+        const closeModal  = document.getElementById('closeModal');
+        const frame       = document.getElementById('youtubeFrame');
+        const videoId     = 'OCO9W9VPPc0';
+        const embedBase   = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
 
-  <script>
-    const btnWatch     = document.getElementById('btnWatch');
-    const modal        = document.getElementById('passwordModal');
-    const pwdInput     = document.getElementById('passwordInput');
-    const confirmBtn   = document.getElementById('confirmBtn');
-    const pwdError     = document.getElementById('passwordError');
-    const videoOverlay = document.getElementById('videoOverlay');
-    const videoFrame   = document.getElementById('videoFrame');
-    const videoClose   = document.getElementById('videoClose');
+        function openModal() {
+            frame.src = embedBase;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-    // ── Open modal ──
-    btnWatch.addEventListener('click', () => {
-      pwdInput.value = '';
-      pwdError.style.display = 'none';
-      modal.style.display = 'flex';
-      pwdInput.focus();
-    });
+        function closeModalFn() {
+            frame.src = '';
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-    // ── Check password ──
-    function checkPassword() {
-      if (pwdInput.value === "9632") {
-        modal.style.display = 'none';
-        videoFrame.src = 'https://www.youtube.com/embed/OCO9W9VPPc0?autoplay=1';
-        videoOverlay.style.display = 'block';
-      } else {
-        pwdError.style.display = 'block';
-        pwdInput.focus();
-      }
-    }
+        playBtn.addEventListener('click', openModal);
+        closeModal.addEventListener('click', closeModalFn);
 
-    confirmBtn.addEventListener('click', checkPassword);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModalFn();
+        });
 
-    pwdInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') checkPassword();
-    });
-
-    // ── Close video ──
-    function closeVideo() {
-      videoOverlay.style.display = 'none';
-      videoFrame.src = '';
-    }
-
-    videoClose.addEventListener('click', closeVideo);
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && videoOverlay.style.display === 'block') {
-        closeVideo();
-      }
-    });
-
-    // ── Close modal on backdrop click ──
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
-  </script>
-
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) closeModalFn();
+        });
+    </script>
 </body>
 </html>
