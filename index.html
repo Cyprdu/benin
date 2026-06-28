@@ -3,693 +3,571 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Refuge des Oubliés - Documentaire</title>
+    <title>Refuge des oubliés - Documentaire</title>
+    <!-- Polices Google Fonts pour un rendu cinéma haut de gamme -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* Variables de couleurs */
+        :root {
+            --bg-color: #0b0c10;
+            --bg-card: #1f2833;
+            --accent-color: #c2410c; /* Rouge ocre / Terre du Bénin */
+            --accent-hover: #ea580c;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --gold: #C9A84C;
-            --dark: #0a0a0a;
-            --dark-card: #111111;
-            --dark-mid: #1a1a1a;
-            --text-light: #f0ece4;
-            --text-muted: #9a9080;
-            --accent: #C9A84C;
-        }
-
-        html {
-            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--dark);
-            color: var(--text-light);
-            font-family: 'Georgia', serif;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* ─── HERO ─── */
-        .hero {
-            position: relative;
-            height: 100vh;
-            min-height: 600px;
+        /* En-tête / Hero Section */
+        header {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            padding: 80px 20px;
+            background: radial-gradient(circle at top, rgba(194, 65, 12, 0.15) 0%, rgba(11, 12, 16, 1) 70%);
         }
 
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            background-image: url('https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg');
-            background-size: cover;
-            background-position: center top;
-            filter: brightness(0.35);
-            transform: scale(1.05);
-            transition: transform 8s ease;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        .hero:hover .hero-bg {
-            transform: scale(1.0);
+        .hero-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
         }
 
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                to bottom,
-                rgba(10,10,10,0.2) 0%,
-                rgba(10,10,10,0.1) 40%,
-                rgba(10,10,10,0.85) 100%
-            );
+        @media (min-width: 900px) {
+            .hero-grid {
+                flex-direction: row;
+                align-items: center;
+            }
         }
 
-        .hero-content {
+        /* Affiche de film */
+        .poster-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
             position: relative;
-            z-index: 2;
-            text-align: center;
-            padding: 2rem;
-            max-width: 800px;
         }
 
-        .hero-tag {
-            display: inline-block;
-            font-family: 'Arial', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.35em;
+        .poster-wrapper {
+            position: relative;
+            max-width: 400px;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(194, 65, 12, 0.2);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .poster-wrapper:hover {
+            transform: scale(1.03);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(194, 65, 12, 0.4);
+        }
+
+        .poster-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Bouton Play sur l'affiche */
+        .poster-play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .poster-wrapper:hover .poster-play-overlay {
+            opacity: 1;
+        }
+
+        .play-icon-large {
+            width: 80px;
+            height: 80px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 0 20px rgba(194, 65, 12, 0.8);
+        }
+
+        .play-icon-large:hover {
+            transform: scale(1.1);
+            background-color: var(--accent-hover);
+        }
+
+        /* Contenu textuel Hero */
+        .hero-content {
+            flex: 1.3;
+        }
+
+        .genre {
+            font-size: 0.9rem;
             text-transform: uppercase;
-            color: var(--gold);
-            border: 1px solid var(--gold);
-            padding: 0.35rem 1rem;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.8s ease 0.2s forwards;
+            letter-spacing: 3px;
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-bottom: 10px;
         }
 
-        .hero-title {
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            font-weight: 400;
+        .title {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            font-weight: 800;
             line-height: 1.1;
-            letter-spacing: 0.04em;
-            color: #fff;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.8s ease 0.5s forwards;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            background: linear-gradient(45deg, #ffffff, #f3f4f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .hero-title span {
-            color: var(--gold);
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2.2rem;
+            }
         }
 
-        .play-btn {
+        .synopsis {
+            font-size: 1.1rem;
+            color: #d1d5db;
+            margin-bottom: 35px;
+            text-align: justify;
+            font-weight: 300;
+        }
+
+        /* Boutons d'action */
+        .btn-play {
             display: inline-flex;
             align-items: center;
-            gap: 0.8rem;
-            background: transparent;
-            border: 2px solid var(--gold);
-            color: var(--gold);
-            font-family: 'Arial', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            padding: 1rem 2.2rem;
+            gap: 12px;
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0;
-            animation: fadeUp 0.8s ease 0.8s forwards;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 20px rgba(194, 65, 12, 0.3);
         }
 
-        .play-btn:hover {
-            background: var(--gold);
-            color: var(--dark);
+        .btn-play:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(194, 65, 12, 0.5);
         }
 
-        .play-icon {
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 7px 0 7px 14px;
-            border-color: transparent transparent transparent currentColor;
-            display: inline-block;
+        .btn-play svg {
+            fill: currentColor;
+            width: 20px;
+            height: 20px;
         }
 
-        .scroll-hint {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            opacity: 0;
-            animation: fadeIn 1s ease 1.5s forwards;
+        /* Section Infos / Equipe */
+        .section-team {
+            padding: 80px 20px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        .scroll-hint span {
-            font-family: 'Arial', sans-serif;
-            font-size: 0.65rem;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        .scroll-line {
-            width: 1px;
-            height: 40px;
-            background: linear-gradient(to bottom, var(--gold), transparent);
-            animation: pulse 2s ease infinite;
-        }
-
-        /* ─── SYNOPSIS ─── */
-        .section {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
-        }
-
-        .section-label {
-            font-family: 'Arial', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .section-label::after {
-            content: '';
-            flex: 0 0 50px;
-            height: 1px;
-            background: var(--gold);
-            opacity: 0.5;
-        }
-
-        .synopsis-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 5rem;
-            align-items: center;
-        }
-
-        .synopsis-poster {
+        .section-title {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 50px;
             position: relative;
         }
 
-        .synopsis-poster img {
-            width: 100%;
-            display: block;
-            border-radius: 2px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-        }
-
-        .synopsis-poster::before {
+        .section-title::after {
             content: '';
-            position: absolute;
-            inset: -8px;
-            border: 1px solid rgba(201,168,76,0.2);
-            border-radius: 2px;
-            pointer-events: none;
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 15px auto 0;
         }
 
-        .synopsis-text {
-            font-size: 1.15rem;
-            line-height: 1.9;
-            color: #c5bdb0;
-            font-style: italic;
+        /* Réalisateur */
+        .director-card {
+            text-align: center;
+            margin-bottom: 60px;
         }
 
-        .synopsis-text p::first-letter {
-            font-size: 3.5rem;
-            line-height: 0.8;
-            float: left;
-            margin-right: 0.15em;
-            margin-top: 0.05em;
-            color: var(--gold);
-            font-style: normal;
-        }
-
-        .director-credit {
-            margin-top: 2.5rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(201,168,76,0.2);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .director-credit .label {
-            font-family: 'Arial', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.25em;
+        .director-role {
+            font-size: 0.9rem;
             text-transform: uppercase;
-            color: var(--text-muted);
+            color: var(--accent-color);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            font-weight: 700;
         }
 
-        .director-credit .name {
-            font-size: 1.05rem;
-            color: var(--text-light);
-            letter-spacing: 0.05em;
+        .director-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Cinzel', serif;
         }
 
-        .divider {
-            width: 1px;
-            height: 30px;
-            background: rgba(201,168,76,0.3);
-        }
-
-        /* ─── SÉPARATEUR ─── */
-        .separator {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .separator hr {
-            border: none;
-            border-top: 1px solid rgba(201,168,76,0.15);
-        }
-
-        /* ─── MISSIONARIES ─── */
-        .missionaries-section {
-            background: var(--dark-mid);
-        }
-
+        /* Missionnaires */
         .missionaries-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .missionary-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        @media (min-width: 600px) {
+            .missionaries-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .member-card {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 16px;
             text-align: center;
-            gap: 1.5rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
         }
 
-        .missionary-img-wrap {
-            position: relative;
-            width: 180px;
-            height: 180px;
+        .member-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(194, 65, 12, 0.3);
         }
 
-        .missionary-img-wrap img {
-            width: 100%;
-            height: 100%;
+        .member-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
             object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid rgba(201,168,76,0.3);
-            filter: grayscale(20%);
-            transition: filter 0.3s ease;
+            margin-bottom: 20px;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
         }
 
-        .missionary-card:hover .missionary-img-wrap img {
-            filter: grayscale(0%);
-        }
-
-        .missionary-img-wrap::before {
-            content: '';
-            position: absolute;
-            inset: -6px;
-            border-radius: 50%;
-            border: 1px solid rgba(201,168,76,0.15);
-        }
-
-        .missionary-name {
-            font-size: 1.3rem;
-            letter-spacing: 0.05em;
-            color: var(--text-light);
-        }
-
-        .missionary-role {
-            font-family: 'Arial', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.25em;
+        .member-role {
+            font-size: 0.8rem;
+            color: var(--accent-color);
             text-transform: uppercase;
-            color: var(--gold);
-            margin-top: -0.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 700;
         }
 
-        /* ─── PARTNERS ─── */
-        .partners-grid {
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        /* Section Partenaires */
+        .section-partners {
+            padding: 60px 20px;
+            background-color: var(--bg-color);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .partners-logo-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 4rem;
-            align-items: center;
             justify-content: center;
-            margin-top: 3rem;
+            align-items: center;
+            gap: 50px;
+            margin-top: 30px;
         }
 
-        .partner-item {
+        .partner-wrapper {
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 0.8rem;
         }
 
         .partner-logo {
-            height: 60px;
+            max-height: 55px;
             width: auto;
-            max-width: 160px;
+            max-width: 220px;
             object-fit: contain;
-            filter: brightness(0) invert(1);
-            opacity: 0.6;
-            transition: opacity 0.3s ease, filter 0.3s ease;
+            /* Uniformisation : on force les logos en blanc pur et légèrement transparents */
+            filter: grayscale(100%) brightness(0) invert(1) opacity(0.7);
+            transition: filter 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
         }
 
-        .partner-item:hover .partner-logo {
+        /* Au survol, le logo retrouve sa couleur d'origine pour être respectueux de la charte */
+        .partner-logo:hover {
+            filter: none;
             opacity: 1;
-            filter: brightness(0) saturate(100%) invert(74%) sepia(50%) saturate(400%) hue-rotate(5deg) brightness(95%);
+            transform: scale(1.05);
         }
 
-        .partner-name {
-            font-family: 'Arial', sans-serif;
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            text-align: center;
-        }
-
-        /* ─── FOOTER ─── */
-        footer {
-            background: #050505;
-            border-top: 1px solid rgba(201,168,76,0.1);
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .footer-title {
-            font-size: 1.4rem;
-            letter-spacing: 0.15em;
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-sub {
-            font-family: 'Arial', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        /* ─── MODAL ─── */
-        .modal-overlay {
+        /* Lecteur plein écran (Overlay / Modal) */
+        .video-overlay {
             position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.95);
             z-index: 9999;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
         }
 
-        .modal-overlay.active {
+        .video-overlay.active {
             opacity: 1;
-            pointer-events: all;
-        }
-
-        .modal-inner {
-            position: relative;
-            width: 90vw;
-            max-width: 1000px;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: -3rem;
-            right: 0;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-            font-family: 'Arial', sans-serif;
-            letter-spacing: 0.1em;
-            transition: color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .modal-close:hover {
-            color: var(--gold);
+            pointer-events: auto;
         }
 
         .video-container {
+            width: 90%;
+            max-width: 1000px;
+            aspect-ratio: 16/9;
             position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            border: 1px solid rgba(201,168,76,0.2);
+            box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
         }
 
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .video-iframe {
             width: 100%;
             height: 100%;
+            border: none;
         }
 
-        /* ─── ANIMATIONS ─── */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(25px); }
-            to   { opacity: 1; transform: translateY(0); }
+        .close-btn {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: color 0.2s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to   { opacity: 1; }
+        .close-btn:hover {
+            color: var(--accent-color);
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; }
-            50%       { opacity: 1; }
+        .close-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
 
-        /* ─── RESPONSIVE ─── */
         @media (max-width: 768px) {
-            .synopsis-grid {
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
+            .close-btn {
+                top: -40px;
+                font-size: 1.1rem;
             }
+        }
 
-            .synopsis-poster {
-                max-width: 280px;
-                margin: 0 auto;
-            }
-
-            .missionaries-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .partners-grid {
-                gap: 2.5rem;
-            }
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
     </style>
 </head>
 <body>
 
-    <!-- ══════════════ HERO ══════════════ -->
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-overlay"></div>
-
-        <div class="hero-content">
-            <div class="hero-tag">Documentaire</div>
-            <h1 class="hero-title">Refuge des<br><span>Oubliés</span></h1>
-            <button class="play-btn" id="playBtn" aria-label="Voir la bande-annonce">
-                <span class="play-icon"></span>
-                Voir le documentaire
-            </button>
-        </div>
-
-        <div class="scroll-hint">
-            <span>Découvrir</span>
-            <div class="scroll-line"></div>
-        </div>
-    </section>
-
-    <!-- ══════════════ SYNOPSIS ══════════════ -->
-    <section class="section">
-        <div class="section-label">Synopsis</div>
-
-        <div class="synopsis-grid">
-            <div class="synopsis-poster">
-                <img
-                    src="https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg"
-                    alt="Affiche du documentaire Refuge des Oubliés"
-                />
-            </div>
-
-            <div>
-                <div class="synopsis-text">
-                    <p>Au Bénin, pays de plus de 14&nbsp;millions d'habitants, il n'existe qu'un seul hôpital psychiatrique public, dont l'accès est conditionné par des moyens financiers que la majorité ne possède pas. Face à cette détresse, l'association Saint-Camille de Lellis se mobilise pour offrir une prise en charge totalement gratuite à ces malades délaissés.</p>
-                </div>
-                <br>
-                <div class="synopsis-text" style="font-style: normal; font-size: 1rem; color: #a09890;">
-                    <p>C'est au sein de cette mission que Noémie et Suzanne se sont engagées bénévolement. À travers leur regard, ce documentaire nous plonge au cœur d'une dure réalité, révélant pourtant, au-delà de la souffrance et de la précarité, la joie profonde et contagieuse qui habite les malades.</p>
+    <!-- SECTION PRINCIPALE / HERO -->
+    <header>
+        <div class="container">
+            <div class="hero-grid">
+                <!-- Affiche de film -->
+                <div class="poster-container">
+                    <div class="poster-wrapper" id="posterPlay">
+                        <img src="https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg" alt="Affiche Refuge des oubliés" class="poster-img">
+                        <div class="poster-play-overlay">
+                            <div class="play-icon-large">
+                                <svg viewBox="0 0 24 24" width="36" height="36" fill="#white">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="director-credit">
-                    <div>
-                        <div class="label">Réalisateur</div>
-                        <div class="name">Cyprien Veyret</div>
-                    </div>
-                    <div class="divider"></div>
-                    <div>
-                        <div class="label">Genre</div>
-                        <div class="name">Documentaire</div>
-                    </div>
-                    <div class="divider"></div>
-                    <div>
-                        <div class="label">Pays</div>
-                        <div class="name">Bénin</div>
-                    </div>
+                <!-- Texte de présentation -->
+                <div class="hero-content">
+                    <div class="genre">Documentaire</div>
+                    <h1 class="title">Refuge des oubliés</h1>
+                    <p class="synopsis">
+                        Au Bénin, pays de plus de 14 millions d’habitants, il n’existe qu’un seul hôpital psychiatrique public, dont l’accès est conditionné par des moyens financiers que la majorité ne possède pas. Face à cette détresse, l’association Saint-Camille de Lellis se mobilise pour offrir une prise en charge totalement gratuite à ces malades délaissés. C’est au sein de cette mission que Noémie et Suzanne se sont engagées bénévolement. À travers leur regard, ce documentaire nous plonge au cœur d'une dure réalité, révélant pourtant, au-delà de la souffrance et de la précarité, la joie profonde et contagieuse qui habite les malades.
+                    </p>
+                    <button class="btn-play" id="mainPlayBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Regarder le film
+                    </button>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- ══════════════ MISSIONARIES ══════════════ -->
-    <section class="missionaries-section">
-        <div class="section">
-            <div class="section-label">Missionnaires au cœur du film</div>
+    <!-- SECTION L'ÉQUIPE -->
+    <section class="section-team">
+        <div class="container">
+            <h2 class="section-title">L'Équipe du Film</h2>
+            
+            <!-- Réalisateur -->
+            <div class="director-card">
+                <div class="director-role">Réalisateur</div>
+                <div class="director-name">Cyprien Veyret</div>
+            </div>
 
+            <!-- Missionnaires -->
             <div class="missionaries-grid">
-                <div class="missionary-card">
-                    <div class="missionary-img-wrap">
-                        <img
-                            src="https://www.fidesco.fr/images-mission-vsi-catholique/elementor/thumbs/veyret2025-portrait-r7jjs99dezviqi282ud2relejjyojwnfze5xhtq2u8.jpg"
-                            alt="Portrait de Noémie Veyret"
-                        />
-                    </div>
-                    <div>
-                        <div class="missionary-name">Noémie Veyret</div>
-                        <div class="missionary-role">Missionnaire bénévole</div>
-                    </div>
+                <!-- Noémie -->
+                <div class="member-card">
+                    <img src="https://www.fidesco.fr/images-mission-vsi-catholique/elementor/thumbs/veyret2025-portrait-r7jjs99dezviqi282ud2relejjyojwnfze5xhtq2u8.jpg" alt="Noémie VEYRET" class="member-avatar">
+                    <div class="member-role">Missionnaire Volontaire</div>
+                    <div class="member-name">Noémie VEYRET</div>
                 </div>
-
-                <div class="missionary-card">
-                    <div class="missionary-img-wrap">
-                        <img
-                            src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/06/callies2025-portrait-300x300.jpg"
-                            alt="Portrait de Suzanne Callies"
-                        />
-                    </div>
-                    <div>
-                        <div class="missionary-name">Suzanne Callies</div>
-                        <div class="missionary-role">Missionnaire bénévole</div>
-                    </div>
+                <!-- Suzanne -->
+                <div class="member-card">
+                    <img src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/06/callies2025-portrait-300x300.jpg" alt="Suzanne CALLIES" class="member-avatar">
+                    <div class="member-role">Missionnaire Volontaire</div>
+                    <div class="member-name">Suzanne CALLIES</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ══════════════ PARTNERS ══════════════ -->
-    <section class="section">
-        <div class="section-label">Partenaires</div>
-
-        <div class="partners-grid">
-            <div class="partner-item">
-                <img
-                    class="partner-logo"
-                    src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/01/logo-fidesco.svg"
-                    alt="Logo Fidesco"
-                />
-                <span class="partner-name">Fidesco</span>
-            </div>
-
-            <div class="partner-item">
-                <img
-                    class="partner-logo"
-                    src="https://associationsaintcamille.org/wp-content/uploads/2018/06/cropped-LOGO-AMELIORE-2-1.png"
-                    alt="Logo Association Saint Camille de Lellis"
-                />
-                <span class="partner-name">Association Saint-Camille de Lellis</span>
-            </div>
-
-            <div class="partner-item">
-                <img
-                    class="partner-logo"
-                    src="https://lalande.ent.auvergnerhonealpes.fr/lectureFichiergw.do?ID_FICHIER=1491401240635"
-                    alt="Logo Lycée Lalande"
-                />
-                <span class="partner-name">Lycée Lalande</span>
+    <!-- SECTION PARTENAIRES -->
+    <section class="section-partners">
+        <div class="container">
+            <h2 class="section-title">Partenaires officiels</h2>
+            <div class="partners-logo-container">
+                <!-- Fidesco -->
+                <div class="partner-wrapper">
+                    <img class="partner-logo" src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/01/logo-fidesco.svg" alt="Fidesco">
+                </div>
+                <!-- Association Saint-Camille -->
+                <div class="partner-wrapper">
+                    <img class="partner-logo" src="https://associationsaintcamille.org/wp-content/uploads/2018/06/cropped-LOGO-AMELIORE-2-1.png" alt="Association Saint-Camille de Lellis">
+                </div>
+                <!-- Lycée Lalande -->
+                <div class="partner-wrapper">
+                    <img class="partner-logo" src="https://lalande.ent.auvergnerhonealpes.fr/lectureFichiergw.do?ID_FICHIER=1491401240635" alt="Lycée Lalande">
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- ══════════════ FOOTER ══════════════ -->
+    <!-- FOOTER -->
     <footer>
-        <div class="footer-title">Refuge des Oubliés</div>
-        <div class="footer-sub">Un documentaire de Cyprien Veyret &nbsp;·&nbsp; Bénin</div>
+        <div class="container">
+            <p>&copy; 2026 Refuge des oubliés. Tous droits réservés.</p>
+        </div>
     </footer>
 
-    <!-- ══════════════ MODAL VIDÉO ══════════════ -->
-    <div class="modal-overlay" id="videoModal" role="dialog" aria-modal="true" aria-label="Lecteur vidéo">
-        <div class="modal-inner">
-            <button class="modal-close" id="closeModal">
-                ✕ &nbsp;Fermer
+    <!-- MODAL DU LECTEUR VIDÉO (Plein écran) -->
+    <div class="video-overlay" id="videoOverlay">
+        <div class="video-container">
+            <button class="close-btn" id="closeVideo">
+                Fermer
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
             </button>
-            <div class="video-container">
-                <iframe
-                    id="youtubeFrame"
-                    src=""
-                    title="Refuge des Oubliés - Documentaire"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen
-                ></iframe>
-            </div>
+            <iframe id="videoIframe" class="video-iframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
 
+    <!-- CODE JAVASCRIPT (Gestion de la lecture vidéo) -->
     <script>
-        const playBtn     = document.getElementById('playBtn');
-        const modal       = document.getElementById('videoModal');
-        const closeModal  = document.getElementById('closeModal');
-        const frame       = document.getElementById('youtubeFrame');
-        const videoId     = 'OCO9W9VPPc0';
-        const embedBase   = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+        const videoOverlay = document.getElementById('videoOverlay');
+        const videoIframe = document.getElementById('videoIframe');
+        const mainPlayBtn = document.getElementById('mainPlayBtn');
+        const posterPlay = document.getElementById('posterPlay');
+        const closeVideo = document.getElementById('closeVideo');
 
-        function openModal() {
-            frame.src = embedBase;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+        // URL d'intégration YouTube (avec paramètre Autoplay)
+        const videoUrl = "https://www.youtube.com/embed/OCO9W9VPPc0?autoplay=1&modestbranding=1&rel=0";
+
+        // Fonction pour ouvrir la vidéo
+        function openPlayer() {
+            videoIframe.src = videoUrl;
+            videoOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Empêche le défilement en arrière-plan
         }
 
-        function closeModalFn() {
-            frame.src = '';
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
+        // Fonction pour fermer la vidéo
+        function closePlayer() {
+            videoIframe.src = ""; // Coupe la vidéo en vidant la source
+            videoOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Réactive le défilement
         }
 
-        playBtn.addEventListener('click', openModal);
-        closeModal.addEventListener('click', closeModalFn);
+        // Événements au clic
+        mainPlayBtn.addEventListener('click', openPlayer);
+        posterPlay.addEventListener('click', openPlayer);
+        closeVideo.addEventListener('click', closePlayer);
 
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModalFn();
+        // Fermer la vidéo si on clique en dehors du cadre
+        videoOverlay.addEventListener('click', (e) => {
+            if (e.target === videoOverlay) {
+                closePlayer();
+            }
         });
 
+        // Touche Échap pour quitter la vidéo
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) closeModalFn();
+            if (e.key === "Escape" && videoOverlay.classList.contains('active')) {
+                closePlayer();
+            }
         });
     </script>
 </body>
