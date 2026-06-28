@@ -1,0 +1,1202 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://www.shareicon.net/download/2016/07/04/637229_benin.ico" />
+  <title>Tableau de Bord - Mission Bénin</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #2c5530 0%, #8B4513 50%, #DAA520 100%);
+      min-height: 100%;
+      color: #333;
+    }
+
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #2c5530, #8B4513);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .film-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-tabs {
+      display: flex;
+      background: #f8f9fa;
+      border-bottom: 3px solid #2c5530;
+      overflow-x: auto;
+      padding: 0 1rem;
+    }
+
+    .nav-tab {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #666;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 3px solid transparent;
+    }
+
+    .nav-tab:hover {
+      background: rgba(44, 85, 48, 0.1);
+      color: #2c5530;
+    }
+
+    .nav-tab.active {
+      color: #2c5530;
+      background: white;
+      border-bottom-color: #DAA520;
+      font-weight: 600;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 2rem;
+      min-height: 60%;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .content-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      border-left: 4px solid #DAA520;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2c5530;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .characteristics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .char-item {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #2c5530;
+    }
+
+    .char-label {
+      font-weight: bold;
+      color: #2c5530;
+      margin-bottom: 0.5rem;
+    }
+
+    .char-value {
+      color: #666;
+    }
+
+    .objective-text {
+      line-height: 1.7;
+      color: #444;
+      text-align: justify;
+      font-size: 1.05rem;
+    }
+
+    .timeline-item {
+      background: #f8f9fa;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+      padding: 1.5rem;
+      border-left: 4px solid #DAA520;
+      transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateX(5px);
+    }
+
+    .timeline-phase {
+      font-weight: bold;
+      color: #2c5530;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .timeline-description {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .music-link {
+      color: #8B4513;
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .music-link:hover {
+      color: #DAA520;
+    }
+
+    .music-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .music-item {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #8B4513;
+      transition: all 0.3s ease;
+    }
+
+    .music-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .music-title {
+      font-weight: bold;
+      color: #2c5530;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .music-player {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .video-container {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .video-frame {
+      width: 100%;
+      max-width: 800px;
+      height: 450px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .poster-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .poster-item {
+      text-align: center;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .poster-image {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gallery-image:hover {
+      transform: scale(1.05);
+    }
+
+    .status-badge {
+      background: #DAA520;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      cursor: pointer;
+    }
+
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .close-modal:hover {
+      color: #DAA520;
+    }
+
+    /* CSS pour les Rapports */
+    .report-accordion {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #2c5530;
+      margin-bottom: 0.5rem;
+      transition: background 0.3s;
+    }
+
+    .report-accordion:hover {
+      background: #e9ecef;
+    }
+
+    .report-content-wrapper {
+      display: none;
+      background: white;
+      border: 1px solid #eee;
+      border-top: none;
+      padding: 1.5rem;
+      border-radius: 0 0 8px 8px;
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .report-actions {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .btn-pdf {
+      background-color: #2c5530;
+      color: white;
+    }
+
+    .btn-read {
+      background-color: #DAA520;
+      color: white;
+    }
+
+    .reading-view {
+      display: none;
+      background: #fffdf5;
+      padding: 2.5rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      color: #2c3e50;
+      line-height: 1.8;
+      font-size: 1.1rem;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+    }
+
+    .reading-view h3 {
+      color: #8B4513;
+      border-bottom: 2px solid #DAA520;
+      padding-bottom: 0.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+    }
+
+    .reading-view h4 {
+      color: #2c5530;
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .reading-view p {
+        margin-bottom: 1.2rem;
+        text-align: justify;
+    }
+
+    .reading-view blockquote {
+      border-left: 5px solid #2c5530;
+      background: rgba(44, 85, 48, 0.05);
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      font-style: italic;
+      color: #444;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .report-header-info {
+        font-size: 0.95rem;
+        color: #555;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #f0f4f1;
+        border-radius: 8px;
+        border: 1px solid #dcdcdc;
+    }
+    
+    .report-contact {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px dashed #ccc;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .nav-tabs {
+        flex-direction: column;
+      }
+      .nav-tab {
+        text-align: left;
+        padding: 0.8rem 1rem;
+      }
+      .film-title {
+        font-size: 2rem;
+      }
+      .video-frame {
+        height: 250px;
+      }
+      .reading-view {
+          padding: 1.2rem;
+          font-size: 1rem;
+      }
+    }
+  </style>
+  <style>
+    @view-transition {
+      navigation: auto;
+    }
+  </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <header class="header">
+      <h1 class="film-title" id="filmTitle">Mission Bénin</h1>
+    </header>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('characteristics')"> 🎬 Caractéristiques </button>
+      <button class="nav-tab" onclick="showTab('objectives')"> 🎯 Objectifs </button>
+      <button class="nav-tab" onclick="showTab('structure')"> 📋 Structure Narrative </button>
+      <button class="nav-tab" onclick="showTab('music')"> 🎵 Musiques </button>
+      <button class="nav-tab" onclick="showTab('trailer')"> 🎥 Bande Annonce </button>
+      <button class="nav-tab" onclick="showTab('posters')"> 🖼️ Affiches </button>
+      <button class="nav-tab" onclick="showTab('interviews')"> 🎤 Interviews </button>
+      <button class="nav-tab" onclick="showTab('noemie')"> 👤 Vidéo Noémie </button>
+      <button class="nav-tab" onclick="showTab('reports')"> 📄 Rapports </button>
+    </nav>
+
+    <div id="characteristics" class="tab-content active">
+      <div class="content-card">
+        <h2 class="card-title">🎬 Caractéristiques du Film</h2>
+        <div class="characteristics-grid">
+          <div class="char-item">
+            <div class="char-label"> Genre </div>
+            <div class="char-value" id="genreValue"> Documentaire </div>
+          </div>
+          <div class="char-item">
+            <div class="char-label"> Durée </div>
+            <div class="char-value" id="durationValue"> 15-20 minutes </div>
+          </div>
+          <div class="char-item">
+            <div class="char-label"> Titre </div>
+            <div class="char-value" id="titleValue"> Mission Bénin </div>
+          </div>
+          <div class="char-item">
+            <div class="char-label"> Statut </div>
+            <div class="char-value"> <span class="status-badge">En production</span> </div>
+          </div>
+          <div class="char-item">
+            <div class="char-label"> Protagonistes </div>
+            <div class="char-value"> Noémie et Suzanne (volontaires FIDESCO) </div>
+          </div>
+          <div class="char-item">
+            <div class="char-label"> Organisations </div>
+            <div class="char-value"> Association Sainte Camille de Lellis, FIDESCO </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <h2 class="card-title">📍 Contexte</h2>
+        <div class="image-gallery">
+            <img src="IMG_7751.jpeg" alt="Bénin 1" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> 
+            <img src="IMG_7752.jpeg" alt="Bénin 2" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> 
+            <img src="IMG_7753.jpeg" alt="Bénin 3" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> 
+            <img src="IMG_7754.jpeg" alt="Bénin 4" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> 
+            <img src="IMG_7755.jpeg" alt="Bénin 5" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> 
+            <img src="IMG_7756.jpeg" alt="Bénin 6" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';"> 
+            <img src="IMG_7757.jpeg" alt="Bénin 7" class="gallery-image" onclick="openModal(this.src)" onerror="this.style.display='none';">
+        </div>
+      </div>
+    </div>
+
+    <div id="objectives" class="tab-content">
+      <div class="content-card">
+        <h2 class="card-title">🎯 Objectif du Film</h2>
+        <p class="objective-text">Ce film propose au spectateur un regard direct sur des réalités souvent ignorées, en montrant que la misère n'est pas un concept abstrait : elle est vécue, ressentie, et fait du quotidien un véritable combat pour ceux qui en souffrent. Il révèle aussi la résilience et l'espoir qu'on ces habitants alors que tout semble perdu, montrant leurs joie de vivre, leur sens de l'hospitalité, leur foi...</p>
+        <p class="objective-text">L'intention est double : provoquer, parfois, un certain inconfort nécessaire pour que la réalité soit perçue sans filtre, tout en inspirant et en donnant de l'espoir, en montrant des actions concrètes qui changent des vies. À travers le parcours de Noémie et Suzanne (2 volontaires envoyé en mission au Bénin) et des volontaires qui l'accompagnent, le film explore la prise en charge gratuite des personnes en situation de troubles psychiatriques, les témoignages de patients guéris ou en voie de guérison, et met en lumière le travail remarquable d'organisations comme l'Association Sainte Camille de Lellis et FIDESCO.</p>
+        <p class="objective-text">Il offre également un regard sur la culture locale et les contrastes saisissants entre grandes villes et villages, révélant les disparités économiques et sociales du Bénin. En mêlant réalisme et humanité, le film cherche à montrer la dureté du monde sans sombrer dans le pessimisme, et à sensibiliser le spectateur à l'importance de la solidarité et de l'engagement, pour qu'il quitte la projection en étant au courant de la dure réalité de ce qui se passe au Bénin, tout en ressentant un sentiment d'espoir en l'humanité.</p>
+      </div>
+    </div>
+
+    <div id="structure" class="tab-content">
+      <div class="content-card">
+        <h2 class="card-title">📋 Structure Narrative Prévue</h2>
+        <div class="timeline-item">
+          <div class="timeline-phase"> 1. Ouverture du Documentaire (45 secondes) </div>
+          <div class="timeline-description"> Images au drone du Bénin, avec une <span class="music-link" onclick="showTab('music')">musique au piano</span> et des voix d'enfant à qui on demande le métier qu'ils veulent faire plus tard. Ça se termine par un enfant qui demande « toi tu veux faire quoi comme métier ». </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase"> 2. Interview de Noémie - Transition France/Bénin </div>
+          <div class="timeline-description"> On enchaîne sur l'interview de Noémie où elle répond à la question d'introduction (« qu'est-ce ce que tu voulais faire quand tu avais 3 ans, ton rêve le plus fou ») pour faire un passage entre la France et le Bénin. Apparition progressive de la <span class="music-link" onclick="showTab('music')">musique numéro 2</span>. </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase"> 3. Joie de Vivre Béninoise </div>
+          <div class="timeline-description"> Au refrain de la <span class="music-link" onclick="showTab('music')">musique numéro 2</span>, on fait des plans de coupe du Bénin en montrant la joie de vivre, le djembé (intégration des vidéos au format vertical côte à côte) montage assez dynamique. Douce transition en écho sur la <span class="music-link" onclick="showTab('music')">musique 3 (Rest Upon the Edge)</span>. </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase"> 4. Témoignage de Guérison </div>
+          <div class="timeline-description"> Pendant cette <span class="music-link" onclick="showTab('music')">musique (numéro 3)</span>, interview d'un ancien malade qui a été guéri par la fondation sainte Camille de Lellis. Il explique d'abord ce que fait la fondation puis bascule sur son témoignage de vie. On finit par lui demander son rapport à la religion, on coupe la musique. </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase"> 5. Foi et Espoir </div>
+          <div class="timeline-description"> On retrouve l'interview de Noémie VEYRET qui nous parle de la foi des Béninois et du fait que Dieu est leur moyen de se rattacher à de l'espoir, plus sa foi personnelle et la différence de la manière de pratiquer la religion. Cela amorce sur la question des différences culturelles (<span class="music-link" onclick="showTab('music')">musique numéro 4</span>). </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase"> 6. Choc Culturel </div>
+          <div class="timeline-description"> Interview de Suzanne, qui parle plutôt du choc culturel en racontant des anecdotes sur la différence de modes de vie, particulièrement la façon dont attacher les humains est une chose courante au Bénin. Fin de la <span class="music-link" onclick="showTab('music')">musique numéro 4</span>. </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase"> 7. Partie Sensible </div>
+          <div class="timeline-description"> Bascule sur partie sensible du documentaire avec des images (floutées)... Travail en cours de développement, image d'archives (pendant le témoignage) </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase"> 8. Fin </div>
+          <div class="timeline-description"> Immage de fin avec <span class="music-link" onclick="showTab('music')"> musique numéro 6 </span>rythmé et sur chaque coup du rythme, on voit des visage différents </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="music" class="tab-content">
+      <div class="content-card">
+        <h2 class="card-title">🎵 Bande Sonore Prévue</h2>
+        <div class="music-grid">
+          <div class="music-item">
+            <div class="music-title"> 🎹 Musique 1 - Intro </div>
+            <p>Musique d'ouverture au piano pour accompagner les images drone et les voix d'enfants.</p>
+            <audio controls class="music-player">
+              <source src="Intro.mp3" type="audio/mpeg"> Votre navigateur ne supporte pas l'élément audio.
+            </audio>
+          </div>
+          <div class="music-item">
+            <div class="music-title"> 🎶 Musique 2 - Transition </div>
+            <p>Musique pour la transition France/Bénin et les plans de joie de vivre.</p>
+            <audio controls class="music-player">
+              <source src="Musique 2.m4a" type="audio/mp4"> Votre navigateur ne supporte pas l'élément audio.
+            </audio>
+          </div>
+          <div class="music-item">
+            <div class="music-title"> 🎵 Musique 3 - Rest Upon the Edge </div>
+            <p>Musique émouvante pour accompagner le témoignage de guérison.</p>
+            <audio controls class="music-player">
+              <source src="Musique 3.mp3" type="audio/mpeg"> Votre navigateur ne supporte pas l'élément audio.
+            </audio>
+          </div>
+          <div class="music-item">
+            <div class="music-title"> 🔍 Musique 4 - En recherche </div>
+            <p>Musique pour accompagner les différences culturelles. <span class="status-badge">En cours de sélection</span></p>
+          </div>
+          <div class="music-item">
+            <div class="music-title"> 🎼 Musique 5 - Finale </div>
+            <p>Musique de conclusion du documentaire.</p>
+            <audio controls class="music-player">
+              <source src="Musique 5.mp3" type="audio/mpeg"> Votre navigateur ne supporte pas l'élément audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="trailer" class="tab-content">
+      <div class="content-card">
+        <h2 class="card-title">🎥 Première Bande Annonce</h2>
+        <div class="video-container">
+          <iframe width="1296" height="729" src="https://www.youtube.com/embed/up8gihR0bEw" title="MISSION BÉNIN (2026) | Trailer VF – Film Documentaire" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div id="posters" class="tab-content">
+      <div class="content-card">
+        <h2 class="card-title">🖼️ Affiches Potentielles</h2>
+        <div class="poster-gallery">
+          <div class="poster-item"><img src="91941D94-657E-4A4B-86F6-7B037D139BD7.png" alt="Affiche Mission Bénin" class="poster-image" onerror="this.style.display='none'; this.parentElement.innerHTML='<p>Affiche en cours de chargement...</p>';">
+            <h3>Proposition d'affiche principale</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="interviews" class="tab-content">
+      <div class="content-card">
+        <h2 class="card-title">🎤 Questions d'Interview</h2>
+        <div class="content-card">
+          <h3 class="card-title">👤 Questionnaire Noémie VEYRET</h3>
+          <div class="timeline-item">
+            <div class="timeline-phase"> Question d'introduction </div>
+            <div class="timeline-description"> Qu'est-ce que tu voulais faire quand tu étais petite et qu'est-ce qui t'a poussé aujourd'hui à partir au Bénin ? </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-phase"> Questions principales </div>
+            <div class="timeline-description">
+              <ul style="line-height: 1.8; margin: 0; padding-left: 1.5rem;">
+                <li>Raconte une anecdote de quelque chose qui t'a marqué dès ton arrivée qui t'a fait un peu rire</li>
+                <li>Quelle est la chose qui a été le plus difficile pour toi ?</li>
+                <li>La différence de culture, comment l'apprivoiser ?</li>
+                <li>(Ton témoignage de vie)</li>
+                <li>Les choses qui contrastent le plus avec la vie française</li>
+                <li>La différence entre le regard de Dieu en occident et ici (culture)</li>
+                <li>Peux-tu nous décrire ce que tu as vu la toute première fois que tu as franchi le seuil du centre d'Avrankou ?</li>
+                <li>Dans quel état arrivent les patients qui sont conduits à la Saint Camille ?</li>
+                <li>Dans ton rapport de mission, tu mentionnes que le rythme de vie est très différent du nôtre? Comment ce changement de cadence influence-t-il ta manière de vivre tes journées là-bas ?</li>
+                <li>Avant d'arriver à l'association Saint-Camille, par quelles épreuves les patients passent-ils souvent? Est ce que tu peux nous raconter l'exemple d'histoires qui t'on touché.</li>
+                <li>Au-delà des soins médicaux, comment l'association Saint-Camille aide-t-elle ces personnes à retrouver une place et une dignité dans la société ?</li>
+                <li>Tu as forcément du avoir des appréhension ou des peurs par rapport a ta mission ou certains patients, peur de les approchés, comment tu surmonte ça ?</li>
+                <li>Tu es partis pour donner, qu'est ce que les patients te donnent en retour ?</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="content-card">
+          <h3 class="card-title">🤔 Autres Interviews</h3>
+          <div class="timeline-item">
+            <div class="timeline-phase"> Questions en cours de réflexion </div>
+            <div class="timeline-description"> Les questions pour les autres personnes interviewées sont actuellement en cours d'élaboration. </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="noemie" class="tab-content">
+      <div class="content-card">
+        <h2 class="card-title">👤 Vidéo de Noémie Veyret</h2>
+        <div class="video-container">
+          <iframe title="vimeo-player" src="https://player.vimeo.com/video/1133841649?h=0e00ddbb3f" width="640" height="360" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    
+    <div id="reports" class="tab-content">
+        <div class="content-card">
+            <h2 class="card-title">📄 Rapports de Mission</h2>
+            
+            <div class="report-wrapper">
+                <div class="report-accordion" onclick="toggleReport('report1')">
+                    <div class="timeline-phase" style="margin:0;">Rapport de mission N°1 - 03/11/2025</div>
+                    <span style="color: #2c5530; font-weight: bold;">▼</span>
+                </div>
+                
+                <div id="report1" class="report-content-wrapper">
+                    <div class="report-actions">
+                        <a href="Rapport de mission n°1.pdf" target="_blank" class="action-btn btn-pdf">
+                           📄 Voir le PDF
+                        </a>
+                        <button onclick="toggleReading('report1-text')" class="action-btn btn-read">
+                           📱 Lire sur téléphone
+                        </button>
+                    </div>
+
+                    <div id="report1-text" class="reading-view">
+                        
+                        <div class="report-header-info">
+                            <h2 style="color:#2c5530; margin-top:0;">FIDESCO - Noémie VEYRET</h2>
+                            <strong>Animatrice sociale</strong><br>
+                            Adresse: Association Saint Camille de Lellis<br>
+                            Centre Padre Pio « padre d'amour »<br>
+                            BP 128-Avrankou<br>
+                            Mail: <a href="mailto:noemie.veyret2004@gmail.com">noemie.veyret2004@gmail.com</a><br>
+                            Date: 03/11/2025<br>
+                            <strong>Nous aider:</strong> <a href="http://www.fidesco.fr/veyret2025" target="_blank" style="color:#2c5530; font-weight:bold;">www.fidesco.fr/veyret2025</a>
+                            <br><br>
+                            <strong>M. ET MME LUDOVIC ET PASCALINE VEYRET</strong><br>
+                            35 B ALLEE DU CHATEAU<br>
+                            01340 ATTIGNAT
+                        </div>
+
+                        <h3>LE MOT DU DIRECTEUR</h3>
+                        <p>Chère Madame, cher Monsieur,</p>
+                        <p>Il y a quelque temps déjà, Noémie Veyret vous annonçait son départ en volontariat au Bénin. Ça y est, elle est arrivée sur le terrain ! La voici au service de la mission, nous nous en réjouissons !</p>
+                        <p>Après une phase de découverte et d'acclimatation, elle a rédigé quelques pages qui relatent ses premiers pas dans sa nouvelle vie. Je suis très heureux de vous les partager. Vous pourrez ainsi découvrir le contexte de son action auprès des plus pauvres.</p>
+                        
+                        <blockquote>
+                        "Aidez-vous les uns les autres à construire des ponts par le dialogue, par la rencontre, tous unis pour être un seul peuple, toujours dans la paix."
+                        </blockquote>
+                        
+                        <p>Par cette phrase, le Pape Léon XIV nous exhorte à la paix, au dialogue et à l'unité; un appel qui résonne profondément avec ce que vivent nos volontaires aux quatre coins du monde.</p>
+                        <p>Grâce au soutien de nombreux donateurs, Fidesco permet chaque année à des familles, des couples et des jeunes de partir se mettre au service de la mission. Nous avons plus que jamais besoin de vous pour continuer à maintenir la présence de nos volontaires sur le terrain !</p>
+                        
+                        <div style="background:#eef5e9; padding:1rem; border-radius:8px; margin: 1rem 0;">
+                        <strong>Comment faire ?</strong>
+                        <ul>
+                            <li>En mettant en place un prélèvement automatique de 18€ / mois (qui revient à 6,12€ / mois après défiscalisation)</li>
+                            <li>En faisant un don de 450€ pour deux ans (153€ après défiscalisation) ou 230€ pour une année de mission.</li>
+                        </ul>
+                        </div>
+
+                        <p>Les volontaires sur le terrain ont besoin de se sentir soutenus. Participer financièrement à la mission est un geste certes matériel, mais il témoigne aussi d'une proximité et d'un soutien concret. Je me fais le porte parole de Noémie pour vous dire combien votre présence compte pour sa mission. Aidez-la dans son engagement, parrainez sa mission et recevez tous ses rapports de mission trimestriels.</p>
+                        <p>Nous vous remercions d'avance de tout ce que vous pourrez faire.</p>
+                        <p>Dans la joie de la mission,<br><strong>Hubert Laurent</strong><br>Directeur de Fidesco</p>
+
+                        <div class="report-contact">
+                        PS: Pour toute question, contactez notre chargée de parrainage: Jeanne MAURIES - 01 58 10 74 96 - don@fidesco.fr<br>
+                        PS 2: Si vous ne souhaitez pas devenir parrain, nous nous engageons à ne plus vous solliciter dans le cadre de nos communications.
+                        </div>
+
+                        <hr style="border:0; border-top: 3px dashed #DAA520; margin: 3rem 0;">
+
+                        <h3>RAPPORT DE MISSION N°1 - NOÉMIE</h3>
+                        
+                        <p>Chers amis, chère famille,</p>
+                        <p>Je tenais avant tout à vous remercier de tout cœur pour votre investissement au sein de ma mission et vous assurer de ma prière. Votre engagement me permet de vivre pleinement cette belle aventure et je vous en suis très reconnaissante.</p>
+                        <p>Me voilà arrivée il y a déjà trois mois au Bénin, avec ma binôme Suzanne, le 1er septembre
+2025. Les premières semaines ont été rythmées par beaucoup de découvertes
+de cette nouvelle culture, et de notre mission et je vais tenter de vous faire gouter à mon
+aventure dans ce premier rapport de mission.</p>
+                        <p>Mais avant cela, je vais vous rappeler dans quelle contexte je suis partie. Avant de débuter
+ma vie professionnelle de psychomotricienne, j'ai ressenti le besoin de m'engager dans une
+mission humanitaire. Je recherchais une expérience forte, en dehors de ma zone de confort,
+qui me permettrai de m'ouvrir à d'autres cultures et de grandir aussi bien humainement que
+spirituellement.</p>
+                        <p>Après avoir beaucoup reçu, j'ai profondément à cœur de consacrer une année au service
+des autres, dans un esprit de gratuité et de disponibilité. Nous avons bénéficié de plusieurs
+temps de formation grâce à Fidesco, qui nous ont permis de partir avec de bons bagages,
+prêtes pour la mission! Me voici maintenant envoyée au Bénin, au sein de l'association Saint
+Camille de Lellis, pour un an en tant qu'animatrice sociale.</p>
+
+
+                        <h4>🌍 Découverte de la culture béninoise</h4>
+                                                <p>Dès notre arrivée, nous avons découvert les routes, pour certaines tout juste goudronnées,
+et pour d'autres encore faites de terre battue que l'on nomme des vons, ainsi qu'une toute
+nouvelle façon de conduire ! Je pense qu'en France, on utilise autant le klaxon, mais pas du
+tout pour les mêmes raisons. Ici, on ne klaxonne pas pour exprimer son mécontentement,
+mais pour annoncer sa présence ou saluer quelqu'un au passage. Les voitures sont souvent
+pleines à craquer, et les motos sont partout. Là où, en France, il nous semblerait impensable
+de transporter certaines choses sur une moto, au Bénin, tout passe : familles nombreuses,
+cochons, meubles, fours... ! Les panneaux de signalisation sont plutôt rares, ce qui rend la
+conduite... disons, plus libre, voire un peu sportive parfois.</p>
+                        <p>Leur notion du temps et des < j'arrive bientôt » est légèrement différente. Les Béninois ne se
+pressent pas, ils ne courent jamais, ils prennent leur temps, ce qui nous apprend
+à ralentir et à ne pas courir. D'ailleurs, il vaut mieux éviter de le faire, au risque d'affoler tout
+le monde, car ici, quand on court, c'est qu'il y a un danger imminent!</p>
+
+                      
+<p>C'est une sensation étrange que nous avons ressentie avec Suzanne : avoir à la fois
+l'impression que les Béninois vivent au ralenti et que le temps, lui, passe à une vitesse folle.
+Peut-être parce que nous vivons davantage le moment présent, l'ici et maintenant, et que
+nos journées sont plus longues et plus intenses.</p>
+
+                      <p>Comment parler de la culture béninoise sans parler de la musique, qui rythme nos journées
+(et même nos nuits de temps en temps). On en entend à tout moment, de plus ou moins
+loin. Elle anime les prières, les fêtes, les réunions; on chante et on danse. Elle unit les gens
+sans un mot, ce qui nous a permis de créer des liens assez facilement avec des personnes
+qui ne parlent pas français.</p>
+
+
+                      <p>Je vous donnerai l'exemple de la fête de la chorale à laquelle nous avons participé.
+Lorsque nous sommes arrivées, les gens étaient en pleine louange. Nous avons donc eu le
+réflexe de rester à l'écart pour ne pas déranger. Mais, étant blanches, nous ne sommes
+évidemment pas passées inaperçues. Très vite, beaucoup de personnes sont venues nous
+chercher pour nous amener à l'avant et nous inviter à danser. Sans un mot, nous avons dansé
+et créé du lien avec plusieurs personnes autour de nous en tentant d'avoir le même rythme
+qu'eux, mais il est difficile pour nous, bonnes Européennes que nous sommes, de faire
+«vibrer > notre corps comme ils essaient patiemment de nous l'apprendre. Beaucoup de
+gens riaient lorsque nous essayions de reproduire leurs mouvements... Je pense que nous
+avons encore une belle marge de progression ! La musique, pendant les messes, est
+également un élément très important de la liturgie. On y retrouve souvent des chants
+accompagnés de beaux instruments, tels que le tam-tam ou le gong, qui rythment les
+mélodies. Nous pouvons aussi danser pendant la messe si l'envie nous prend c'est tout à fait
+normal, pour mon plus grand bonheur!</p>
+
+                      <p>Autre grande découverte : le marché. Ici, la négociation n'est pas une option surtout quand
+on est blanche ! Avec le temps, je pense que je vais développer un talent de négociatrice
+insoupçonné. On y trouve toutes sortes de produits, principalement des aliments locaux :
+ignames, bananes, ananas, mangues, manioc, crincrin, riz, arachides, ainsi que des chèvres
+et des poules. On y croise aussi des vendeurs de tissus traditionnels, le wax qu'on achète de
+temps en temps pour nous confectionne des tenues béninoises. Certaines marchandes se
+déplacent avec leur étalage posé sur la tête sans jamais rien faire tomber, avec une agilité et
+une force remarquable.</p>
+                       <p>Nous avons dû aussi nous adapter à de nouveaux plats et surtout à la répétition des mêmes
+mets. J'ai compris dès les premiers jours que la cuisine béninoise était moins variée que la
+nôtre, lorsqu'un Béninois m'a demandé quel était « le plat préféré des Français », question à
+laquelle je n'ai pas su répondre tant la gastronomie française est diversifiée. Ici, la base de
+l'alimentation est ce qu'ils appellent "la pâte", un mélange de farine de maïs épaissie à la
+cuisson. La culture béninoise partage cependant avec la nôtre l'importance du repas comme
+moment de convivialité et de partage. Mais attention: ici, on ne parle pas à table car nous
+risquerions de nous étouffer ! C'est une coutume que nous avons découverte dès notre
+arrivée à Avrankou, lors du premier repas partagé avec<« papa Amadji », le directeur du
+centre. Le silence à table nous avait d'abord mises mal à l'aise: nous pensions l'avoir dérangé
+ou offensé. Nous avons vite été rassurées par nos collègues en apprenant qu'il s'agissait
+simplement d'une habitude culturelle.</p>
+                       <p>Les Béninois ont un profond sens de'l'accueil. Dès nos premiers jours au Bénin, nous avons
+été invitées à déjeuner chez plusieurs personnes, alors même qu'elles n'avaient que très peu
+de moyens. Je me souviens notamment d'Éric, l'un de nos collègues de travail, qui vit avec
+sa femme et leurs quatre enfants dans une seule pièce d'à peine six mètres carrés.
+Et pourtant, il avait tenu à nous recevoir dignement : il avait même acheté une bouteille de
+vin pour partager un repas avec nous. Éric ne savait pas comment déboucher la bouteille j'ai
+donc pris un grand plaisir, en bonne Française, à lui montrer la technique!</p>
+                       <p>Cette rencontre nous a profondément touchées. Elle nous a permis de prendre conscience
+de cette pauvreté discrète mais bien réelle, et de la grande générosité qui l'accompagne
+souvent.</p>
+                       <p>Les professionnels de santé du centre se sont aussi montrés très accueillants et disponibles.
+Ils ont été de véritables repères et soutiens dans nos débuts, nous permettant de poser
+toutes nos questions pour mieux comprendre la culture béninoise et nous adapter à notre
+nouvelle vie sur place.</p>
+                      <p>L'adaptation culturelle me demande cependant encore un peu de temps, notamment dans
+le rapport au corps. En effet, la pudeur, les gestes, le toucher ne sont pas les mêmes. J'ai,
+par exemple, été assez surprise au début, en serrant la main d'un Béninois, de constater qu'il
+ne la lâchait pas après les premières salutations mais seulement à la fin de la conversation!
+                </p>
+
+
+
+                      <p>Nous faisons aussi l'expérience, parfois déstabilisante, d'être perçues comme « différentes >
+en raison de notre couleur de peau. Les enfants, en particulier, nous interpellent souvent
+dans la rue en criant « Yovo ! » (Ce qui signifie "Blanc"), jusqu'à ce que nous leur répondions
+par un petit signe de la main. Certains vont même jusqu'à nous suivre en chantant : "Yovo,
+Yovo, bonsoir !". En arrivant dans le village, nous pensions que ces appels s'atténueraient
+avec le temps, mais c'est plutôt l'inverse: le phénomène s'est amplifié. Les enfants,
+désormais plus à l'aise, s'approchent pour nous serrer la main et nous demander notre
+prénom. Les adultes, eux aussi, ont ce réflexe chaleureux de venir nous saluer et se présenter.
+Le contact avec les Béninois est extrêmement facile. Ils sont fiers de nous dire où ils habitent
+et aiment partager un aperçu de leur vie: leur travail, leur famille, leur maison, etc. Nous
+sommes constamment sollicitées, et cette spontanéité a grandement facilité notre
+intégration au village. Aujourd'hui, lorsque nous sortons dans notre rue, nous pouvons dire
+que nous connaissons presque tout le monde, et que beaucoup sont en train de devenir des
+amis.</p>
+
+                      
+                      
+                        <h4>📜​ Histoire de l'association Saint Camille de Lellis</h4>
+                                             <p>Lors de nos premiers jours au Bénin, nous avons commencé notre aventure au sein du centre
+de Tokan ou nous avons eu la joie de rencontrer Grégoire Ahongbonon, le fondateur de
+l'association Saint Camille de Lellis qui nous a raconté son histoire.</p>
+                      <p>À la suite d'une profonde dépression, Grégoire s'est retrouvé au bord du suicide. Désespéré,
+il s'est tourné vers un prêtre pour lui demander de l'aide. Ce dernier lui expliqua que chaque
+chrétien devait apporter sa pierre à l'édifice de l'Église, et que même les laïques avaient un
+grands rôles à jouer. Cette phrase fut pour Grégoire un véritable déclic: il comprit qu'il devait
+agir, sans encore savoir comment.</p>
+                      <p>Peu de temps après, il fut profondément bouleversé par la vision d'une personne souffrant
+de troubles psychiatriques, seule et nue dans la rue. Il prit alors conscience de sa vocation:
+venir en aide à ces personnes marginalisées et abandonnées par la société et par leur famille.
+C'est ainsi qu'il fonda le premier centre de la Saint-Camille de Lellis.</p>
+                      <p>En l'écoutant raconter son histoire, j'ai été frappée par sa grande humilité. Sa phrase fétiche,
+qu'il répète souvent, résume bien son état d'esprit :< Je ne suis que l'instrument du Seigneur,
+je n'ai rien fait. »</p>
+
+
+
+
+                      <p>Aujourd'hui, les malades viennent de toutes parts, souffrant de pathologies diverses:
+schizophrénie, bipolarité, dépression profonde ou déficience intellectuelle. Beaucoup
+arrivent dans un état de grande détresse, enchaînés ou ligotés par leurs proches ou la police,
+parfois après avoir été maltraités par des guérisseurs ou des marabouts. Il existe également
+des sectes évangéliques. Après avoir été largement rémunérés, ces dernières les affament
+ou les frappent pour « chasser le diable » ou les « désenvoûter ». C'est souvent en dernier
+recours que ces personnes, épuisées et brisées, parviennent à la Saint-Camille,
+accompagnées de familles en larmes et à bout d'espoir.</p>
+                      <p>Lorsqu'un nouveau patient arrive, la famille est d'abord reçue par l'infirmier-chef.
+Un entretien permet d'évaluer la situation et de proposer un traitement adapté.
+Les malades reçoivent d'abord un traitement par injection pour les apaiser pendant
+quelques jours. Si le retour à domicile n'est pas possible, le patient est alors accueilli dans le
+centre, où il bénéficie d'une prise en charge complète.</p>
+                      <p>La Saint-Camille ne se limite pas aux soins : elle accompagne aussi la réinsertion
+des malades dans la société en leur offrant des formations professionnelles, couture, tissage,
+boulangerie ou jardinage. Beaucoup de patients affirment avoir été "sauvés" par cette
+structure, que l'on surnomme d'ailleurs "la cour des miracles" d'Avrankou.
+Sans la Saint-Camille, nombre d'entre eux auraient été laissés pour compte, sans ressources
+ni famille, voire condamnés à mourir dans la rue. Les premiers patients accueillis étaient
+d'ailleurs des personnes errantes, recueillies et soignées par les membres de l'association.</p>
+                      <p>Aujourd'hui, la Saint-Camille d'Avrankou accueille entre 160 et 180 patients internes, pour
+des séjours allant de trois semaines à un an, et parfois à vie pour ceux qui n'ont plus de
+famille. La structure se compose de trois principaux sites:</p>
+                      
+                      <p>- Le bâtiment administratif, où sont reçus les nouveaux patients et où les externes viennent
+chercher leurs médicaments;</p>
+                      <p>- Le bâtiment des internes, où les patients résident plusieurs semaines ;</p>
+                      <p>- Le site de Dangbodji, dédié à la réinsertion professionnelle et à l'accueil des enfants des
+patients.</p>
+
+                      
+                      
+                        <h4>🤝​ Ma mission :</h4>
+                                            <p>Après cette belle rencontre avec Grégoire, nous sommes enfin arrivées à Avrankou, où notre
+grande aventure missionnaire a véritablement commencé. Les premiers jours ont été
+relativement doux : nous avons pris le temps de découvrir les lieux, de rencontrer nos
+collègues et de faire connaissance avec les patients</p>
+
+                      <p>Dès notre première entrée dans le centre, nous avons été confrontées de manière très
+concrète à la réalité de la pauvreté que nous allions servir. Certains malades nous saluaient
+simplement, d'autres nous agrippaient, tandis que quelques-uns évitaient notre regard ou
+refusaient de nous serrer la main. Nous avons vu des personnes allongées à même le sol,
+d'autres errant sans but, ou encore criant des paroles incohérentes.</p>
+
+                      <p>Heureusement, nous étions bien accompagnées ce jour-là, ce qui a rendu cette première
+rencontre à la fois douce et bouleversante. J'ai ressenti une sorte de choc émotionnel,
+un mélange d'impuissance et d'élan : une envie immédiate de comprendre et d'agir.
+Pourtant, j'ai vite compris que la mission ne pouvait pas commencer dans l'urgence et dans
+l'action. Il fallait d'abord prendre le temps : le temps de rencontrer, d'écouter et de
+comprendre.</p>
+                      <p>Peu à peu, nous avons donc fait connaissance avec les patients. Ils nous ont raconté leur
+histoire, leur parcours de vie et leur combat contre la maladie. J'avoue avoir eu du mal,
+au début, à trouver ma place dans cette mission. Je ne savais pas vraiment comment "ajouter
+ma pierre à l'édifice". Notre mission principale consistait à être animatrices sociales, mais je
+ne voyais pas encore comment ces activités pouvaient réellement aider les patients.</p>
+                      <p>Au fil des semaines, nous avons repris progressivement les animations mises en place par
+les anciennes volontaires: musculation, danse, football, activités manuelles... Chaque jour,
+nous leur proposons ces moments de stimulation, qui leur permettent de s'exprimer à travers
+leurs créations et de vivre un moment de convivialité. Ces temps sont aussi l'occasion de
+revaloriser les malades, de leur montrer qu'ils sont encore capables de faire de belles choses,
+qu'ils ont une dignité et qu'ils peuvent être reconnus comme des personnes à part entière.
+Ces moments leur permettent aussi, parfois, de se livrer, de nous partager leurs émotions et
+leurs ressentis.</p>
+                      <p>J'ai réalisé que la plus grande richesse que nous avions à offrir, et qui était aussi au cœur de
+notre mission, était le temps : un temps gratuit, une écoute active, une présence
+bienveillante.</p>
+
+                      <p>J'ai goûté à la joie d'être dans l'être et non dans le faire, comme Fidesco nous l'avait si
+souvent rappelé lors de notre préparation à la mission.</p>
+                       <p>Avec le temps, nous avons commencé à mettre en place des fiches psychosociales, afin de
+mieux comprendre chaque patient dans sa globalité et de les accompagner au mieux dans
+leur parcours de réinsertion.</p>
+                       <p>Le fait de vivre presque au quotidien avec eux nous permet d'observer, d'échanger et de
+comprendre plus finement leur fonctionnement, tout en repérant d'éventuelles difficultés à
+signaler à l'infirmière ou à la gestionnaire du centre.</p>
+                       <p>Trois fois par semaine, les lundis, mercredis et vendredis, j'assiste l'infirmière lors des soins.
+Ma principale mission consiste à réaliser les pansements sur les petites plaies, ce qui lui
+permet d'alléger sa charge de travail.</p>
+                       <p>Nous nous rendons également au centre de Dangbodji, où vivent en moyenne une trentaine
+d'enfants âgés de 6 à 18 ans, pour la plupart issus de malades ou d'anciens malades
+décédés. Nous y faisons de l'aide aux devoirs, un moment privilégié pour échanger avec eux
+et découvrir leurs besoins. Ces enfants nous offrent l'opportunité de côtoyer un autre public,
+de partager de beaux moments et d'apporter un véritable souffle nouveau à notre semaine.</p>
+                       <p>Ce qui fait, selon moi, la beauté de la Saint-Camille, c'est cette manière unique de considérer
+chaque patient avec respect et de lui offrir une seconde chance, un nouveau départ. Ici, nous
+ne parlons pas de "patients", mais "d'amis" un mot plein de sens, qui traduit la profonde
+considération que chaque soignant doit leur porter.</p>
+                      
+
+<p>J'ai pris toute la mesure de cet état d'esprit en découvrant, pour la première fois, le panneau
+apposé sur les murs du centre, visible depuis la rue comme depuis la cour, où il est écrit :
+"Les malades sont la pupille et le cœur de Dieu.".</p>
+                      <p>Cette phrase de Saint Camille de Lellis prend de plus e n plus de sens au fur et à mesure que
+la mission avance. Notamment lorsque certaines situations me dépassent ou que je fais les
+pansements et que les soins deviennent difficiles, je repense à ces mots: je m'imagine
+soigner le corps du Christ, et tout devient plus simple.</p>
+
+                      <p>L'un des grands atouts que nous avons eus en arrivant à la Saint-Camille, c'est notre regard
+neuf sur les personnes que nous rencontrions.</p>
+
+                      <p>Je pense notamment à Thierry, un patient présent depuis de nombreuses années.
+Ancien toxicomane, il avait sans doute blessé beaucoup de monde autour de lui, et sa
+réputation au sein du centre n'était pas bonne. Lorsque l'équipe nous a vues en sa
+compagnie, plusieurs nous ont prévenues de ne pas trop nous en approcher, le qualifiant
+de voleur et affirmant qu'il ne changerait jamais. Au début, nous avons écouté ces mises en
+garde sans chercher à en savoir plus. Mais, avec le temps, nous avons pris le temps d'écouter
+Thierry et de découvrir un homme transformé, conscient de ses erreurs et déterminé à s'en
+sortir. Nous avons choisi de lui parler comme à un ami. Thierry est devenu pour nous une
+personne sur qui nous pouvons compter. Il est très serviable et aspire à une vie meilleure. II
+a même trouvé du travail à la mairie d'Avrankou. Petit à petit, il s'en sort, et le voir évoluer est
+une vraie joie. Depuis ce jour, j'ai compris l'importance de garder un regard personnel et
+ouvert sur chaque malade, sans se laisser influencer par les jugements du passé.</p>
+
+                      
+
+<p>La mission à la Saint-Camille, c'est aussi se laisser toucher simplement par nos amis.
+Je prendrai pour exemple Sikirou, un jeune homme de 17 ans présentant une importante
+déficience intellectuelle. Il est arrivé au centre il y a quelques années. Ce jeune a tendance
+à nous attraper les joues ou à vouloir nous faire des bisous. Il présente également une grande
+rigidité corporelle et un fort bruxisme.</p>
+                      <p>Lors des premiers jours au centre, j'appréhendais un peu sa présence : il se jetait souvent sur
+nous, et nous ne savions pas comment réagir. Nous étions à la fois confrontées à une
+personne en situation de handicap, et à nos propres limites corporelles, parfois violemment
+bousculées. Ce patient nous faisait en réalité un peu peur au début. Puis, lorsque nous avons
+commencé nos activités, j'étais persuadée qu'il ne serait pas capable de rester plus de trois
+minutes assis sur une chaise, encore moins de terminer une tâche. Et pourtant, une fois de
+plus, la première impression s'est révélée trompeuse. Sikirou est resté durant toute l'activité,
+concentré sur sa peinture, réalisant plusieurs œuvres sans crier, et nous appelant parfois pour
+que nous venions admirer et valider son œuvre. Au fil du temps, il nous a encore surprises :il
+sait jouer du tam-tam, chantonner en dessinant et même danser!</p>
+                      <p>En somme, Sikirou nous émerveille un peu plus chaque jour et fait partie des personnes qui
+nous aident à dépasser nos préjugés et à nous laisser porter par la mission.</p>
+
+
+
+                      
+                       
+                        <h4>✝️ La dimension spirituelle de mon engagement</h4>
+                      <p>Lorsque je suis partie au Bénin, je pensais arriver avec une foi déjà bien solide, nourrie par
+mon éducation, ma pratique et mon engagement dans la mission. Et pourtant, j'ai été
+surprise de constater à quel point ma foi semblait bien pauvre face à celle de la plupart des
+patients que j'ai rencontrés.</p>
+                      <p>Nos amis rendent grâce pour tout, car tout le bien est considéré comme l'œuvre du
+Seigneur. La foi donne à leur vie une dimension d'espérance immense. Lorsque j'encourage
+les patients en leur disant "ça va aller », ils répondent souvent : "Dieu fera" ou "Dieu est
+grand". Toute leur vie, leurs rêves, leur guérison reposent sur leur foi. Elle est leur pilier et
+parfois même le seul auquel ils peuvent s'accrocher dans les moments difficiles.</p>
+                      <p>Un jour, la mère d'un patient m'a dit : "On a toujours besoin d'un plus petit que soi".
+Ces mots m'ont particulièrement touchée. Elle récapitule parfaitement ce que je vis ici : les
+malades m'enseignent la simplicité, l'amour gratuit, le pardon et la patience.</p>
+
+                      <p>Finalement, la mission m'amène à accepter mes limites et mes faiblesses et m'aide à mieux
+accueillir et comprendre celles des autres, en saisissant humblement que nous sommes
+appelés à le servir le Christ avec toute notre humanité, faite à la fois de richesses et de
+fragilités.</p>
+                      <p>En résumé, je peux dire que ce début d'aventure béninoise est à la fois déroutant et d'une
+grande richesse. Peu à peu, nous nous laissons apprivoiser par cette culture et par les
+personnes que nous rencontrons. Nous sentons nos cœurs s'ouvrir et se transformer jour
+après jour.</p>
+                      <p>Je compte toujours sur vos prières, afin que le Seigneur m'accompagne, m'inspire et fasse
+grandir en moi, chaque jour, la joie de servir et d'aimer.</p>
+
+                      
+                      
+                        <p>A très bientôt pour de nouvelles aventures,<br><strong>Noémie</strong></p>
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+  </div>
+
+  <div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="close-modal" onclick="closeModal()">×</span>
+    <img class="modal-content" id="modalImage">
+  </div>
+
+  <script>
+    const defaultConfig = {
+      film_title: "Mission Bénin",
+      duration: "15-20 minutes",
+      genre: "Documentaire"
+    };
+
+    function openModal(imageSrc) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modal.style.display = 'block';
+      modalImg.src = imageSrc;
+    }
+
+    function closeModal() {
+      document.getElementById('imageModal').style.display = 'none';
+    }
+
+    function showTab(tabName) {
+      // Hide all tab contents
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(content => content.classList.remove('active'));
+
+      // Remove active class from all tabs
+      const tabs = document.querySelectorAll('.nav-tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+
+      // Show selected tab content
+      document.getElementById(tabName).classList.add('active');
+
+      // Add active class to clicked tab
+      event.target.classList.add('active');
+    }
+    
+    // NOUVELLE FONCTION POUR LE RAPPORT
+    function toggleReport(id) {
+        const content = document.getElementById(id);
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+    }
+    
+    // NOUVELLE FONCTION POUR LE MODE LECTURE
+    function toggleReading(id) {
+        const textDiv = document.getElementById(id);
+        const btn = event.target;
+        
+        if (textDiv.style.display === "block") {
+            textDiv.style.display = "none";
+            btn.innerHTML = "📱 Lire sur téléphone";
+            btn.style.background = "#DAA520";
+        } else {
+            textDiv.style.display = "block";
+            btn.innerHTML = "❌ Fermer la lecture";
+            btn.style.background = "#8B4513";
+            // Scroll to text
+            setTimeout(() => {
+                textDiv.scrollIntoView({behavior: "smooth", block: "start"});
+            }, 100);
+        }
+    }
+
+    async function onConfigChange(config) {
+      const filmTitle = config.film_title || defaultConfig.film_title;
+      const duration = config.duration || defaultConfig.duration;
+      const genre = config.genre || defaultConfig.genre;
+
+      document.getElementById('filmTitle').textContent = filmTitle;
+      document.getElementById('titleValue').textContent = filmTitle;
+      document.getElementById('durationValue').textContent = duration;
+      document.getElementById('genreValue').textContent = genre;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["film_title", config.film_title || defaultConfig.film_title],
+        ["duration", config.duration || defaultConfig.duration],
+        ["genre", config.genre || defaultConfig.genre]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    // Add smooth scrolling and animations
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animate cards on scroll
+      const cards = document.querySelectorAll('.content-card, .timeline-item, .music-item');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      });
+
+      cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+      });
+    });
+  </script>
+</body>
+</html>
