@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refuge des oubliés - Documentaire</title>
+
+    <!-- Icône d'onglet (Favicon) -->
+    <link rel="icon" type="image/x-icon" href="https://www.shareicon.net/download/2016/07/04/637229_benin.ico">
+
+    <!-- Polices Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Variables de couleurs - Thème Jaune Cinéma */
+        :root {
+            --bg-color: #0b0c10;
+            --bg-card: #1f2833;
+            --accent-color: #eab308; /* Jaune Cinéma / Or */
+            --accent-hover: #ca8a04;  /* Jaune plus sombre au survol */
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* En-tête / Hero Section */
+        header {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            background: radial-gradient(circle at top, rgba(234, 179, 8, 0.12) 0%, rgba(11, 12, 16, 1) 70%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        @media (min-width: 900px) {
+            .hero-grid {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+        /* Affiche de film */
+        .poster-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .poster-wrapper {
+            position: relative;
+            max-width: 400px;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(234, 179, 8, 0.15);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .poster-wrapper:hover {
+            transform: scale(1.03);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(234, 179, 8, 0.3);
+        }
+
+        .poster-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Bouton Play sur l'affiche */
+        .poster-play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .poster-wrapper:hover .poster-play-overlay {
+            opacity: 1;
+        }
+
+        .play-icon-large {
+            width: 80px;
+            height: 80px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.6);
+        }
+
+        .play-icon-large:hover {
+            transform: scale(1.1);
+            background-color: var(--accent-hover);
+        }
+
+        /* Contenu textuel Hero */
+        .hero-content {
+            flex: 1.3;
+        }
+
+        .genre {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            background: linear-gradient(45deg, #ffffff, #f3f4f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2.2rem;
+            }
+        }
+
+        .synopsis {
+            font-size: 1.1rem;
+            color: #d1d5db;
+            margin-bottom: 35px;
+            text-align: justify;
+            font-weight: 300;
+        }
+
+        /* Boutons d'action */
+        .btn-play {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background-color: var(--accent-color);
+            color: #111; /* Texte sombre sur bouton jaune pour lisibilité */
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 20px rgba(234, 179, 8, 0.2);
+        }
+
+        .btn-play:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(234, 179, 8, 0.4);
+        }
+
+        .btn-play svg {
+            fill: currentColor;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Bouton Don - mise en avant */
+        .btn-donate-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-donate {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: transparent;
+            color: var(--accent-color);
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1rem;
+            border: 2px solid var(--accent-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-donate:hover {
+            background-color: var(--accent-color);
+            color: #111;
+            transform: translateY(-2px);
+        }
+
+        /* Section Infos / Equipe */
+        .section-team {
+            padding: 80px 20px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 15px auto 0;
+        }
+
+        /* Réalisateur */
+        .director-card {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .director-role {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .director-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Missionnaires */
+        .missionaries-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 600px) {
+            .missionaries-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .member-card {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .member-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(234, 179, 8, 0.3);
+        }
+
+        .member-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+        }
+
+        .member-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .member-link:hover .member-avatar {
+            transform: scale(1.05);
+        }
+
+        .member-role {
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .member-link:hover .member-name {
+            color: var(--accent-color);
+        }
+
+        /* Bouton Soutenir sous chaque missionnaire */
+        .btn-support {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 18px;
+            background-color: var(--accent-color);
+            color: #111;
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-support:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Section Partenaires */
+        .section-partners {
+            padding: 60px 20px;
+            background-color: var(--bg-color);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .partners-logo-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            margin-top: 30px;
+        }
+
+        .partner-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .partner-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .partner-logo {
+            max-height: 55px;
+            width: auto;
+            max-width: 220px;
+            object-fit: contain;
+            filter: grayscale(100%) brightness(0) invert(1) opacity(0.7);
+            transition: filter 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
+        }
+
+        .partner-logo:hover {
+            filter: none;
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* Section Don */
+        .section-donate {
+            padding: 70px 20px;
+            background: radial-gradient(circle at center, rgba(234, 179, 8, 0.1) 0%, rgba(11, 12, 16, 1) 80%);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .donate-text {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #d1d5db;
+            font-size: 1.05rem;
+            font-weight: 300;
+        }
+
+        .btn-donate-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background-color: var(--accent-color);
+            color: #111;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1.15rem;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 20px rgba(234, 179, 8, 0.2);
+        }
+
+        .btn-donate-main:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(234, 179, 8, 0.4);
+        }
+
+        .btn-donate-main svg {
+            fill: currentColor;
+            width: 22px;
+            height: 22px;
+        }
+
+        /* LECTEUR VIDÉO (Plein écran / Overlay) */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .video-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: #000;
+        }
+
+        /* Curseur caché en plein écran si inactif */
+        .video-container.hide-cursor {
+            cursor: none;
+        }
+
+        .video-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* BANDEAU SUPÉRIEUR STYLE NETFLIX (Contient le bouton Fermer) */
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
+            z-index: 11;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .top-bar.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .top-bar-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* Zone de détection invisible tout en haut (pour réactiver au survol de la souris) */
+        .top-trigger {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            z-index: 10;
+            background: transparent;
+        }
+
+        /* Bouton fermer */
+        .close-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        .close-btn:hover {
+            background-color: var(--accent-color);
+            color: #111;
+            border-color: var(--accent-color);
+        }
+
+        .close-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECTION PRINCIPALE / HERO -->
+    <header>
+        <div class="container">
+            <div class="hero-grid">
+                <!-- Affiche de film -->
+                <div class="poster-container">
+                    <div class="poster-wrapper" id="posterPlay">
+                        <img src="https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg" alt="Affiche Refuge des oubliés" class="poster-img">
+                        <div class="poster-play-overlay">
+                            <div class="play-icon-large">
+                                <svg viewBox="0 0 24 24" width="36" height="36" fill="#111">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Texte de présentation -->
+                <div class="hero-content">
+                    <div class="genre">Documentaire</div>
+                    <h1 class="title">Refuge des oubliés</h1>
+                    <p class="synopsis">
+                        Au Bénin, pays de plus de 14 millions d’habitants, il n’existe qu’un seul hôpital psychiatrique public, dont l’accès est conditionné par des moyens financiers que la majorité ne possède pas. Face à cette détresse, l’association Saint-Camille de Lellis se mobilise pour offrir une prise en charge totalement gratuite à ces malades délaissés. C’est au sein de cette mission que Noémie et Suzanne se sont engagées bénévolement. À travers leur regard, ce documentaire nous plonge au cœur d'une dure réalité, révélant pourtant, au-delà de la souffrance et de la précarité, la joie profonde et contagieuse qui habite les malades.
+                    </p>
+                    <button class="btn-play" id="mainPlayBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Regarder le film
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION L'ÉQUIPE -->
+    <section class="section-team">
+        <div class="container">
+            <h2 class="section-title">L'Équipe du Film</h2>
+
+            <!-- Réalisateur -->
+            <div class="director-card">
+                <div class="director-role">Réalisateur</div>
+                <div class="director-name">Cyprien Veyret</div>
+            </div>
+
+            <!-- Missionnaires -->
+            <div class="missionaries-grid">
+                <!-- Noémie -->
+                <div class="member-card">
+                    <a href="https://www.fidesco.fr/volontaire/noemie-veyret" target="_blank" rel="noopener noreferrer" class="member-link">
+                        <img src="https://www.fidesco.fr/images-mission-vsi-catholique/elementor/thumbs/veyret2025-portrait-r7jjs99dezviqi282ud2relejjyojwnfze5xhtq2u8.jpg" alt="Noémie VEYRET" class="member-avatar">
+                        <div class="member-role">Missionnaire Volontaire</div>
+                        <div class="member-name">Noémie VEYRET</div>
+                    </a>
+                    <a href="https://www.fidesco.fr/volontaire/noemie-veyret" target="_blank" rel="noopener noreferrer" class="btn-support">
+                        Soutenir Noémie
+                    </a>
+                </div>
+                <!-- Suzanne -->
+                <div class="member-card">
+                    <a href="https://www.fidesco.fr/volontaire/suzanne-callies" target="_blank" rel="noopener noreferrer" class="member-link">
+                        <img src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/06/callies2025-portrait-300x300.jpg" alt="Suzanne CALLIES" class="member-avatar">
+                        <div class="member-role">Missionnaire Volontaire</div>
+                        <div class="member-name">Suzanne CALLIES</div>
+                    </a>
+                    <a href="https://www.fidesco.fr/volontaire/suzanne-callies" target="_blank" rel="noopener noreferrer" class="btn-support">
+                        Soutenir Suzanne
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION PARTENAIRES -->
+    <section class="section-partners">
+        <div class="container">
+            <h2 class="section-title">Partenaires officiels</h2>
+            <div class="partners-logo-container">
+                <!-- Fidesco -->
+                <div class="partner-wrapper">
+                    <a href="https://www.fidesco.fr/" target="_blank" rel="noopener noreferrer" class="partner-link">
+                        <img class="partner-logo" src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/01/logo-fidesco.svg" alt="Fidesco">
+                    </a>
+                </div>
+                <!-- Association Saint-Camille -->
+                <div class="partner-wrapper">
+                    <a href="https://www.amis-st-camille.org/" target="_blank" rel="noopener noreferrer" class="partner-link">
+                        <img class="partner-logo" src="https://associationsaintcamille.org/wp-content/uploads/2018/06/cropped-LOGO-AMELIORE-2-1.png" alt="Association Saint-Camille de Lellis">
+                    </a>
+                </div>
+                <!-- Lycée Lalande -->
+                <div class="partner-wrapper">
+                    <a href="https://lalande.ent.auvergnerhonealpes.fr/" target="_blank" rel="noopener noreferrer" class="partner-link">
+                        <img class="partner-logo" src="https://lalande.ent.auvergnerhonealpes.fr/lectureFichiergw.do?ID_FICHIER=1491401240635" alt="Lycée Lalande">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION FAIRE UN DON -->
+    <section class="section-donate">
+        <div class="container">
+            <h2 class="section-title">Faire un don</h2>
+            <p class="donate-text">
+                Soutenez l'association Saint-Camille de Lellis et son action auprès des malades psychiatriques délaissés au Bénin. Chaque don, quel qu'il soit, contribue à offrir un accompagnement digne et gratuit à ceux qui en ont le plus besoin.
+            </p>
+            <a href="https://www.amis-st-camille.org/participer/faire-un-don/don-paypal/" target="_blank" rel="noopener noreferrer" class="btn-donate-main">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                Faire un don
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Refuge des oubliés. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- CONTENEUR DU LECTEUR -->
+    <div class="video-overlay" id="videoOverlay">
+        <!-- Zone invisible pour détecter le passage de la souris en haut de l'écran -->
+        <div class="top-trigger" id="topTrigger"></div>
+
+        <!-- Bandeau supérieur (contenant le bouton Fermer) -->
+        <div class="top-bar" id="topBar">
+            <span class="top-bar-title">Refuge des oubliés</span>
+            <button class="close-btn" id="closeVideo">
+                Fermer
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="video-container" id="videoContainer">
+            <iframe id="videoIframe" class="video-iframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- CODE JAVASCRIPT -->
+    <script>
+        const videoOverlay = document.getElementById('videoOverlay');
+        const videoContainer = document.getElementById('videoContainer');
+        const videoIframe = document.getElementById('videoIframe');
+        const mainPlayBtn = document.getElementById('mainPlayBtn');
+        const posterPlay = document.getElementById('posterPlay');
+        const closeVideo = document.getElementById('closeVideo');
+
+        const topTrigger = document.getElementById('topTrigger');
+        const topBar = document.getElementById('topBar');
+
+        // URL d'intégration YouTube (avec lecture automatique forcée)
+        const videoUrl = "https://www.youtube.com/embed/OCO9W9VPPc0?autoplay=1&modestbranding=1&rel=0";
+
+        // Variables pour gérer l'affichage intelligent du bouton fermer
+        let inactivityTimeout;
+
+        // Fonction pour afficher le bandeau supérieur de contrôles
+        function showControls() {
+            topBar.classList.add('visible');
+            videoContainer.classList.remove('hide-cursor');
+
+            // On réinitialise le timer d'inactivité
+            clearTimeout(inactivityTimeout);
+            inactivityTimeout = setTimeout(() => {
+                if (videoOverlay.classList.contains('active')) {
+                    topBar.classList.remove('visible');
+                    videoContainer.classList.add('hide-cursor'); // Cache aussi le curseur de souris
+                }
+            }, 3000); // Disparaît après 3 secondes d'inactivité
+        }
+
+        // Demande de passage au plein écran natif du navigateur
+        function requestNativeFullscreen(element) {
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) { /* Safari / Chrome iOS */
+                element.webkitRequestFullscreen();
+            } else if (element.mozRequestFullScreen) { /* Firefox */
+                element.mozRequestFullScreen();
+            } else if (element.msRequestFullscreen) { /* IE/Edge */
+                element.msRequestFullscreen();
+            }
+        }
+
+        // Sortie du plein écran natif
+        function exitNativeFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+
+        // Fonction pour démarrer la vidéo et passer en plein écran
+        function openPlayer() {
+            videoIframe.src = videoUrl;
+            videoOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Bloque le scroll
+
+            // Force le plein écran
+            requestNativeFullscreen(videoOverlay);
+
+            // Affiche les contrôles au démarrage, puis lance le comportement d'inactivité
+            showControls();
+        }
+
+        // Fonction pour fermer la vidéo et stopper le flux
+        function closePlayer() {
+            videoIframe.src = ""; // Stop le son et l'image de la vidéo
+            videoOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restaure le scroll
+
+            // Reset des contrôles
+            clearTimeout(inactivityTimeout);
+            topBar.classList.remove('visible');
+            videoContainer.classList.remove('hide-cursor');
+
+            // Si le navigateur est toujours en plein écran, on en sort
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
+                exitNativeFullscreen();
+            }
+        }
+
+        // Événements de clics
+        mainPlayBtn.addEventListener('click', openPlayer);
+        posterPlay.addEventListener('click', openPlayer);
+        closeVideo.addEventListener('click', closePlayer);
+
+        // Événements souris pour afficher/masquer le bouton "Fermer"
+        // Le survol de la zone tout en haut déclenche l'affichage
+        topTrigger.addEventListener('mouseenter', showControls);
+        topBar.addEventListener('mouseenter', () => {
+            // Empêche la disparition des contrôles tant qu'on est au-dessus du bandeau
+            topBar.classList.add('visible');
+            clearTimeout(inactivityTimeout);
+        });
+        topBar.addEventListener('mouseleave', showControls);
+
+        // Si l'utilisateur clique ou touche les bordures externes, affiche aussi les contrôles
+        videoOverlay.addEventListener('mousemove', showControls);
+        videoOverlay.addEventListener('touchstart', showControls);
+
+        // Détection de la fermeture du plein écran par l'utilisateur (Touche ESC / Échap ou bouton retour de l'appareil)
+        function onFullscreenChange() {
+            const isFullscreen = document.fullscreenElement || 
+                                 document.webkitFullscreenElement || 
+                                 document.mozFullScreenElement || 
+                                 document.msFullscreenElement;
+
+            // Si l'utilisateur a quitté le plein écran natif, on coupe la vidéo proprement
+            if (!isFullscreen && videoOverlay.classList.contains('active')) {
+                closePlayer();
+            }
+        }
+
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+        document.addEventListener('mozfullscreenchange', onFullscreenChange);
+        document.addEventListener('MSFullscreenChange', onFullscreenChange);
+    </script>
+</body>
+</html>
