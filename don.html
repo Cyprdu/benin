@@ -67,15 +67,23 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
         }
 
+        /* Conteneur de l'affiche */
+        .poster-wrapper {
+            position: relative;
+            max-width: 400px;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(234, 179, 8, 0.15);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
         .poster-wrapper:hover {
             transform: scale(1.03);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(234, 179, 8, 0.3);
-        }
-
-        .poster-img {
-            width: 100%;
-            height: auto;
-            display: block;
         }
 
         /* Bouton Play sur l'affiche */
@@ -91,6 +99,7 @@
             justify-content: center;
             opacity: 0;
             transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
         .poster-wrapper:hover .poster-play-overlay {
@@ -109,7 +118,7 @@
             box-shadow: 0 0 20px rgba(234, 179, 8, 0.6);
         }
 
-        .play-icon-large:hover {
+        .poster-wrapper:hover .play-icon-large {
             transform: scale(1.1);
             background-color: var(--accent-hover);
         }
@@ -552,7 +561,7 @@
             <div class="hero-grid">
                 <!-- Affiche de film -->
                 <div class="poster-container">
-                    <a href="https://www.youtube.com/watch?v=OCO9W9VPPc0" target="_blank" rel="noopener noreferrer" class="poster-wrapper" id="posterPlay">
+                    <div class="poster-wrapper" id="posterPlay">
                         <img src="https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg" alt="Affiche Refuge des oubliés" class="poster-img">
                         <div class="poster-play-overlay">
                             <div class="play-icon-large">
@@ -561,7 +570,7 @@
                                 </svg>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div><!-- Texte de présentation -->
                 <div class="hero-content">
                     <div class="genre">Documentaire</div>
@@ -624,7 +633,8 @@
     </section><!-- SECTION GALERIE / CARROUSEL -->
     <section class="section-gallery">
         <div class="container">
-            <h2 class="section-title">Galerie du Film</h2><div class="carousel-wrapper">
+            <h2 class="section-title">Galerie du Film</h2>
+            <div class="carousel-wrapper">
                 <div class="carousel-track-container">
                     <div class="carousel-track" id="carouselTrack">
                         <div class="carousel-slide">
