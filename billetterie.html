@@ -6,10 +6,10 @@
     <title>Refuge des Oubliés</title>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="https://www.shareicon.net/download/2016/07/04/637229_benin.ico">
-    <!-- Google Fonts -->
+    <!-- Google Fonts : Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-deep: #07080a;
@@ -33,11 +33,12 @@
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Outfit', sans-serif;
             background-color: var(--bg-deep);
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* --- NAVIGATION --- */
@@ -85,7 +86,7 @@
             color: #111;
             padding: 10px 20px;
             border-radius: 30px;
-            font-weight: 700;
+            font-weight: 600;
             text-decoration: none;
             font-size: 0.9rem;
             transition: background 0.3s ease, transform 0.2s ease;
@@ -112,7 +113,7 @@
             width: 25px;
             height: 3px;
             background-color: var(--text-main);
-            border-radius: 3px;
+            border-radius: 2px;
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
@@ -223,12 +224,12 @@
             display: inline-block;
             background: rgba(212, 175, 55, 0.15);
             color: var(--accent-amber);
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
+            font-size: 0.75rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             margin-bottom: 15px;
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
@@ -243,11 +244,11 @@
         }
 
         .hero-desc {
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: #e5e7eb;
             margin-bottom: 30px;
-            font-weight: 300;
-            line-height: 1.6;
+            font-weight: 400;
+            line-height: 1.7;
         }
 
         .hero-buttons {
@@ -263,7 +264,7 @@
             gap: 10px;
             padding: 12px 25px;
             border-radius: 50px;
-            font-weight: 700;
+            font-weight: 600;
             text-decoration: none;
             font-size: 0.95rem;
             transition: background 0.3s ease, transform 0.2s ease;
@@ -300,12 +301,10 @@
                 text-align: center;
                 padding-top: 90px;
             }
-            /* Masque l'affiche et la pastille documentaire sur téléphone */
             .hero-poster-box,
             .hero-badge {
                 display: none;
             }
-            /* Réduit la taille maximale du logo-titre sur téléphone */
             .hero-title-img {
                 max-width: 260px;
                 margin: 0 auto 15px auto;
@@ -328,12 +327,12 @@
         }
 
         .section-title {
-            font-family: 'Cinzel', serif;
-            font-size: 2rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.3rem;
             text-align: center;
-            margin-bottom: 15px;
-            font-weight: 700;
-            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
         }
 
         .section-subtitle {
@@ -342,11 +341,12 @@
             max-width: 650px;
             margin: 0 auto 35px auto;
             font-size: 0.95rem;
+            font-weight: 400;
             padding: 0 10px;
         }
 
         @media (max-width: 768px) {
-            .section-title { font-size: 1.6rem; }
+            .section-title { font-size: 1.8rem; }
         }
 
         /* --- MODULE SÉANCES AVEC CALENDRIER DÉFILANT --- */
@@ -422,15 +422,15 @@
         }
 
         .date-number {
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
         }
 
         .date-month {
             font-size: 0.75rem;
             font-weight: 500;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .screenings-list {
@@ -463,8 +463,8 @@
         }
 
         .screening-datetime {
-            font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--accent-amber);
         }
@@ -480,6 +480,7 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            font-weight: 500;
         }
 
         .screening-badge-type {
@@ -494,7 +495,7 @@
             color: #111;
             padding: 10px 20px;
             border-radius: 30px;
-            font-weight: 700;
+            font-weight: 600;
             text-decoration: none;
             font-size: 0.9rem;
             white-space: nowrap;
@@ -536,18 +537,19 @@
         }
 
         .synopsis-text-box h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.7rem;
             margin-bottom: 15px;
             color: var(--accent-amber);
+            font-weight: 800;
         }
 
         .synopsis-text-box p {
             color: #d1d5db;
             margin-bottom: 15px;
-            font-weight: 300;
-            font-size: 0.95rem;
-            line-height: 1.6;
+            font-weight: 400;
+            font-size: 1rem;
+            line-height: 1.7;
         }
 
         .synopsis-visuals {
@@ -598,16 +600,16 @@
         .role-tag {
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             color: var(--accent-amber);
-            font-weight: 700;
+            font-weight: 600;
             margin-bottom: 6px;
         }
 
         .name-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.4rem;
-            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
             margin-bottom: 10px;
         }
 
@@ -647,7 +649,7 @@
             color: #111;
             padding: 10px 20px;
             border-radius: 30px;
-            font-weight: 700;
+            font-weight: 600;
             text-decoration: none;
             font-size: 0.85rem;
             width: 100%;
@@ -799,19 +801,16 @@
         .donate-box p {
             color: #d1d5db;
             margin-bottom: 25px;
-            font-size: 0.95rem;
-            font-weight: 300;
+            font-size: 1rem;
+            font-weight: 400;
         }
 
         /* --- FOOTER --- */
-        footer {
-            padding: 30px 0;
-            text-align: center;
-            background: var(--bg-deep);
-            border-top: 1px solid var(--border-glass);
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
+        <footer>
+            <div class="container">
+                <p>&copy; 2026 Refuge des Oubliés. Tous droits réservés.</p>
+            </div>
+        </footer>
     </style>
 </head>
 <body>
@@ -965,7 +964,7 @@
             <div class="director-box">
                 <img src="cyprienveyret.png" alt="Cyprien Veyret" class="member-avatar" onerror="this.src='https://via.placeholder.com/130?text=CV'">
                 <div class="role-tag">Réalisateur</div>
-                <div class="name-title">Cyprien Veyret</div>
+                <div class="name-title">Cyprien VEYRET</div>
             </div>
 
             <div class="missionaries-grid">
