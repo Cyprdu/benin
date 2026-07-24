@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refuge des Oubliés - Site Officiel & Séances</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://www.shareicon.net/download/2016/07/04/637229_benin.ico">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #07080a;
+            --bg-surface: #12151c;
+            --bg-card: #1a1f2c;
+            --accent-amber: #d4af37;
+            --accent-amber-hover: #e6c555;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-glass: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(7, 8, 10, 0.95);
+        }
+
+        .nav-logo-img {
+            max-height: 45px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-amber);
+        }
+
+        .btn-nav-ticket {
+            background-color: var(--accent-amber);
+            color: #111;
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-nav-ticket:hover {
+            background-color: var(--accent-amber-hover);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            .navbar { padding: 15px 20px; }
+            .nav-links { display: none; }
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            filter: brightness(0.7);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(7,8,10,0.95) 0%, rgba(7,8,10,0.4) 50%, rgba(7,8,10,0.7) 100%);
+            z-index: 1;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 120px 20px 60px;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .hero-poster-box {
+            flex: 0 0 340px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.2);
+            border: 1px solid var(--border-glass);
+            transition: transform 0.4s ease;
+        }
+
+        .hero-poster-box:hover {
+            transform: scale(1.02);
+        }
+
+        .hero-poster-box img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .hero-details {
+            flex: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-amber);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* --- TITRE NET (SANS FLOU) --- */
+        .hero-title-img {
+            max-width: 450px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 25px;
+            display: block;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+            opacity: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-title-img:hover {
+            transform: scale(1.02);
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: #e5e7eb;
+            margin-bottom: 35px;
+            font-weight: 300;
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--accent-amber);
+            color: #111;
+            padding: 15px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1.05rem;
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-amber-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            padding: 15px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.05rem;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(4px);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            .hero-container {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 100px;
+            }
+            .hero-poster-box {
+                max-width: 260px;
+                margin: 0 auto;
+            }
+            .hero-title-img {
+                margin: 0 auto 20px auto;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+        }
+
+        /* --- CONTAINER GLOBAL --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 40px auto;
+            font-size: 1.05rem;
+        }
+
+        /* --- MODULE SÉANCES AVEC CALENDRIER DÉFILANT --- */
+        .section-screenings {
+            padding: 100px 0;
+            background-color: var(--bg-surface);
+            border-top: 1px solid var(--border-glass);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .dates-scroller-wrapper {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto 50px auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dates-scroller {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 5px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-amber) var(--bg-card);
+            justify-content: center;
+        }
+
+        .date-card {
+            flex: 0 0 110px;
+            height: 110px;
+            background: rgba(26, 31, 44, 0.65);
+            backdrop-filter: blur(12px) grayscale(20%);
+            -webkit-backdrop-filter: blur(12px) grayscale(20%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-main);
+        }
+
+        .date-card:hover {
+            border-color: var(--accent-amber);
+            transform: translateY(-3px);
+            background: rgba(26, 31, 44, 0.85);
+        }
+
+        .date-card.active {
+            background: var(--accent-amber);
+            color: #111;
+            border-color: var(--accent-amber);
+        }
+
+        .date-day {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .date-number {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .date-month {
+            font-size: 0.8rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .screenings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .screening-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .screening-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .screening-card.past {
+            opacity: 0.4;
+            filter: grayscale(80%);
+            pointer-events: none;
+        }
+
+        .screening-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .screening-datetime {
+            font-family: 'Cinzel', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-amber);
+        }
+
+        .screening-location {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .screening-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 15px;
+        }
+
+        .screening-badge-type {
+            background: rgba(255,255,255,0.06);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .btn-book {
+            background-color: var(--accent-amber);
+            color: #111;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            transition: background 0.3s ease;
+        }
+
+        .btn-book:hover {
+            background-color: var(--accent-amber-hover);
+        }
+
+        .screening-card.past .btn-book {
+            background: var(--text-muted);
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .screening-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            .btn-book {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* --- SYNOPSIS & UNIVERS --- */
+        .section-synopsis {
+            padding: 100px 0;
+        }
+
+        .synopsis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .synopsis-text-box h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--accent-amber);
+        }
+
+        .synopsis-text-box p {
+            color: #d1d5db;
+            margin-bottom: 20px;
+            text-align: justify;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .synopsis-visuals {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .synopsis-visuals img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid var(--border-glass);
+            transition: transform 0.3s ease;
+        }
+
+        .synopsis-visuals img:hover {
+            transform: scale(1.03);
+        }
+
+        @media (max-width: 900px) {
+            .synopsis-grid { grid-template-columns: 1fr; }
+        }
+
+        /* --- L'ÉQUIPE --- */
+        .section-team {
+            padding: 100px 0;
+            background-color: var(--bg-surface);
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .director-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto 50px auto;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .member-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 3px solid var(--accent-amber);
+        }
+
+        .role-tag {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-amber);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .name-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .missionaries-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            align-items: stretch;
+        }
+
+        .missionary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 30px;
+            width: 320px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
+        }
+
+        .missionary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .missionary-content {
+            flex-grow: 1;
+        }
+
+        .missionary-card a.missionary-link {
+            text-decoration: none;
+            color: var(--text-main);
+            display: block;
+        }
+
+        .btn-support {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            background-color: var(--accent-amber);
+            color: #111;
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-support:hover {
+            background-color: var(--accent-amber-hover);
+        }
+
+        /* --- GALERIE / CARROUSEL --- */
+        .section-gallery {
+            padding: 100px 0;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            border: 1px solid var(--border-glass);
+        }
+
+        .carousel-track-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+        }
+
+        .carousel-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--border-glass);
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease, color 0.3s ease;
+            z-index: 10;
+        }
+
+        .carousel-arrow:hover {
+            background: var(--accent-amber);
+            color: #111;
+        }
+
+        .carousel-arrow svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .carousel-arrow.prev { left: 20px; }
+        .carousel-arrow.next { right: 20px; }
+
+        .carousel-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(7,8,10,0.7);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border-glass);
+            z-index: 10;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: var(--accent-amber);
+            transform: scale(1.3);
+        }
+
+        /* --- PARTENAIRES --- */
+        .section-partners {
+            padding: 80px 0;
+            background-color: var(--bg-surface);
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .partners-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .partner-logo {
+            max-height: 55px;
+            width: auto;
+            max-width: 200px;
+            object-fit: contain;
+            filter: grayscale(100%) brightness(0) invert(1) opacity(0.6);
+            transition: filter 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
+        }
+
+        .partner-logo:hover {
+            filter: none;
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* --- SECTION DON --- */
+        .section-donate {
+            padding: 100px 0;
+            background: radial-gradient(circle at center, rgba(212,175,55,0.08) 0%, rgba(7,8,10,1) 80%);
+            text-align: center;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .donate-box {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .donate-box p {
+            color: #d1d5db;
+            margin-bottom: 35px;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-glass);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <a href="#">
+            <img src="https://image.tmdb.org/t/p/original/fqphiSPJVXloNjLbMCnLdFdXE5N.png" alt="Refuge des Oubliés" class="nav-logo-img">
+        </a>
+        <ul class="nav-links">
+            <li><a href="#synopsis">Synopsis</a></li>
+            <li><a href="#seances">Séances & Billetterie</a></li>
+            <li><a href="#equipe">Équipe</a></li>
+            <li><a href="#galerie">Galerie</a></li>
+            <li><a href="#partenaires">Partenaires</a></li>
+        </ul>
+        <a href="#seances" class="btn-nav-ticket">Réserver une séance</a>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <video autoplay muted loop playsinline class="hero-video">
+            <source src="https://moncamp.fr/video/video.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-container">
+            <div class="hero-poster-box">
+                <img src="https://cinema-lalande.fr/BENIN%20-%20AFFICHE.jpeg" alt="Affiche Refuge des Oubliés">
+            </div>
+            <div class="hero-details">
+                <span class="hero-badge">Documentaire</span>
+                <img src="https://image.tmdb.org/t/p/original/fqphiSPJVXloNjLbMCnLdFdXE5N.png" alt="Refuge des Oubliés" class="hero-title-img">
+                <p class="hero-desc">
+                    Au Bénin, pays de plus de 14 millions d’habitants, il n’existe qu’un seul hôpital psychiatrique public, dont l’accès est conditionné par des moyens financiers que la majorité ne possède pas. Face à cette détresse, l’association Saint-Camille de Lellis se mobilise pour offrir une prise en charge totalement gratuite à ces malades délaissés.
+                </p>
+                <div class="hero-buttons">
+                    <a href="https://www.youtube.com/watch?v=OCO9W9VPPc0" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        Bande-annonce
+                    </a>
+                    <a href="#seances" class="btn-secondary">Voir les séances</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MODULE SÉANCES ET BILLETTERIE -->
+    <section class="section-screenings" id="seances">
+        <div class="container">
+            <h2 class="section-title">Projections & Billetterie</h2>
+            <p class="section-subtitle">Sélectionnez une date ci-dessous pour afficher les séances correspondantes.</p>
+            
+            <div class="dates-scroller-wrapper">
+                <div class="dates-scroller" id="datesScroller">
+                    <div class="date-card active" data-date="2026-05-10">
+                        <span class="date-day">Dim</span>
+                        <span class="date-number">10</span>
+                        <span class="date-month">Mai 2026</span>
+                    </div>
+                    <div class="date-card" data-date="2026-06-15">
+                        <span class="date-day">Lun</span>
+                        <span class="date-number">15</span>
+                        <span class="date-month">Juin 2026</span>
+                    </div>
+                    <div class="date-card" data-date="2026-06-22">
+                        <span class="date-day">Lun</span>
+                        <span class="date-number">22</span>
+                        <span class="date-month">Juin 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="screenings-list" id="screeningsList">
+                <!-- Séance active 1 -->
+                <div class="screening-card" data-date="2026-06-15" style="display: none;">
+                    <div class="screening-info">
+                        <span class="screening-datetime">15 Juin 2026 à 20:00</span>
+                        <span class="screening-location">Cinéma Le Zénith — Lyon</span>
+                        <div class="screening-meta">
+                            <span class="screening-badge-type">Avant-première</span>
+                            <span class="screening-badge-type">En présence de l'équipe</span>
+                        </div>
+                    </div>
+                    <a href="https://www.allocine.fr" target="_blank" rel="noopener noreferrer" class="btn-book">Réserver</a>
+                </div>
+
+                <!-- Séance active 2 -->
+                <div class="screening-card" data-date="2026-06-22" style="display: none;">
+                    <div class="screening-info">
+                        <span class="screening-datetime">22 Juin 2026 à 19:30</span>
+                        <span class="screening-location">Louxor — Paris</span>
+                        <div class="screening-meta">
+                            <span class="screening-badge-type">VOSTFR</span>
+                            <span class="screening-badge-type">4K</span>
+                        </div>
+                    </div>
+                    <a href="https://www.allocine.fr" target="_blank" rel="noopener noreferrer" class="btn-book">Réserver</a>
+                </div>
+
+                <!-- Séance passée -->
+                <div class="screening-card past" data-date="2026-05-10" style="display: flex;">
+                    <div class="screening-info">
+                        <span class="screening-datetime">10 Mai 2026 à 18:00</span>
+                        <span class="screening-location">Cinéma Lalande — Bourg-en-Bresse</span>
+                        <div class="screening-meta">
+                            <span class="screening-badge-type">Projection spéciale</span>
+                        </div>
+                    </div>
+                    <span class="btn-book">Séance passée</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SYNOPSIS & UNIVERS -->
+    <section class="section-synopsis" id="synopsis">
+        <div class="container">
+            <div class="synopsis-grid">
+                <div class="synopsis-text-box">
+                    <h3>Au cœur de la mission</h3>
+                    <p>
+                        C’est au sein de cette mission que Noémie et Suzanne se sont engagées bénévolement. À travers leur regard, ce documentaire nous plonge au cœur d'une dure réalité, révélant pourtant, au-delà de la souffrance et de la précarité, la joie profonde et contagieuse qui habite les malades.
+                    </p>
+                    <p>
+                        Un voyage bouleversant sur la dignité humaine, la résilience et la force de l'engagement face à l'indifférence.
+                    </p>
+                </div>
+                <div class="synopsis-visuals">
+                    <img src="https://image.tmdb.org/t/p/original/2tHTwLe02ojg0pRW21EYLCvTxuP.jpg" alt="Photogramme 1">
+                    <img src="https://image.tmdb.org/t/p/original/qGnolBf91g7iCh8nQMKpyD17Sg8.jpg" alt="Photogramme 2">
+                    <img src="https://image.tmdb.org/t/p/original/dxfhWZbRMMTh6Ujg7IxzPiJVlGb.jpg" alt="Photogramme 3">
+                    <img src="https://image.tmdb.org/t/p/original/aqr252L7Odj4s4gfLefydjYgHpA.jpg" alt="Photogramme 4">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- L'ÉQUIPE -->
+    <section class="section-team" id="equipe">
+        <div class="container">
+            <h2 class="section-title">L'Équipe du Film</h2>
+            
+            <div class="director-box">
+                <img src="cyprienveyret.png" alt="Cyprien Veyret" class="member-avatar" onerror="this.src='https://via.placeholder.com/130?text=CV'">
+                <div class="role-tag">Réalisateur</div>
+                <div class="name-title">Cyprien Veyret</div>
+            </div>
+
+            <div class="missionaries-grid">
+                <div class="missionary-card">
+                    <div class="missionary-content">
+                        <a href="https://www.fidesco.fr/volontaire/noemie-veyret" target="_blank" rel="noopener noreferrer" class="missionary-link">
+                            <img src="https://www.fidesco.fr/images-mission-vsi-catholique/elementor/thumbs/veyret2025-portrait-r7jjs99dezviqi282ud2relejjyojwnfze5xhtq2u8.jpg" alt="Noémie VEYRET" class="member-avatar">
+                            <div class="role-tag">Missionnaire Volontaire</div>
+                            <div class="name-title">Noémie VEYRET</div>
+                        </a>
+                    </div>
+                    <a href="https://www.fidesco.fr/volontaire/noemie-veyret" target="_blank" rel="noopener noreferrer" class="btn-support">Soutenir Noémie</a>
+                </div>
+
+                <div class="missionary-card">
+                    <div class="missionary-content">
+                        <a href="https://www.fidesco.fr/volontaire/suzanne-callies" target="_blank" rel="noopener noreferrer" class="missionary-link">
+                            <img src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/06/callies2025-portrait-300x300.jpg" alt="Suzanne CALLIES" class="member-avatar">
+                            <div class="role-tag">Missionnaire Volontaire</div>
+                            <div class="name-title">Suzanne CALLIES</div>
+                        </a>
+                    </div>
+                    <a href="https://www.fidesco.fr/volontaire/suzanne-callies" target="_blank" rel="noopener noreferrer" class="btn-support">Soutenir Suzanne</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERIE -->
+    <section class="section-gallery" id="galerie">
+        <div class="container">
+            <h2 class="section-title">Galerie du Film</h2>
+            <div class="carousel-wrapper">
+                <div class="carousel-track-container">
+                    <div class="carousel-track" id="carouselTrack">
+                        <div class="carousel-slide"><img src="https://image.tmdb.org/t/p/original/2tHTwLe02ojg0pRW21EYLCvTxuP.jpg" alt="Galerie 1"></div>
+                        <div class="carousel-slide"><img src="https://image.tmdb.org/t/p/original/qGnolBf91g7iCh8nQMKpyD17Sg8.jpg" alt="Galerie 2"></div>
+                        <div class="carousel-slide"><img src="https://image.tmdb.org/t/p/original/dxfhWZbRMMTh6Ujg7IxzPiJVlGb.jpg" alt="Galerie 3"></div>
+                        <div class="carousel-slide"><img src="https://image.tmdb.org/t/p/original/aqr252L7Odj4s4gfLefydjYgHpA.jpg" alt="Galerie 4"></div>
+                        <div class="carousel-slide"><img src="https://image.tmdb.org/t/p/original/r3xwtm1VbQOg4nief7HlYf9LUZL.jpg" alt="Galerie 5"></div>
+                        <div class="carousel-slide"><img src="https://image.tmdb.org/t/p/original/tM5Wsq0HY1gIvME00oRRLFLgQs1.jpg" alt="Galerie 6"></div>
+                    </div>
+                    <div class="carousel-counter" id="carouselCounter">1 / 6</div>
+                    <button class="carousel-arrow prev" id="prevBtn" aria-label="Précédent"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+                    <button class="carousel-arrow next" id="nextBtn" aria-label="Suivant"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PARTENAIRES -->
+    <section class="section-partners" id="partenaires">
+        <div class="container">
+            <h2 class="section-title">Partenaires officiels</h2>
+            <div class="partners-container">
+                <a href="https://www.fidesco.fr/" target="_blank" rel="noopener noreferrer"><img class="partner-logo" src="https://www.fidesco.fr/images-mission-vsi-catholique/2025/01/logo-fidesco.svg" alt="Fidesco"></a>
+                <a href="https://www.amis-st-camille.org/" target="_blank" rel="noopener noreferrer"><img class="partner-logo" src="https://associationsaintcamille.org/wp-content/uploads/2018/06/cropped-LOGO-AMELIORE-2-1.png" alt="Saint-Camille"></a>
+                <a href="https://lalande.ent.auvergnerhonealpes.fr/" target="_blank" rel="noopener noreferrer"><img class="partner-logo" src="https://lalande.ent.auvergnerhonealpes.fr/lectureFichiergw.do?ID_FICHIER=1491401240635" alt="Lycée Lalande"></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION DON -->
+    <section class="section-donate" id="don">
+        <div class="container">
+            <div class="donate-box">
+                <h2 class="section-title">Soutenir la mission</h2>
+                <p>
+                    Chaque don, quel qu'il soit, contribue à offrir un accompagnement digne et gratuit aux malades psychiatriques délaissés au Bénin via l'association Saint-Camille de Lellis.
+                </p>
+                <a href="https://www.amis-st-camille.org/participer/faire-un-don/don-paypal/" target="_blank" rel="noopener noreferrer" class="btn-primary">Faire un don en ligne</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Refuge des Oubliés. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Carrousel galerie
+            const track = document.getElementById('carouselTrack');
+            const slides = Array.from(track.children);
+            const nextButton = document.getElementById('nextBtn');
+            const prevButton = document.getElementById('prevBtn');
+            const dotsContainer = document.getElementById('carouselDots');
+            const counter = document.getElementById('carouselCounter');
+
+            let currentIndex = 0;
+
+            slides.forEach((_, index) => {
+                const dot = document.createElement('button');
+                dot.classList.add('carousel-dot');
+                if (index === 0) dot.classList.add('active');
+                dotsContainer.appendChild(dot);
+                dot.addEventListener('click', () => moveToSlide(index));
+            });
+
+            const dots = Array.from(dotsContainer.children);
+
+            function updateCarousel() {
+                track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                counter.textContent = `${currentIndex + 1} / ${slides.length}`;
+                dots.forEach(dot => dot.classList.remove('active'));
+                dots[currentIndex].classList.add('active');
+            }
+
+            function moveToSlide(index) {
+                currentIndex = index;
+                updateCarousel();
+            }
+
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                updateCarousel();
+            });
+
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                updateCarousel();
+            });
+
+            // Filtres par calendrier de dates pour les séances
+            const dateCards = document.querySelectorAll('.date-card');
+            const screeningCards = document.querySelectorAll('.screening-card');
+
+            dateCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    dateCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    const selectedDate = card.getAttribute('data-date');
+
+                    screeningCards.forEach(scCard => {
+                        if (scCard.getAttribute('data-date') === selectedDate) {
+                            scCard.style.display = 'flex';
+                        } else {
+                            scCard.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
