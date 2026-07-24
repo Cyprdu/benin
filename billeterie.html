@@ -180,7 +180,6 @@
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        /* --- TITRE NET (SANS FLOU) --- */
         .hero-title-img {
             max-width: 450px;
             width: 100%;
@@ -189,11 +188,6 @@
             display: block;
             filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
             opacity: 1;
-            transition: transform 0.3s ease;
-        }
-
-        .hero-title-img:hover {
-            transform: scale(1.02);
         }
 
         .hero-desc {
@@ -348,6 +342,16 @@
             background: var(--accent-amber);
             color: #111;
             border-color: var(--accent-amber);
+        }
+
+        /* Style pour les cartes de dates passées (grisées mais cliquables) */
+        .date-card.past {
+            opacity: 0.4;
+            filter: grayscale(80%);
+        }
+
+        .date-card.past:hover {
+            opacity: 0.7;
         }
 
         .date-day {
@@ -744,11 +748,11 @@
             max-width: 200px;
             object-fit: contain;
             filter: grayscale(100%) brightness(0) invert(1) opacity(0.6);
-            transition: filter 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
+        /* MODIFICATION ICI : Le filtre reste inchangé au survol, seule l'opacité et l'agrandissement changent */
         .partner-logo:hover {
-            filter: none;
             opacity: 1;
             transform: scale(1.05);
         }
@@ -774,13 +778,11 @@
         }
 
         /* --- FOOTER --- */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-glass);
-        }
+        <footer>
+            <div class="container">
+                <p>&copy; 2026 Refuge des Oubliés. Tous droits réservés.</p>
+            </div>
+        </footer>
     </style>
 </head>
 <body>
@@ -835,62 +837,73 @@
             
             <div class="dates-scroller-wrapper">
                 <div class="dates-scroller" id="datesScroller">
-                    <div class="date-card active" data-date="2026-07-01">
+                    <div class="date-card past" data-date="2026-07-01">
                         <span class="date-day">Mer</span>
                         <span class="date-number">1</span>
-                        <span class="date-month">Juillet 2026</span>
+                        <span class="date-month">Juil 2026</span>
+                    </div>
+                    <div class="date-card past" data-date="2026-07-02">
+                        <span class="date-day">Jeu</span>
+                        <span class="date-number">2</span>
+                        <span class="date-month">Juil 2026</span>
                     </div>
                     <div class="date-card" data-date="2026-09-17">
                         <span class="date-day">Jeu</span>
                         <span class="date-number">17</span>
-                        <span class="date-month">Septembre 2026</span>
+                        <span class="date-month">Sept 2026</span>
                     </div>
-
                 </div>
             </div>
 
             <div class="screenings-list" id="screeningsList">
-                <!-- Séance active 1 -->
-                <div class="screening-card" data-date="2026-07-01" style="display: none;">
+                <!-- Séance passée du 1er Juillet -->
+                <div class="screening-card past" data-date="2026-07-01" style="display: none;">
                     <div class="screening-info">
                         <span class="screening-datetime">1 Juillet 2026 à 19:00</span>
                         <span class="screening-location">Cinéma La Grennette Bourg-en-Bresse</span>
                         <div class="screening-meta">
                             <span class="screening-badge-type">Avant-première</span>
                             <span class="screening-badge-type">En présence du réalisateur</span>
+                            <span class="screening-badge-type">UHD - DOLBY ATMOS</span>
                         </div>
                     </div>
-                    <a href="http://cinema-lalande.fr" target="_blank" rel="noopener noreferrer" class="btn-book">Complet</a>
+                    <span class="btn-book">Séance passée</span>
                 </div>
-
-                <!-- Séance active 2 -->
-                <div class="screening-card" data-date="2026-06-22" style="display: none;">
+                <div class="screening-card past" data-date="2026-07-01" style="display: none;">
                     <div class="screening-info">
-                        <span class="screening-datetime">22 Juin 2026 à 19:30</span>
-                        <span class="screening-location">Lyon - Eicar</span>
+                        <span class="screening-datetime">1 Juillet 2026 à 18:30</span>
+                        <span class="screening-location">Projection EICAR Lyon</span>
                         <div class="screening-meta">
-                            <span class="screening-badge-type">Remise du prix AURA</span>
+                            <span class="screening-badge-type">Rémise Prix EICAR AURA</span>
                             <span class="screening-badge-type">UHD</span>
                         </div>
                     </div>
-                    <a href="http://cinema-lalande.fr" target="_blank" rel="noopener noreferrer" class="btn-book">Complet</a>
+                    <span class="btn-book">Séance passée</span>
                 </div>
 
-                <!-- Séance passée -->
-                <div class="screening-card past" data-date="2026-05-10" style="display: flex;">
+                <!-- Séance passée du 2 Juillet (EICAR Paris) -->
+                <div class="screening-card past" data-date="2026-07-02" style="display: none;">
+                    <div class="screening-info">
+                        <span class="screening-datetime">2 Juillet 2026 à 20:00</span>
+                        <span class="screening-location">EICAR Paris</span>
+                        <div class="screening-meta">
+                            <span class="screening-badge-type">Projection spéciale</span>
+                        </div>
+                    </div>
+                    <a href="https://www.eicar.fr/campus/paris" target="_blank" rel="noopener noreferrer" class="btn-book">Séance passée</a>
+                </div>
+
+                <!-- Séance à venir du 17 Septembre -->
+                <div class="screening-card" data-date="2026-09-17" style="display: none;">
                     <div class="screening-info">
                         <span class="screening-datetime">17 Septembre 2026 à 20:00</span>
                         <span class="screening-location">Cinéma Amphi Bourg-en-Bresse</span>
                         <div class="screening-meta">
                             <span class="screening-badge-type">Projection privée</span>
                             <span class="screening-badge-type">En présence de l'équipe du film</span>
-
                         </div>
                     </div>
-
-
-                    
-                    <span class="btn-book">Séance passée</span>
+                    <a href="http://cinema-lalande.fr" target="_blank" rel="noopener noreferrer" class="btn-book">Réserver</a>
                 </div>
             </div>
         </div>
@@ -1056,25 +1069,55 @@
                 updateCarousel();
             });
 
-            // Filtres par calendrier de dates pour les séances
+            // Gestion du calendrier de dates et des séances
             const dateCards = document.querySelectorAll('.date-card');
             const screeningCards = document.querySelectorAll('.screening-card');
 
+            // Fonction pour activer une date et afficher sa séance associée
+            function selectDate(targetDate) {
+                dateCards.forEach(c => {
+                    if (c.getAttribute('data-date') === targetDate) {
+                        c.classList.add('active');
+                    } else {
+                        c.classList.remove('active');
+                    }
+                });
+
+                screeningCards.forEach(scCard => {
+                    if (scCard.getAttribute('data-date') === targetDate) {
+                        scCard.style.display = 'flex';
+                    } else {
+                        scCard.style.display = 'none';
+                    }
+                });
+            }
+
+            // Écouteur de clic pour chaque carte de date (reste cliquable même grisée)
             dateCards.forEach(card => {
                 card.addEventListener('click', () => {
-                    dateCards.forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
                     const selectedDate = card.getAttribute('data-date');
-
-                    screeningCards.forEach(scCard => {
-                        if (scCard.getAttribute('data-date') === selectedDate) {
-                            scCard.style.display = 'flex';
-                        } else {
-                            scCard.style.display = 'none';
-                        }
-                    });
+                    selectDate(selectedDate);
                 });
             });
+
+            // Sélection automatique de la séance à venir la plus proche au chargement
+            const today = new Date().toISOString().split('T')[0];
+            let targetCard = null;
+            let firstCard = dateCards[0];
+            let closestFutureCard = null;
+
+            dateCards.forEach(card => {
+                const cardDate = card.getAttribute('data-date');
+                if (cardDate >= today && !closestFutureCard) {
+                    closestFutureCard = card;
+                }
+            });
+
+            // Priorité à la prochaine séance à venir, sinon repli sur la première date disponible
+            targetCard = closestFutureCard || firstCard;
+            if (targetCard) {
+                selectDate(targetCard.getAttribute('data-date'));
+            }
         });
     </script>
 </body>
