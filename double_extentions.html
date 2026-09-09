@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Incident simulé — Rapport de sécurité</title>
+<title>Incident simule — Rapport de securite</title>
 <style>
   :root{
     --bg: #0a0a0c;
@@ -30,7 +31,6 @@
     background:repeating-linear-gradient(135deg, var(--stripe-a) 0 18px, var(--stripe-b) 18px 36px);
   }
 
-  /* ---------- START SCREEN ---------- */
   #start-screen{
     min-height:100vh;
     display:flex;
@@ -83,7 +83,6 @@
   .enter-btn:active{transform:translateY(0);}
   #start-screen .note{margin-top:18px;font-size:13px;color:#6c6b70;}
 
-  /* ---------- MAIN APP ---------- */
   #app{display:none;min-height:100vh;flex-direction:column;}
   #app.visible{display:flex;}
 
@@ -279,7 +278,6 @@
   }
   .attempts{font-family:var(--mono);font-size:12px;color:#6c6b70;margin-top:10px;}
 
-  /* success */
   #success-box{display:none;text-align:center;padding:50px 20px;}
   #success-box.visible{display:block;}
   #success-box .check{
@@ -299,7 +297,6 @@
   }
   .quit-note{margin-top:14px;font-size:12.5px;color:#6c6b70;}
 
-  /* ---------- REFULLSCREEN OVERLAY ---------- */
   #refs-overlay{
     display:none;
     position:fixed;inset:0;
@@ -332,20 +329,18 @@
 </head>
 <body>
 
-<!-- START SCREEN -->
 <div id="start-screen">
   <svg class="siren" viewBox="0 0 24 24" fill="none">
     <path d="M12 2 L22 20 H2 Z" fill="none" stroke="#d81e1e" stroke-width="1.6" stroke-linejoin="round"/>
     <line x1="12" y1="9" x2="12" y2="14" stroke="#d81e1e" stroke-width="1.8" stroke-linecap="round"/>
     <circle cx="12" cy="16.8" r="1" fill="#d81e1e"/>
   </svg>
-  <h1>Attention ! Vous avez été victime d'un piratage informatique fictif.</h1>
-  <p class="sub">Voici la raison de votre chute&nbsp;: <strong>double extension</strong>. Ce rapport d'incident vous explique ce qui vient de se passer et comment l'éviter la prochaine fois. La lecture complète est obligatoire pour reprendre la main sur cette page.</p>
+  <h1>Attention ! Vous avez ete victime d'un piratage informatique fictif.</h1>
+  <p class="sub">Voici la raison de votre chute&nbsp;: <strong>double extension</strong>. Ce rapport d'incident vous explique ce qui vient de se passer et comment l'eviter la prochaine fois. La lecture complete est obligatoire pour reprendre la main sur cette page.</p>
   <button class="enter-btn" id="enter-btn" type="button">Ouvrir le rapport d'incident</button>
-  <div class="note">La page passera en plein écran. Elle ne se libère qu'une fois le document lu et le mot secret saisi.</div>
+  <div class="note">La page passera en plein ecran. Elle ne se libere qu'une fois le document lu et le mot secret saisi.</div>
 </div>
 
-<!-- MAIN APP -->
 <div id="app">
   <div class="hazard"></div>
   <header class="masthead">
@@ -354,13 +349,13 @@
       <img src="https://lesbases.anct.gouv.fr/images/7931e7bd-f9d3-4ab3-9da0-c8a83369398e.webp?width=3600" alt="Logo partenaire 2">
       <img src="https://www.linformaticien.com/images/00-articles/2024-11/Capture_de%CC%81cran_2024-12-20_a%CC%80_09.38.51.png" alt="Logo partenaire 3">
     </div>
-    <div class="masthead-title">SIMULATION · SENSIBILISATION CYBERSÉCURITÉ</div>
+    <div class="masthead-title">SIMULATION · SENSIBILISATION CYBERSECURITE</div>
   </header>
 
   <div class="alert-banner">
-    <span class="tag">INCIDENT SIMULÉ · NON RÉEL</span>
-    <h2>Vous avez été victime d'un piratage informatique fictif ! Voici la raison de votre chute : double extension.</h2>
-    <p>Aucune donnée n'a réellement été compromise. Ce message reproduit un scénario d'attaque courant pour vous apprendre à le reconnaître. Lisez le rapport ci-dessous jusqu'au bout pour débloquer la sortie.</p>
+    <span class="tag">INCIDENT SIMULE · NON REEL</span>
+    <h2>Vous avez ete victime d'un piratage informatique fictif ! Voici la raison de votre chute : double extension.</h2>
+    <p>Aucune donnee n'a reellement ete compromise. Ce message reproduit un scenario d'attaque courant pour vous apprendre a le reconnaitre. Lisez le rapport ci-dessous jusqu'au bout pour debloquer la sortie.</p>
   </div>
 
   <main>
@@ -371,17 +366,17 @@
 
           <div class="doc-section">
             <h3><span class="num">01</span> Ce qui vient de se passer</h3>
-            <p>Dans ce scénario, vous auriez ouvert une pièce jointe reçue par e-mail en pensant consulter un document classique — une facture, un CV, une photo. En réalité, le fichier contenait un programme capable de s'exécuter sur votre machine dès l'ouverture. La technique utilisée pour vous tromper porte un nom précis&nbsp;: la double extension.</p>
+            <p>Dans ce scenario, vous auriez ouvert une piece jointe recue par e-mail en pensant consulter un document classique — une facture, un CV, une photo. En realite, le fichier contenait un programme capable de s'executer sur votre machine des l'ouverture. La technique utilisee pour vous tromper porte un nom precis&nbsp;: la double extension.</p>
           </div>
 
           <div class="doc-section">
             <h3><span class="num">02</span> Qu'est-ce qu'une double extension</h3>
-            <p>Chaque fichier possède une extension qui indique au système comment le traiter : <code class="ex">.pdf</code> pour un document, <code class="ex">.jpg</code> pour une image, <code class="ex">.exe</code> pour un programme. Une double extension consiste à nommer un fichier avec deux extensions à la suite, par exemple <code class="ex">facture.pdf.exe</code>. Beaucoup de systèmes n'affichent par défaut que la dernière partie du nom qui leur semble familière, ou masquent purement et simplement les extensions connues.</p>
+            <p>Chaque fichier possede une extension qui indique au systeme comment le traiter : <code class="ex">.pdf</code> pour un document, <code class="ex">.jpg</code> pour une image, <code class="ex">.exe</code> pour un programme. Une double extension consiste a nommer un fichier avec deux extensions a la suite, par exemple <code class="ex">facture.pdf.exe</code>. Beaucoup de systemes n'affichent par defaut que la derniere partie du nom qui leur semble familiere, ou masquent purement et simplement les extensions connues.</p>
           </div>
 
           <div class="doc-section">
-            <h3><span class="num">03</span> Pourquoi ce piège fonctionne aussi bien</h3>
-            <p>Windows et macOS masquent souvent les extensions de fichiers par défaut pour "simplifier" l'affichage. Résultat&nbsp;: un fichier nommé <code class="ex">facture.pdf.exe</code> peut s'afficher simplement comme <code class="ex">facture.pdf</code>, avec en plus une icône de PDF si l'attaquant a pris soin de la falsifier. Rien ne vous alerte visuellement, alors que le fichier est en réalité un exécutable.</p>
+            <h3><span class="num">03</span> Pourquoi ce piege fonctionne aussi bien</h3>
+            <p>Windows et macOS masquent souvent les extensions de fichiers par defaut pour "simplifier" l'affichage. Resultat&nbsp;: un fichier nomme <code class="ex">facture.pdf.exe</code> peut s'afficher simplement comme <code class="ex">facture.pdf</code>, avec en plus une icone de PDF si l'attaquant a pris soin de la falsifier. Rien ne vous alerte visuellement, alors que le fichier est en realite un executable.</p>
             <ul>
               <li><code class="ex">rapport_final.docx.js</code> — se fait passer pour un document Word</li>
               <li><code class="ex">photo_vacances.jpg.scr</code> — se fait passer pour une image</li>
@@ -391,25 +386,25 @@
 
           <div class="doc-section">
             <h3><span class="num">04</span> Comment un pirate exploite cette technique</h3>
-            <p>Le scénario type&nbsp;: un e-mail imite une entreprise connue ou un collègue, avec un ton urgent ("facture en retard", "colis bloqué", "document à signer"). La pièce jointe porte un nom rassurant et une icône familière. En double-cliquant, la victime pense ouvrir un document alors qu'elle lance en réalité un programme qui peut installer un logiciel malveillant, voler des identifiants ou chiffrer des fichiers.</p>
-            <p>Pour être certain que vous avez lu l'intégralité de ce rapport, le mot secret à saisir dans le champ tout en bas de cette page est «&nbsp;<span class="secret" id="secret-word">MOTSECRET</span>&nbsp;». Retenez-le, il vous sera demandé à la fin.</p>
+            <p>Le scenario type&nbsp;: un e-mail imite une entreprise connue ou un collegue, avec un ton urgent ("facture en retard", "colis bloque", "document a signer"). La piece jointe porte un nom rassurant et une icone familiere. En double-cliquant, la victime pense ouvrir un document alors qu'elle lance en realite un programme qui peut installer un logiciel malveillant, voler des identifiants ou chiffrer des fichiers.</p>
+            <p>Pour etre certain que vous avez lu l'integralite de ce rapport, le mot secret a saisir dans le champ tout en bas de cette page est «&nbsp;<span class="secret" id="secret-word">MOTSECRET</span>&nbsp;». Retenez-le, il vous sera demande a la fin.</p>
           </div>
 
           <div class="doc-section">
-            <h3><span class="num">05</span> Comment s'en protéger</h3>
+            <h3><span class="num">05</span> Comment s'en proteger</h3>
             <ul>
-              <li>Affichez systématiquement les extensions de fichiers dans les paramètres de votre explorateur.</li>
-              <li>Vérifiez les propriétés d'un fichier avant de l'ouvrir plutôt que de vous fier à son icône.</li>
-              <li>Méfiez-vous des pièces jointes inattendues, même si l'expéditeur semble connu.</li>
-              <li>Vérifiez l'adresse e-mail complète de l'expéditeur, pas seulement le nom affiché.</li>
-              <li>Gardez un antivirus à jour et laissez-le analyser les pièces jointes avant ouverture.</li>
+              <li>Affichez systematiquement les extensions de fichiers dans les parametres de votre explorateur.</li>
+              <li>Verifiez les proprietes d'un fichier avant de l'ouvrir plutot que de vous fier a son icone.</li>
+              <li>Mefiez-vous des pieces jointes inattendues, meme si l'expediteur semble connu.</li>
+              <li>Verifiez l'adresse e-mail complete de l'expediteur, pas seulement le nom affiche.</li>
+              <li>Gardez un antivirus a jour et laissez-le analyser les pieces jointes avant ouverture.</li>
               <li>En cas de doute, contactez votre service informatique avant d'ouvrir le fichier.</li>
             </ul>
           </div>
 
           <div class="doc-section">
             <h3><span class="num">06</span> Ce qu'il faut retenir</h3>
-            <p>Un nom de fichier rassurant et une icône familière ne garantissent jamais la nature réelle d'un fichier. La double extension exploite la confiance que l'on place dans l'apparence plutôt que dans la vérification. Le réflexe à adopter est simple&nbsp;: en cas de doute sur une pièce jointe, on vérifie avant d'ouvrir, on ne fait jamais confiance à l'urgence apparente d'un message.</p>
+            <p>Un nom de fichier rassurant et une icone familiere ne garantissent jamais la nature reelle d'un fichier. La double extension exploite la confiance que l'on place dans l'apparence plutot que dans la verification. Le reflexe a adopter est simple&nbsp;: en cas de doute sur une piece jointe, on verifie avant d'ouvrir, on ne fait jamais confiance a l'urgence apparente d'un message.</p>
           </div>
 
           <div class="end-marker">— FIN DU RAPPORT —</div>
@@ -418,12 +413,12 @@
 
       <div class="status-row">
         <div class="status-chip"><span class="dot" id="dot-time"></span><span id="time-label">Temps de lecture minimum en cours…</span></div>
-        <div class="status-chip"><span class="dot" id="dot-scroll"></span><span id="scroll-label">Défilement jusqu'en bas requis</span></div>
+        <div class="status-chip"><span class="dot" id="dot-scroll"></span><span id="scroll-label">Defilement jusqu'en bas requis</span></div>
       </div>
 
       <div class="unlock-box disabled" id="unlock-box">
         <form id="unlock-form">
-          <label for="word-input">Mot secret indiqué dans le rapport ci-dessus</label>
+          <label for="word-input">Mot secret indique dans le rapport ci-dessus</label>
           <div class="unlock-row">
             <input type="text" id="word-input" autocomplete="off" placeholder="Saisissez le mot secret" disabled>
             <button type="submit" class="submit-btn" id="submit-btn" disabled>Valider</button>
@@ -438,8 +433,8 @@
           <circle cx="12" cy="12" r="10" stroke="#35c46a" stroke-width="1.6"/>
           <path d="M7.5 12.5l3 3 6-6.5" stroke="#35c46a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <h2>Rapport lu et validé</h2>
-        <p>Vous pouvez désormais quitter cette page. Le mode plein écran a été désactivé.</p>
+        <h2>Rapport lu et valide</h2>
+        <p>Vous pouvez desormais quitter cette page. Le mode plein ecran a ete desactive.</p>
         <button class="quit-btn" id="quit-btn" type="button">Quitter la page</button>
         <div class="quit-note">Si l'onglet ne se ferme pas automatiquement, vous pouvez le fermer manuellement.</div>
       </div>
@@ -447,10 +442,9 @@
     </div>
   </main>
 
-  <footer class="legal">Simulation pédagogique de sensibilisation — aucune donnée réelle n'a été affectée.</footer>
+  <footer class="legal">Simulation pedagogique de sensibilisation — aucune donnee reelle n'a ete affectee.</footer>
 </div>
 
-<!-- RE-FULLSCREEN OVERLAY -->
 <div id="refs-overlay">
   <div class="refs-card">
     <svg class="warn-icon" viewBox="0 0 24 24" fill="none">
@@ -458,16 +452,16 @@
       <line x1="12" y1="9" x2="12" y2="14" stroke="#d81e1e" stroke-width="1.8" stroke-linecap="round"/>
       <circle cx="12" cy="16.8" r="1" fill="#d81e1e"/>
     </svg>
-    <h3>Vous avez quitté le mode plein écran</h3>
-    <p>Le rapport n'a pas été validé. Un <strong>nouveau mot secret</strong> a été généré : relisez la section correspondante avant de le ressaisir.</p>
-    <button class="enter-btn" id="refs-btn" type="button">Revenir en plein écran</button>
+    <h3>Vous avez quitte le mode plein ecran</h3>
+    <p>Le rapport n'a pas ete valide. Un <strong>nouveau mot secret</strong> a ete genere : relisez la section correspondante avant de le ressaisir.</p>
+    <button class="enter-btn" id="refs-btn" type="button">Revenir en plein ecran</button>
   </div>
 </div>
 
 <script>
 (function(){
   var WORDS = ["VIGILANCE","EXTENSION","HAMECON","PAREFEU","PRUDENCE","ANTIVIRUS","PHISHING","CYBERVEILLE","MEFIANCE","SECURITE"];
-  var MIN_READ_SECONDS = 105; // ~2 min lecture minimum imposée
+  var MIN_READ_SECONDS = 30;
 
   var currentWord = null;
   var unlocked = false;
@@ -552,7 +546,7 @@
     if(atBottom && !scrollOk){
       scrollOk = true;
       dotScroll.classList.add('on');
-      scrollLabel.textContent = "Document défilé jusqu'en bas";
+      scrollLabel.textContent = "Document defile jusqu'en bas";
       checkUnlockReady();
     }
   });
@@ -583,7 +577,6 @@
     } else {
       refsOverlay.classList.add('visible');
       stopTimer();
-      // nouveau mot secret : oblige à relire pour retrouver la bonne réponse
       setWord(pickWord(currentWord));
     }
   }
@@ -601,7 +594,7 @@
       successBox.classList.add('visible');
     } else {
       formMsg.className = 'error';
-      formMsg.textContent = "Mot incorrect. Un nouveau mot secret a été généré, relisez la section 04.";
+      formMsg.textContent = "Mot incorrect. Un nouveau mot secret a ete genere, relisez la section 04.";
       attemptsLabel.textContent = "Tentatives : " + attempts;
       wordInput.classList.add('shake');
       setTimeout(function(){ wordInput.classList.remove('shake'); }, 320);
