@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incident simulé — Rapport de sécurité</title>
+<style>
+  :root{
+    --bg: #0a0a0c;
+    --panel: #131316;
+    --panel-2: #1b1b1f;
+    --stripe-a: #d81e1e;
+    --stripe-b: #0a0a0c;
+    --amber: #ffb020;
+    --text: #ece9e2;
+    --text-dim: #9b9a9e;
+    --ok: #35c46a;
+    --danger: #ff3b30;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--sans);height:100%;}
+  body{-webkit-font-smoothing:antialiased;}
+
+  .hazard{
+    height:14px;
+    width:100%;
+    background:repeating-linear-gradient(135deg, var(--stripe-a) 0 18px, var(--stripe-b) 18px 36px);
+  }
+
+  /* ---------- START SCREEN ---------- */
+  #start-screen{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:40px 20px;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(216,30,30,0.25), transparent 60%),
+      var(--bg);
+  }
+  .siren{
+    width:96px;height:96px;margin-bottom:28px;
+    filter:drop-shadow(0 0 22px rgba(216,30,30,.55));
+  }
+  #start-screen h1{
+    font-family:var(--sans);
+    font-weight:800;
+    font-size:clamp(28px,5vw,44px);
+    letter-spacing:-0.01em;
+    margin:0 0 14px;
+    color:var(--text);
+    max-width:820px;
+    line-height:1.15;
+  }
+  #start-screen .sub{
+    font-family:var(--serif);
+    font-size:19px;
+    color:var(--text-dim);
+    max-width:620px;
+    line-height:1.55;
+    margin:0 0 34px;
+  }
+  #start-screen .sub strong{color:var(--amber);font-style:italic;}
+  .enter-btn{
+    background:var(--stripe-a);
+    color:#fff;
+    border:none;
+    padding:16px 34px;
+    font-size:17px;
+    font-weight:700;
+    border-radius:3px;
+    cursor:pointer;
+    letter-spacing:.01em;
+    box-shadow:0 6px 24px rgba(216,30,30,.35);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .enter-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(216,30,30,.5);}
+  .enter-btn:active{transform:translateY(0);}
+  #start-screen .note{margin-top:18px;font-size:13px;color:#6c6b70;}
+
+  /* ---------- MAIN APP ---------- */
+  #app{display:none;min-height:100vh;flex-direction:column;}
+  #app.visible{display:flex;}
+
+  header.masthead{
+    background:var(--panel);
+    border-bottom:1px solid #2a2a2e;
+    padding:22px clamp(20px,5vw,60px);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .logos{display:flex;align-items:center;gap:18px;background:#f4f2ee;padding:10px 16px;border-radius:6px;}
+  .logos img{height:34px;width:auto;object-fit:contain;display:block;}
+  .masthead-title{font-size:13px;letter-spacing:.06em;color:var(--text-dim);font-family:var(--mono);}
+
+  .alert-banner{
+    background:linear-gradient(180deg, rgba(216,30,30,.16), rgba(216,30,30,.04));
+    border-bottom:1px solid rgba(216,30,30,.35);
+    padding:30px clamp(20px,5vw,60px) 26px;
+  }
+  .alert-banner .tag{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--stripe-a);
+    border:1px solid var(--stripe-a);
+    padding:3px 9px;
+    border-radius:3px;
+    margin-bottom:14px;
+  }
+  .alert-banner h2{
+    margin:0 0 10px;
+    font-size:clamp(22px,3.4vw,32px);
+    line-height:1.25;
+    max-width:900px;
+    font-weight:800;
+  }
+  .alert-banner p{
+    margin:0;
+    color:var(--text-dim);
+    font-family:var(--serif);
+    font-size:16px;
+    max-width:760px;
+    line-height:1.5;
+  }
+
+  main{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    padding:34px clamp(16px,5vw,60px) 60px;
+  }
+  .wrap{width:100%;max-width:760px;}
+
+  #doc-scroll{
+    background:var(--panel);
+    border:1px solid #2a2a2e;
+    border-radius:8px;
+    padding:8px 0 0;
+    max-height:52vh;
+    overflow-y:auto;
+    position:relative;
+  }
+  #doc-scroll .doc-inner{padding:8px 30px 34px;}
+  #doc-scroll::-webkit-scrollbar{width:10px;}
+  #doc-scroll::-webkit-scrollbar-thumb{background:#333338;border-radius:6px;}
+  #doc-scroll::-webkit-scrollbar-track{background:transparent;}
+
+  .doc-section{margin:26px 0;}
+  .doc-section:first-child{margin-top:14px;}
+  .doc-section h3{
+    font-size:15px;
+    font-family:var(--mono);
+    color:var(--amber);
+    margin:0 0 10px;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .doc-section h3 .num{color:#5a5a5f;}
+  .doc-section p{
+    font-family:var(--serif);
+    font-size:16.5px;
+    line-height:1.68;
+    color:#dcdad4;
+    margin:0 0 12px;
+  }
+  .doc-section ul{margin:0 0 12px;padding-left:22px;}
+  .doc-section li{
+    font-family:var(--serif);
+    font-size:16.5px;
+    line-height:1.6;
+    color:#dcdad4;
+    margin-bottom:6px;
+  }
+  code.ex{
+    font-family:var(--mono);
+    background:#26262b;
+    padding:2px 6px;
+    border-radius:3px;
+    font-size:14.5px;
+    color:#ffb9b9;
+  }
+  .secret{
+    background:rgba(255,176,32,.16);
+    border:1px solid rgba(255,176,32,.45);
+    padding:1px 8px;
+    border-radius:3px;
+    font-weight:700;
+    color:var(--amber);
+    letter-spacing:.02em;
+  }
+  .end-marker{
+    text-align:center;
+    color:#5a5a5f;
+    font-family:var(--mono);
+    font-size:12px;
+    padding-top:6px;
+    letter-spacing:.08em;
+  }
+
+  .status-row{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    margin:18px 2px 22px;
+    font-family:var(--mono);
+    font-size:12.5px;
+  }
+  .status-chip{
+    display:flex;align-items:center;gap:8px;
+    color:var(--text-dim);
+    border:1px solid #2a2a2e;
+    background:var(--panel);
+    padding:7px 12px;
+    border-radius:5px;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:#4a4a4f;flex:none;}
+  .dot.on{background:var(--ok);box-shadow:0 0 8px rgba(53,196,106,.7);}
+
+  .unlock-box{
+    background:var(--panel);
+    border:1px solid #2a2a2e;
+    border-radius:8px;
+    padding:26px 26px 24px;
+  }
+  .unlock-box.disabled{opacity:.45;}
+  .unlock-box label{
+    display:block;
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--text-dim);
+    margin-bottom:10px;
+    letter-spacing:.03em;
+  }
+  .unlock-row{display:flex;gap:10px;flex-wrap:wrap;}
+  #word-input{
+    flex:1 1 220px;
+    background:#0e0e10;
+    border:1px solid #3a3a40;
+    color:var(--text);
+    font-family:var(--mono);
+    font-size:16px;
+    padding:13px 14px;
+    border-radius:5px;
+    outline:none;
+  }
+  #word-input:focus{border-color:var(--amber);}
+  #word-input:disabled{cursor:not-allowed;}
+  .submit-btn{
+    background:var(--amber);
+    color:#1a1300;
+    border:none;
+    font-weight:700;
+    padding:13px 22px;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:15px;
+  }
+  .submit-btn:disabled{background:#3a3a40;color:#7c7c80;cursor:not-allowed;}
+  .submit-btn:not(:disabled):hover{filter:brightness(1.06);}
+  #form-msg{margin-top:12px;font-family:var(--mono);font-size:13px;min-height:18px;}
+  #form-msg.error{color:var(--danger);}
+  #form-msg.hint{color:var(--text-dim);}
+  .shake{animation:shake .32s;}
+  @keyframes shake{
+    10%,90%{transform:translateX(-2px);}
+    20%,80%{transform:translateX(4px);}
+    30%,50%,70%{transform:translateX(-7px);}
+    40%,60%{transform:translateX(7px);}
+  }
+  .attempts{font-family:var(--mono);font-size:12px;color:#6c6b70;margin-top:10px;}
+
+  /* success */
+  #success-box{display:none;text-align:center;padding:50px 20px;}
+  #success-box.visible{display:block;}
+  #success-box .check{
+    width:64px;height:64px;margin:0 auto 20px;
+  }
+  #success-box h2{margin:0 0 10px;font-size:24px;}
+  #success-box p{color:var(--text-dim);font-family:var(--serif);font-size:16px;margin:0 0 26px;}
+  .quit-btn{
+    background:var(--ok);
+    color:#06280f;
+    border:none;
+    font-weight:700;
+    padding:15px 30px;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+  }
+  .quit-note{margin-top:14px;font-size:12.5px;color:#6c6b70;}
+
+  /* ---------- REFULLSCREEN OVERLAY ---------- */
+  #refs-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(4,4,5,.97);
+    z-index:1000;
+    align-items:center;justify-content:center;
+    text-align:center;
+    padding:30px;
+  }
+  #refs-overlay.visible{display:flex;}
+  .refs-card{max-width:480px;}
+  .refs-card .warn-icon{width:56px;height:56px;margin:0 auto 18px;filter:drop-shadow(0 0 16px rgba(216,30,30,.6));}
+  .refs-card h3{font-size:21px;margin:0 0 12px;}
+  .refs-card p{font-family:var(--serif);color:var(--text-dim);font-size:15.5px;line-height:1.55;margin:0 0 22px;}
+  .refs-card p strong{color:var(--amber);}
+
+  footer.legal{
+    text-align:center;
+    padding:20px;
+    font-size:11.5px;
+    color:#4a4a4f;
+    font-family:var(--mono);
+  }
+
+  @media (max-width:560px){
+    .logos{flex-wrap:wrap;justify-content:center;}
+    .logos img{height:26px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <svg class="siren" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2 L22 20 H2 Z" fill="none" stroke="#d81e1e" stroke-width="1.6" stroke-linejoin="round"/>
+    <line x1="12" y1="9" x2="12" y2="14" stroke="#d81e1e" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="12" cy="16.8" r="1" fill="#d81e1e"/>
+  </svg>
+  <h1>Attention ! Vous avez été victime d'un piratage informatique fictif.</h1>
+  <p class="sub">Voici la raison de votre chute&nbsp;: <strong>double extension</strong>. Ce rapport d'incident vous explique ce qui vient de se passer et comment l'éviter la prochaine fois. La lecture complète est obligatoire pour reprendre la main sur cette page.</p>
+  <button class="enter-btn" id="enter-btn" type="button">Ouvrir le rapport d'incident</button>
+  <div class="note">La page passera en plein écran. Elle ne se libère qu'une fois le document lu et le mot secret saisi.</div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="hazard"></div>
+  <header class="masthead">
+    <div class="logos">
+      <img src="https://www.nwx.fr/wp-content/uploads/2025/10/logo-N-CyP.jpg" alt="Logo partenaire 1">
+      <img src="https://lesbases.anct.gouv.fr/images/7931e7bd-f9d3-4ab3-9da0-c8a83369398e.webp?width=3600" alt="Logo partenaire 2">
+      <img src="https://www.linformaticien.com/images/00-articles/2024-11/Capture_de%CC%81cran_2024-12-20_a%CC%80_09.38.51.png" alt="Logo partenaire 3">
+    </div>
+    <div class="masthead-title">SIMULATION · SENSIBILISATION CYBERSÉCURITÉ</div>
+  </header>
+
+  <div class="alert-banner">
+    <span class="tag">INCIDENT SIMULÉ · NON RÉEL</span>
+    <h2>Vous avez été victime d'un piratage informatique fictif ! Voici la raison de votre chute : double extension.</h2>
+    <p>Aucune donnée n'a réellement été compromise. Ce message reproduit un scénario d'attaque courant pour vous apprendre à le reconnaître. Lisez le rapport ci-dessous jusqu'au bout pour débloquer la sortie.</p>
+  </div>
+
+  <main>
+    <div class="wrap">
+
+      <div id="doc-scroll">
+        <div class="doc-inner">
+
+          <div class="doc-section">
+            <h3><span class="num">01</span> Ce qui vient de se passer</h3>
+            <p>Dans ce scénario, vous auriez ouvert une pièce jointe reçue par e-mail en pensant consulter un document classique — une facture, un CV, une photo. En réalité, le fichier contenait un programme capable de s'exécuter sur votre machine dès l'ouverture. La technique utilisée pour vous tromper porte un nom précis&nbsp;: la double extension.</p>
+          </div>
+
+          <div class="doc-section">
+            <h3><span class="num">02</span> Qu'est-ce qu'une double extension</h3>
+            <p>Chaque fichier possède une extension qui indique au système comment le traiter : <code class="ex">.pdf</code> pour un document, <code class="ex">.jpg</code> pour une image, <code class="ex">.exe</code> pour un programme. Une double extension consiste à nommer un fichier avec deux extensions à la suite, par exemple <code class="ex">facture.pdf.exe</code>. Beaucoup de systèmes n'affichent par défaut que la dernière partie du nom qui leur semble familière, ou masquent purement et simplement les extensions connues.</p>
+          </div>
+
+          <div class="doc-section">
+            <h3><span class="num">03</span> Pourquoi ce piège fonctionne aussi bien</h3>
+            <p>Windows et macOS masquent souvent les extensions de fichiers par défaut pour "simplifier" l'affichage. Résultat&nbsp;: un fichier nommé <code class="ex">facture.pdf.exe</code> peut s'afficher simplement comme <code class="ex">facture.pdf</code>, avec en plus une icône de PDF si l'attaquant a pris soin de la falsifier. Rien ne vous alerte visuellement, alors que le fichier est en réalité un exécutable.</p>
+            <ul>
+              <li><code class="ex">rapport_final.docx.js</code> — se fait passer pour un document Word</li>
+              <li><code class="ex">photo_vacances.jpg.scr</code> — se fait passer pour une image</li>
+              <li><code class="ex">releve_bancaire.pdf.bat</code> — se fait passer pour un PDF</li>
+            </ul>
+          </div>
+
+          <div class="doc-section">
+            <h3><span class="num">04</span> Comment un pirate exploite cette technique</h3>
+            <p>Le scénario type&nbsp;: un e-mail imite une entreprise connue ou un collègue, avec un ton urgent ("facture en retard", "colis bloqué", "document à signer"). La pièce jointe porte un nom rassurant et une icône familière. En double-cliquant, la victime pense ouvrir un document alors qu'elle lance en réalité un programme qui peut installer un logiciel malveillant, voler des identifiants ou chiffrer des fichiers.</p>
+            <p>Pour être certain que vous avez lu l'intégralité de ce rapport, le mot secret à saisir dans le champ tout en bas de cette page est «&nbsp;<span class="secret" id="secret-word">MOTSECRET</span>&nbsp;». Retenez-le, il vous sera demandé à la fin.</p>
+          </div>
+
+          <div class="doc-section">
+            <h3><span class="num">05</span> Comment s'en protéger</h3>
+            <ul>
+              <li>Affichez systématiquement les extensions de fichiers dans les paramètres de votre explorateur.</li>
+              <li>Vérifiez les propriétés d'un fichier avant de l'ouvrir plutôt que de vous fier à son icône.</li>
+              <li>Méfiez-vous des pièces jointes inattendues, même si l'expéditeur semble connu.</li>
+              <li>Vérifiez l'adresse e-mail complète de l'expéditeur, pas seulement le nom affiché.</li>
+              <li>Gardez un antivirus à jour et laissez-le analyser les pièces jointes avant ouverture.</li>
+              <li>En cas de doute, contactez votre service informatique avant d'ouvrir le fichier.</li>
+            </ul>
+          </div>
+
+          <div class="doc-section">
+            <h3><span class="num">06</span> Ce qu'il faut retenir</h3>
+            <p>Un nom de fichier rassurant et une icône familière ne garantissent jamais la nature réelle d'un fichier. La double extension exploite la confiance que l'on place dans l'apparence plutôt que dans la vérification. Le réflexe à adopter est simple&nbsp;: en cas de doute sur une pièce jointe, on vérifie avant d'ouvrir, on ne fait jamais confiance à l'urgence apparente d'un message.</p>
+          </div>
+
+          <div class="end-marker">— FIN DU RAPPORT —</div>
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="status-chip"><span class="dot" id="dot-time"></span><span id="time-label">Temps de lecture minimum en cours…</span></div>
+        <div class="status-chip"><span class="dot" id="dot-scroll"></span><span id="scroll-label">Défilement jusqu'en bas requis</span></div>
+      </div>
+
+      <div class="unlock-box disabled" id="unlock-box">
+        <form id="unlock-form">
+          <label for="word-input">Mot secret indiqué dans le rapport ci-dessus</label>
+          <div class="unlock-row">
+            <input type="text" id="word-input" autocomplete="off" placeholder="Saisissez le mot secret" disabled>
+            <button type="submit" class="submit-btn" id="submit-btn" disabled>Valider</button>
+          </div>
+          <div id="form-msg"></div>
+          <div class="attempts" id="attempts-label"></div>
+        </form>
+      </div>
+
+      <div class="unlock-box" id="success-box">
+        <svg class="check" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#35c46a" stroke-width="1.6"/>
+          <path d="M7.5 12.5l3 3 6-6.5" stroke="#35c46a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2>Rapport lu et validé</h2>
+        <p>Vous pouvez désormais quitter cette page. Le mode plein écran a été désactivé.</p>
+        <button class="quit-btn" id="quit-btn" type="button">Quitter la page</button>
+        <div class="quit-note">Si l'onglet ne se ferme pas automatiquement, vous pouvez le fermer manuellement.</div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="legal">Simulation pédagogique de sensibilisation — aucune donnée réelle n'a été affectée.</footer>
+</div>
+
+<!-- RE-FULLSCREEN OVERLAY -->
+<div id="refs-overlay">
+  <div class="refs-card">
+    <svg class="warn-icon" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2 L22 20 H2 Z" fill="none" stroke="#d81e1e" stroke-width="1.6" stroke-linejoin="round"/>
+      <line x1="12" y1="9" x2="12" y2="14" stroke="#d81e1e" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="12" cy="16.8" r="1" fill="#d81e1e"/>
+    </svg>
+    <h3>Vous avez quitté le mode plein écran</h3>
+    <p>Le rapport n'a pas été validé. Un <strong>nouveau mot secret</strong> a été généré : relisez la section correspondante avant de le ressaisir.</p>
+    <button class="enter-btn" id="refs-btn" type="button">Revenir en plein écran</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var WORDS = ["VIGILANCE","EXTENSION","HAMECON","PAREFEU","PRUDENCE","ANTIVIRUS","PHISHING","CYBERVEILLE","MEFIANCE","SECURITE"];
+  var MIN_READ_SECONDS = 105; // ~2 min lecture minimum imposée
+
+  var currentWord = null;
+  var unlocked = false;
+  var started = false;
+  var timeOk = false;
+  var scrollOk = false;
+  var elapsed = 0;
+  var timerHandle = null;
+  var attempts = 0;
+
+  var startScreen = document.getElementById('start-screen');
+  var enterBtn = document.getElementById('enter-btn');
+  var app = document.getElementById('app');
+  var docScroll = document.getElementById('doc-scroll');
+  var secretSpan = document.getElementById('secret-word');
+  var wordInput = document.getElementById('word-input');
+  var submitBtn = document.getElementById('submit-btn');
+  var unlockBox = document.getElementById('unlock-box');
+  var unlockForm = document.getElementById('unlock-form');
+  var formMsg = document.getElementById('form-msg');
+  var attemptsLabel = document.getElementById('attempts-label');
+  var dotTime = document.getElementById('dot-time');
+  var dotScroll = document.getElementById('dot-scroll');
+  var timeLabel = document.getElementById('time-label');
+  var scrollLabel = document.getElementById('scroll-label');
+  var successBox = document.getElementById('success-box');
+  var quitBtn = document.getElementById('quit-btn');
+  var refsOverlay = document.getElementById('refs-overlay');
+  var refsBtn = document.getElementById('refs-btn');
+
+  function pickWord(excl){
+    var pool = WORDS.filter(function(w){ return w !== excl; });
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function setWord(w){
+    currentWord = w;
+    secretSpan.textContent = w;
+  }
+
+  function requestFS(){
+    var el = document.documentElement;
+    var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if(req){ try{ req.call(el); }catch(e){} }
+  }
+  function exitFS(){
+    var exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if(exit){ try{ exit.call(document); }catch(e){} }
+  }
+  function isFS(){
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  }
+
+  function startTimer(){
+    if(timerHandle) return;
+    timerHandle = setInterval(function(){
+      elapsed += 1;
+      if(elapsed >= MIN_READ_SECONDS && !timeOk){
+        timeOk = true;
+        dotTime.classList.add('on');
+        timeLabel.textContent = "Temps de lecture minimum atteint";
+        checkUnlockReady();
+      }
+    }, 1000);
+  }
+  function stopTimer(){
+    if(timerHandle){ clearInterval(timerHandle); timerHandle = null; }
+  }
+
+  function checkUnlockReady(){
+    if(timeOk && scrollOk && !unlocked){
+      unlockBox.classList.remove('disabled');
+      wordInput.disabled = false;
+      submitBtn.disabled = false;
+      formMsg.className = 'hint';
+      formMsg.textContent = "Vous pouvez saisir le mot secret.";
+    }
+  }
+
+  docScroll.addEventListener('scroll', function(){
+    var atBottom = docScroll.scrollTop + docScroll.clientHeight >= docScroll.scrollHeight - 12;
+    if(atBottom && !scrollOk){
+      scrollOk = true;
+      dotScroll.classList.add('on');
+      scrollLabel.textContent = "Document défilé jusqu'en bas";
+      checkUnlockReady();
+    }
+  });
+
+  enterBtn.addEventListener('click', function(){
+    started = true;
+    requestFS();
+    startScreen.style.display = 'none';
+    app.classList.add('visible');
+    setWord(pickWord(null));
+    startTimer();
+  });
+
+  refsBtn.addEventListener('click', function(){
+    requestFS();
+  });
+
+  document.addEventListener('fullscreenchange', onFSChange);
+  document.addEventListener('webkitfullscreenchange', onFSChange);
+  document.addEventListener('mozfullscreenchange', onFSChange);
+  document.addEventListener('MSFullscreenChange', onFSChange);
+
+  function onFSChange(){
+    if(!started || unlocked) return;
+    if(isFS()){
+      refsOverlay.classList.remove('visible');
+      startTimer();
+    } else {
+      refsOverlay.classList.add('visible');
+      stopTimer();
+      // nouveau mot secret : oblige à relire pour retrouver la bonne réponse
+      setWord(pickWord(currentWord));
+    }
+  }
+
+  unlockForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(wordInput.disabled) return;
+    var val = wordInput.value.trim().toUpperCase();
+    attempts += 1;
+    if(val === currentWord){
+      unlocked = true;
+      stopTimer();
+      exitFS();
+      unlockBox.style.display = 'none';
+      successBox.classList.add('visible');
+    } else {
+      formMsg.className = 'error';
+      formMsg.textContent = "Mot incorrect. Un nouveau mot secret a été généré, relisez la section 04.";
+      attemptsLabel.textContent = "Tentatives : " + attempts;
+      wordInput.classList.add('shake');
+      setTimeout(function(){ wordInput.classList.remove('shake'); }, 320);
+      wordInput.value = '';
+      wordInput.focus();
+      setWord(pickWord(currentWord));
+    }
+  });
+
+  quitBtn.addEventListener('click', function(){
+    window.close();
+    setTimeout(function(){
+      quitBtn.textContent = "Vous pouvez fermer cet onglet manuellement";
+      quitBtn.disabled = true;
+    }, 400);
+  });
+})();
+</script>
+</body>
+</html>
